@@ -1,0 +1,45 @@
+{
+  "name": "mediamouse/users",
+  "description": "Add user management to filament laravel",
+  "type": "library",
+  "repositories": [
+    { "type": "vcs", "url": "ssh://repos@repos.mediamouse.nl:22/home/repos/repos/mediamouse.filament.git" },
+    { "type": "vcs", "url": "ssh://repos@repos.mediamouse.nl:22/home/repos/repos/mediamouse.laravel.git" }
+  ],
+  "require": {
+    "php": "^8.1",
+    "laravel/framework": "^9.0",
+    "filament/filament": "^2.0",
+    "filament/forms": "^2.0",
+    "mediamouse/laravel" : "dev-master",
+    "mediamouse/filament": "dev-master",
+    "spatie/laravel-package-tools": "^1.9"
+  },
+  "require-dev": {
+    "barryvdh/laravel-debugbar": "^3.7"
+  },
+  "license": "private",
+  "autoload": {
+    "psr-4": {
+      "Mediamouse\\Users\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Jeroen de Leur",
+      "email": "jeroen@mediamouse.nl"
+    },
+    {
+      "name": "Sjoerd Steeman",
+      "email": "sjoerd@mediamouse.nl"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [
+          "Mediamouse\\Users\\UserServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable"
+}
