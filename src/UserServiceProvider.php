@@ -1,5 +1,6 @@
 <?php
 
+namespace Mediamouse\Users;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
