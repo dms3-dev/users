@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user_memberof_group', function (Blueprint $table): void{
-            $table->integer('user_id' )->unsigned();
+            $table->bigInteger('user_id' )->unsigned();
             $table->string('group_key', 10);
 
             $table->timestamps();

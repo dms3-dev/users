@@ -9,10 +9,10 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table): void {
 
-            $table->string('language_iso', 2);
+            $table->string('language_iso', 2)->nullable();
 
             $table->enum('status', ['ACTIVE', 'LOCKED', 'INACTIVE'])->default('ACTIVE')->after('id');
-            $table->string('username', 50)->after('status');
+            $table->string('username', 50)->after('status')->nullable();
 
             $table->enum('role', ['NONE', 'MEMBER', 'ADMINISTRATOR', 'SA'])->default('NONE')->after('remember_token');
             $table->enum('two_factor', ['NONE', 'EMAIL', 'SMS'])->default('NONE')->after('role');
