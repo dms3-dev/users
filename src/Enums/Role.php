@@ -1,6 +1,6 @@
 <?php
 
-namespace MediaMouse\Users\Role;
+namespace Mediamouse\Users\Role;
 
 enum Role : string {
     case NONE = 'NONE';

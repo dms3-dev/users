@@ -1,6 +1,6 @@
 <?php
 
-namespace MediaMouse\Languages\Enums;
+namespace Mediamouse\Users\Enums;
 
 enum Status : string {
     case ACTIVE = 'ACTIVE';
