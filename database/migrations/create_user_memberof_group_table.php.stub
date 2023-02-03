@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('user_memberof_group', function (Blueprint $table): void{
+            $table->integer('user_id' )->unsigned();
+            $table->string('group_key', 10);
+
+            $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+            $table->foreign('group_key')
+                ->references('key')
+                ->on('groups')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+            $table->unique(['user_id', 'group_key'], 'DEFINING');
+
+            $table->id();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('user_memberof_group');
+    }
+};
