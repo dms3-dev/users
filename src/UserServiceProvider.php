@@ -12,8 +12,17 @@ class UserServiceProvider extends PackageServiceProvider
         $package
             ->name('mediamouse-users')
             ->hasMigrations([
+                'add_fields_to_users_table',
                 'create_languages_table',
-                'create_users_table',
+                'add_fields_to_users_table',
+                'create_group_has_privilege_table',
+                'create_groups_table',
+                'create_login_attempts_table',
+                'create_password_resets_table',
+                'create_passwords_table',
+                'create_policies_table',
+                'create_privileges_table',
+                'create_user_memberof_group_table',
             ])
             ;
     }

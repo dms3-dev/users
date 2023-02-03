@@ -3,7 +3,6 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Mediamouse\Users\Enums\Status;
 use Mediamouse\Laravel\Models\Model;
 
