@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table): void {
+
+            $table->string('language_iso', 2);
+
+            $table->enum('status', ['ACTIVE', 'LOCKED', 'INACTIVE'])->default('ACTIVE')->after('id');
+            $table->string('username', 50)->after('status');
+
+            $table->enum('role', ['NONE', 'MEMBER', 'ADMINISTRATOR', 'SA'])->default('NONE')->after('remember_token');
+            $table->enum('two_factor', ['NONE', 'EMAIL', 'SMS'])->default('NONE')->after('role');
+
+            $table->foreign('language_iso')
+                ->references('iso')
+                ->on('languages')
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+};
