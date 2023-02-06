@@ -3,7 +3,9 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
-use Mediamouse\Users\Enums\Status;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
+use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Laravel\Models\Model;
 
 /**
@@ -11,8 +13,10 @@ use Mediamouse\Laravel\Models\Model;
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property string name
- * @property string status
+ * @property LanguageStatus status
  * @property int sort
+ *
+ * @property Collection<User> users
  */
 class Language extends Model
 {
@@ -22,15 +26,15 @@ class Language extends Model
     public $incrementing = false;
 
     protected $casts = [
-        'status' => Status::class,
+        'status' => LanguageStatus::class,
     ];
 
-//    public function users(): HasMany
-//    {
-//        return $this->hasMany(Users::class);
-//    }
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 
-    public static function make(string $iso, string $name, Status $status = Status::ACTIVE, int $sort = 0) {
+    public static function make(string $iso, string $name, LanguageStatus $status = LanguageStatus::ACTIVE, int $sort = 0) {
         $self = self::findOrCreate($iso);
 
         $self->name = $name;

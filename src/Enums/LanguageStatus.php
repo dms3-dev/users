@@ -2,7 +2,7 @@
 
 namespace Mediamouse\Users\Enums;
 
-enum Status : string {
+enum LanguageStatus : string {
     case ACTIVE = 'ACTIVE';
     case INACTIVE = 'INACTIVE';
 }

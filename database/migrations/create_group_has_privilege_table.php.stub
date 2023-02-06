@@ -12,6 +12,7 @@ return new class extends Migration
             $table->string('group_key', 10);
             $table->string('policy', 255);
             $table->string('privilege', 50);
+            $table->bigInteger('privilege_id');
 
             $table->timestamps();
 
@@ -23,6 +24,12 @@ return new class extends Migration
 
             $table->foreign(['policy', 'privilege'])
                 ->references(['policy', 'privilege'])
+                ->on('privileges')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+            $table->foreign('privilege_id')
+                ->references('id')
                 ->on('privileges')
                 ->restrictOnUpdate()
                 ->restrictOnDelete();
