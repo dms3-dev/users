@@ -26,6 +26,12 @@ class UserServiceProvider extends PackageServiceProvider
                 'create_user_memberof_group_table',
             ])
             ;
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
         Filament::serving(function () {
             Filament::registerNavigationGroups([
                 NavigationGroup::make()
