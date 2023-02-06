@@ -2,6 +2,8 @@
 
 namespace Mediamouse\Users;
 
+use Filament\Facades\Filament;
+use Filament\Navigation\NavigationGroup;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -24,5 +26,12 @@ class UserServiceProvider extends PackageServiceProvider
                 'create_user_memberof_group_table',
             ])
             ;
+        Filament::serving(function () {
+            Filament::registerNavigationGroups([
+                NavigationGroup::make()
+                    ->label('User management')
+                    ->icon('heroicon-s-mail'),
+            ]);
+        });
     }
 }
