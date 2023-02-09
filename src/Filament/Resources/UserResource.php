@@ -2,46 +2,80 @@
 
 namespace Mediamouse\Users\Filament\Resources;
 
-use Exception;
-use Mediamouse\Users\Enums\LanguageStatus;
-use Mediamouse\Users\Filament\Resources\UserResource\Pages;
-use Mediamouse\Users\Models\Language;
-use Mediamouse\Users\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Forms\Components;
+use Mediamouse\Filament\Forms\Components\TextInput;
+use Mediamouse\Users\Enums\LanguageStatus;
+use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Enums\UserStatus;
+use Mediamouse\Users\Enums\UserTwoFactor;
+use Mediamouse\Users\Filament\Resources\UserResource\Pages;
+use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\LoginAttemptsRelationManager;
+use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\UserOverviewRelationManager;
+use Mediamouse\Users\Models\Language;
+use Mediamouse\Users\Models\User;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                        ->label('Full Name')
-                        ->required(),
-                Forms\Components\TextInput::make('username')
-                        ->label('Username')
-                        ->required(),
-                Forms\Components\TextInput::make('email')
-                        ->email()
-                        ->required(),
-                Forms\Components\Select::make('language_iso')
-                    ->label('Language')
-                    ->required()
-                    ->options(function() {
-                        return Language::query()->where('status', LanguageStatus::ACTIVE->value)->orderBy('sort')->pluck('name', 'iso');
-                    }),
+
+                Forms\Components\Grid::make(2)->schema([
+                    Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+                        Forms\Components\Fieldset::make('User information')->columns(1)->columnSpan(1)->schema([
+                            TextInput::make('username')->required()->maxLength(50),
+                            TextInput::make('name')->label('Full name')->required()->maxLength(255),
+                            TextInput::make('email')->required()->email()->maxLength(255),
+                        ]),
+                        Forms\Components\Fieldset::make('About')->columns(1)->columnSpan(1)->schema([
+                            Forms\Components\Select::make('language_iso')
+                                ->label('Language')
+                                ->required()
+                                ->options(function () {
+                                    return Language::query()->where('status', LanguageStatus::ACTIVE->value)->orderBy('sort')->pluck('name', 'iso');
+                                }),
+                            Forms\Components\Select::make('role')
+                                ->options(UserRole::class)
+                                ->required(),
+                        ]),
+                    ]),
+                    Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+                        Forms\Components\Fieldset::make('Groups')->columns(1)->columnSpan(1)->schema([
+                Forms\Components\Repeater::make('allGroups')
+                    ->label('Group')
+                    ->relationship()
+                    ->disableItemCreation()->disableItemDeletion()->disableItemMovement()
+                    ->schema([
+                        Forms\Components\Checkbox::make('group_key')
+                    ]),
+                        ]),
+                        Forms\Components\Fieldset::make('Security')->columns(1)->columnSpan(1)->schema([
+                            Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+                                Forms\Components\Select::make('two_factor')
+                                    ->options(UserTwoFactor::class)
+                                    ->required(),
+                                Forms\Components\Select::make('status')
+                                    ->options(UserStatus::class)
+                                    ->required()
+                            ]),
+                        ]),
+                    ]),
+                ]),
             ]);
     }
 
@@ -52,8 +86,14 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+
+                Tables\Columns\TextColumn::make('username')
+                    ->label('Username')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name')
+                    ->label('Full name')
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
@@ -75,30 +115,50 @@ class UserResource extends Resource
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('language_iso')
-                    ->label('ISO')
+                Tables\Columns\TextColumn::make('language.name')
+                    ->label('Language')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('two_factor')
+                    ->label('2FA')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('groups')
+                    ->label('Group(s)')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('lastLoginAttempt.created_at')
+                    ->label('Last login attempt')
+                    ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s'))
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\Action::make('verify')
-                        ->color('success')
-                        ->icon('heroicon-o-check')
-                        ->visible(fn(User $record) => $record->email_verified_at === null)
-                        ->requiresConfirmation()
-                        ->action(function(User $record) {
-                            $record->email_verified_at = Carbon::now();
-                            $record->save();
+                    ->color('success')
+                    ->icon('heroicon-o-check')
+                    ->visible(fn(User $record) => $record->email_verified_at === null)
+                    ->requiresConfirmation()
+                    ->action(function (User $record) {
+                        $record->email_verified_at = Carbon::now();
+                        $record->save();
 
-                            Notification::make('verified')
-                                ->iconColor('success')
-                                ->title('User is verified')
-                                ->icon('heroicon-o-check')
-                                ->send();
-                        }),
+                        Notification::make('verified')
+                            ->iconColor('success')
+                            ->title('User is verified')
+                            ->icon('heroicon-o-check')
+                            ->send();
+                    }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ]);
     }
 
@@ -108,6 +168,21 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'view' => Pages\ViewUser::route('/{record}/view'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            LoginAttemptsRelationManager::class,
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            UserResource\Widgets\UserOverview::class,
         ];
     }
 }

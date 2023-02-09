@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
@@ -37,9 +39,19 @@ use Mediamouse\Users\Enums\UserTwoFactor;
  * @property Language language
  * @property LoginAttempt lastLoginAttempt
  */
-
 class User extends Model
 {
+    protected $fillable = [
+        'username',
+        'name',
+        'email',
+        'role',
+        'two_factor',
+        'language_iso',
+        'groups',
+        'status',
+    ];
+
     protected $casts = [
         'status' => UserStatus::class,
         'role' => UserRole::class,
@@ -70,6 +82,26 @@ class User extends Model
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'user_memberof_group', 'user_id', 'group_key');
+    }
+
+    public function allGroups()
+    {
+        $result = DB::query()
+            ->from('groups')
+            ->leftJoin('user_memberof_group', function(Builder $query) {
+
+                $query->whereRaw('user_memberof_group.group_key = groups.key');
+                $query->whereRaw('user_memberof_group.user_id = ' . $this->id);
+            })
+                ;
+
+        $result = $this->hasMany(UserMemberOfGroup::class)
+            ->rightJoin('groups', function(Builder $query) {
+                $query->whereRaw('user_memberof_group.group_key = groups.key');
+                $query->whereRaw('user_memberof_group.user_id = ' . $this->id);
+            })
+            ;
+        return $result;
     }
 
     public function lastLoginAttempt(): HasOne

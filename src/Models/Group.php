@@ -19,10 +19,17 @@ use Ramsey\Collection\Collection;
 
 class Group extends Model
 {
+    protected $table = 'groups';
     protected $primaryKey = 'key';
 
     protected $keyType = 'string';
     public $incrementing = false;
+
+    protected $fillable =
+        [
+        'key',
+        'name',
+    ];
 
     public function users() : BelongsToMany
     {

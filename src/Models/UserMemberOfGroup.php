@@ -15,5 +15,5 @@ use Mediamouse\Laravel\Models\Model;
 
 class UserMemberOfGroup extends Model
 {
-
+    protected $table = 'user_memberof_group';
 }
