@@ -14,17 +14,13 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
-use Mediamouse\Users\Filament\Resources\GroupResource\Actions\TestMailTemplateAction;
-use Mediamouse\Users\Models\Mail;
-use Mediamouse\Users\Models\MailTemplateField;
-use Mediamouse\Users\Models\MailTemplateTranslation;
 use Mediamouse\Users\Models\User;
 
 class UserMemberOfGroupRelationManager extends RelationManager
 {
-    protected static string $relationship = 'UsersMemberOfGroup';
+    protected static string $relationship = 'users';
 
-    protected static ?string $recordTitleAttribute = 'UserMemberOfGroup';
+    protected static ?string $recordTitleAttribute = 'Group';
 
     public static function form(Form $form): Form
     {
@@ -72,8 +68,25 @@ class UserMemberOfGroupRelationManager extends RelationManager
                     ->alignLeft()
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('group.name')
+                Tables\Columns\TextColumn::make('role')
+                    ->label('User role')
+                    ->toggleable()
+                    ->alignLeft()
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('groups')
                     ->label('Assigned group(s)')
+                    ->formatStateUsing(
+                        function($state) {
+                            $groups = array();
+
+                            foreach($state as $group) {
+                                $groups[] = $group->name;
+                            }
+                            return implode(',',  $groups);
+                        }
+
+                    )
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
@@ -86,8 +99,7 @@ class UserMemberOfGroupRelationManager extends RelationManager
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                TestMailTemplateAction::makeTable(),
+//                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 //

@@ -10,6 +10,14 @@ class EditUser extends EditRecord
 {
     protected static string $resource = UserResource::class;
 
+    /**
+     * @return mixed
+     */
+    public function getRedirectUrl() :string
+    {
+        return UserResource::getUrl('view', ['record' => $this->record]);
+    }
+
     protected function getActions(): array
     {
         return [

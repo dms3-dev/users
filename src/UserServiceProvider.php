@@ -35,8 +35,8 @@ class UserServiceProvider extends PackageServiceProvider
         Filament::serving(function () {
             Filament::registerNavigationGroups([
                 NavigationGroup::make()
-                    ->label('User management')
-                    ->icon('heroicon-s-mail'),
+                    ->label('User Management')
+                    ->icon('heroicon-s-user'),
             ]);
         });
     }

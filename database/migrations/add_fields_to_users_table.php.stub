@@ -14,6 +14,11 @@ return new class extends Migration {
             $table->enum('status', ['ACTIVE', 'LOCKED', 'INACTIVE'])->default('ACTIVE')->after('id');
             $table->string('username', 50)->after('status')->nullable();
 
+            $table->string('phone_number', 15);
+            $table->timestamp('phone_verified_at');
+
+            $table->string('password', 255)->nullable()->change();
+
             $table->enum('role', ['NONE', 'MEMBER', 'ADMINISTRATOR', 'SA'])->default('NONE')->after('remember_token');
             $table->enum('two_factor', ['NONE', 'EMAIL', 'SMS'])->default('NONE')->after('role');
 

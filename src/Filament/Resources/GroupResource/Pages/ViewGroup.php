@@ -12,11 +12,11 @@ use Filament\Resources\Pages\ViewRecord;
 class ViewGroup extends ViewRecord
 {
     protected static string $resource = GroupResource::class;
-    protected static ?string $title = 'User';
+    protected static ?string $title = 'Group';
 
     protected function getTitle(): string
     {
-        return "User `{$this->record->name}`";
+        return "Group `{$this->record->name}`";
     }
 
     /**

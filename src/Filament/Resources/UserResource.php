@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources;
 
 use Carbon\Carbon;
+use Closure;
 use Exception;
 use Filament\Forms;
 use Filament\Notifications\Notification;
@@ -11,16 +12,17 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Forms\Components;
+use Mediamouse\Laravel\Support\Arr;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
-use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Filament\Resources\UserResource\Pages;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\LoginAttemptsRelationManager;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\UserOverviewRelationManager;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
+use Mediamouse\Users\Settings\UserManagementSettings;
 
 class UserResource extends Resource
 {
@@ -32,7 +34,15 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
+//        dd(Arr::combine(
+//            app(UserManagementSettings::class)->two_fa_MEMBER,
+//            app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
+//            app(UserManagementSettings::class)->two_fa_SA
+//        ));
+
         return $form
+
+
             ->schema([
 
                 Forms\Components\Grid::make(2)->schema([
@@ -56,18 +66,35 @@ class UserResource extends Resource
                     ]),
                     Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                         Forms\Components\Fieldset::make('Groups')->columns(1)->columnSpan(1)->schema([
-                Forms\Components\Repeater::make('allGroups')
-                    ->label('Group')
-                    ->relationship()
-                    ->disableItemCreation()->disableItemDeletion()->disableItemMovement()
-                    ->schema([
-                        Forms\Components\Checkbox::make('group_key')
-                    ]),
+                            Forms\Components\CheckboxList::make('groups')
+                                ->columns(2)
+                                ->relationship('groups', 'name')
+                                ->inlineLabel()
+                                ->disableLabel(),
                         ]),
                         Forms\Components\Fieldset::make('Security')->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                                 Forms\Components\Select::make('two_factor')
-                                    ->options(UserTwoFactor::class)
+                                    ->options(Arr::combine(
+                                        app(UserManagementSettings::class)->two_fa_MEMBER,
+                                        app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
+                                        app(UserManagementSettings::class)->two_fa_SA
+                                    ))
+//                                    ->enum(UserRole::class)
+//                                    ->rules([
+//                                        function (...$params) {
+//
+//                                            dump($params);
+//                                            return function (...$params) {
+//                                                dump(request());
+//                                                dump($_SERVER);
+//                                                dd($params);
+//                                                if ($value !== 'foo') {
+//                                                    $fail("The {$attribute} is invalid. YOLO");
+//                                                }
+//                                            };
+//                                        },
+//                                    ])
                                     ->required(),
                                 Forms\Components\Select::make('status')
                                     ->options(UserStatus::class)
