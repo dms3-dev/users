@@ -12,14 +12,17 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Forms\Components;
+use App\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Laravel\Support\Arr;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
+use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Filament\Resources\UserResource\Pages;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\LoginAttemptsRelationManager;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\UserOverviewRelationManager;
+use Mediamouse\Users\Models\Group;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
@@ -53,14 +56,14 @@ class UserResource extends Resource
                             TextInput::make('email')->required()->email()->maxLength(255),
                         ]),
                         Forms\Components\Fieldset::make('About')->columns(1)->columnSpan(1)->schema([
-                            Forms\Components\Select::make('language_iso')
+                            Forms\Components\Select::make('language.name')
                                 ->label('Language')
-                                ->required()
                                 ->options(function () {
                                     return Language::query()->where('status', LanguageStatus::ACTIVE->value)->orderBy('sort')->pluck('name', 'iso');
                                 }),
                             Forms\Components\Select::make('role')
                                 ->options(UserRole::class)
+                                ->enum(UserRole::class)
                                 ->required(),
                         ]),
                     ]),
@@ -75,12 +78,17 @@ class UserResource extends Resource
                         Forms\Components\Fieldset::make('Security')->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                                 Forms\Components\Select::make('two_factor')
-                                    ->options(Arr::combine(
+                                    ->enum(UserTwoFactor::class)
+                                    ->options(Arr::setKeysEqualToValues(Arr::combine(
                                         app(UserManagementSettings::class)->two_fa_MEMBER,
                                         app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
                                         app(UserManagementSettings::class)->two_fa_SA
-                                    ))
-//                                    ->enum(UserRole::class)
+                                    )))
+
+//    ['NONE', 'EMAIL']
+//    ['NONE' => 'NONE', 'EMAIL' => 'EMAIL']
+
+
 //                                    ->rules([
 //                                        function (...$params) {
 //
@@ -97,6 +105,8 @@ class UserResource extends Resource
 //                                    ])
                                     ->required(),
                                 Forms\Components\Select::make('status')
+                                    ->label('Account status')
+                                    ->enum(UserStatus::class)
                                     ->options(UserStatus::class)
                                     ->required()
                             ]),
@@ -148,20 +158,29 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label('Account status')
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('two_factor')
                     ->label('2FA')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('groups')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('groups.name')
                     ->label('Group(s)')
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->formatStateUsing(
+                        function(User $record) {
+                            $groups = array();
+
+                            foreach($record->groups as $group) {
+                                $groups[] = $group->name;
+                            }
+                            return implode(', ',  $groups);
+                        }
+
+                    ),
                 Tables\Columns\TextColumn::make('lastLoginAttempt.created_at')
                     ->label('Last login attempt')
                     ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s'))
@@ -186,6 +205,7 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ViewAction::make(),
+                ViewAction::make()->color('info'),
             ]);
     }
 
