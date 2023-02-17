@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Mediamouse\Laravel\Models\Model;
+use Mediamouse\Users\Factories\GroupFactory;
 use Ramsey\Collection\Collection;
 
 /**
@@ -43,9 +44,4 @@ class Group extends Model
     {
         return $this->belongsToMany(Privilege::class, 'group_has_privilege', 'group_key', 'privilege_id');
     }
-
-//    protected static function newFactory()
-//    {
-//        return new Group::factory();
-//    }
 }

@@ -10,6 +10,11 @@ class EditGroup extends EditRecord
 {
     protected static string $resource = GroupResource::class;
 
+    public function getRedirectUrl() :string
+    {
+        return GroupResource::getUrl('view', ['record' => $this->record]);
+    }
+
     protected function getActions(): array
     {
         return [

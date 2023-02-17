@@ -62,9 +62,9 @@ class GroupResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('users')
+                Tables\Columns\TextColumn::make('users_count')
+                    ->counts('users')
                     ->label('Amount of users')
-                    ->formatStateUsing(fn ($state) => sizeof($state))
                     ->toggleable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

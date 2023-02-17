@@ -37,11 +37,6 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
-//        dd(Arr::combine(
-//            app(UserManagementSettings::class)->two_fa_MEMBER,
-//            app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
-//            app(UserManagementSettings::class)->two_fa_SA
-//        ));
 
         return $form
 
@@ -84,25 +79,7 @@ class UserResource extends Resource
                                         app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
                                         app(UserManagementSettings::class)->two_fa_SA
                                     )))
-
-//    ['NONE', 'EMAIL']
-//    ['NONE' => 'NONE', 'EMAIL' => 'EMAIL']
-
-
-//                                    ->rules([
-//                                        function (...$params) {
-//
-//                                            dump($params);
-//                                            return function (...$params) {
-//                                                dump(request());
-//                                                dump($_SERVER);
-//                                                dd($params);
-//                                                if ($value !== 'foo') {
-//                                                    $fail("The {$attribute} is invalid. YOLO");
-//                                                }
-//                                            };
-//                                        },
-//                                    ])
+//                                        ->options(UserTwoFactor::class)
                                     ->required(),
                                 Forms\Components\Select::make('status')
                                     ->label('Account status')
