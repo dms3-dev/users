@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Filament\Resources;
 
 use Exception;
 use Filament\Forms;
+use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
