@@ -1,0 +1,100 @@
+<?php
+
+namespace Mediamouse\Users\Tests\Feature\Resources\User;
+
+use App\Models\Customer;
+use App\Models\User;
+use Mediamouse\Filament\Testing\Traits\FilamentForm;
+use Mediamouse\Filament\Testing\Traits\ResourcePage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\Rules\Enum;
+use Mediamouse\Users\Enums\LanguageStatus;
+use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Enums\UserStatus;
+use Mediamouse\Users\Enums\UserTwoFactor;
+use Mediamouse\Users\Filament\Resources\UserResource;
+use Mediamouse\Users\Models\Group;
+use Mediamouse\Users\Models\Language;
+use Tests\TestCase;
+
+/**
+ * @property User record
+ */
+class EditUserPageTest extends TestCase
+{
+    use ResourcePage;
+    use FilamentForm;
+    use RefreshDatabase;
+
+    protected function updateRecord() : void
+    {
+        $this->record = User::find($this->record->id);
+    }
+
+    private function createGroup($id) : void {
+        $group = new Group();
+        $group->key = $id;
+        $group->name = $id . '_name';
+        $group->save();
+    }
+
+    protected function setUpPage(): void
+    {
+        $this->createGroup('K1');
+        $this->createGroup('K2');
+        $this->createGroup('K3');
+
+
+        $this->record = User::factory()->create();
+        $this->modelClass = User::class;
+        $this->url = UserResource::getUrl('edit', ['record' => User::factory()->create()]);
+        $this->liveWireParameters = ['record' => $this->record->id];
+        $this->liveWireClass = UserResource\Pages\EditUser::class;
+        $this->formDataSet = [
+            'username' => fake()->firstName(),
+            'name' => fake()->name(),
+            'email' => fake()->email(),
+            'language_iso' => fake()->randomElement(Language::query()->where('status', LanguageStatus::ACTIVE->value)->pluck('iso')),
+            'role' => fake()->randomElement(UserRole::cases())->value,
+            'groups' => [fake()->randomElement(['K1', 'K2', 'K3'])],
+            'two_factor' => fake()->randomElement(UserTwoFactor::cases())->value,
+            'status' => fake()->randomElement(UserStatus::cases())->value,
+        ];
+    }
+
+    public function testFieldUserNameIsRequired() {                         $this->seeIfFieldIsRequired('username'); }
+    public function testFieldNameIsRequired() {                             $this->seeIfFieldIsRequired('name'); }
+    public function testFieldEmailIsRequired() {                            $this->seeIfFieldIsRequired('email'); }
+    public function testFieldLanguageIsoIsRequired() {                      $this->seeIfFieldIsRequired('language_iso'); }
+    public function testFieldRoleIsRequired() {                             $this->seeIfFieldIsRequired('role'); }
+    public function testFieldTwoFactorIsRequired() {                        $this->seeIfFieldIsRequired('two_factor'); }
+    public function testFieldStatusIsRequired() {                           $this->seeIfFieldIsRequired('status'); }
+
+    public function testFieldGroupsIsNotRequired() {                        $this->seeIfFieldIsNotRequired('groups'); }
+
+    public function testFieldUserNameIsNotTooLong() {                       $this->seeIfFieldIsNotToLong('username', 51); }
+    public function testFieldNameIsNotTooLong() {                           $this->seeIfFieldIsNotToLong('name', 256); }
+    public function testFieldEmailIsNotTooLong() {                          $this->seeIfFieldIsNotToLong('email', 256); }
+
+    public function testFieldEmailMustBeAValidEmailAddress() {              $this->seeIfFieldIsValidatedBy('email', 'email', fake()->text(100)); }
+    public function testFieldTwoFactorMustBeAValidTwoFactor() {             $this->seeIfFieldIsValidatedBy('two_factor', Enum::class, 'abc'); }
+    public function testFieldStatusMustBeAValidStatus() {                   $this->seeIfFieldIsValidatedBy('status', Enum::class, 'abc'); }
+    public function testFieldRoleMustBeAValidStatus() {                     $this->seeIfFieldIsValidatedBy('role', Enum::class, 'abc'); }
+
+    public function testFieldUserNameCanBeUpdated() {                       $this->seeIfFieldIsUpdated('username'); }
+    public function testFieldNameCanBeUpdated() {                           $this->seeIfFieldIsUpdated('name'); }
+    public function testFieldEmailCanBeUpdated() {                          $this->seeIfFieldIsUpdated('email'); }
+    public function testFieldLanguageIsoCanBeUpdated() {                    $this->seeIfFieldIsUpdated('language_iso'); }
+    public function testFieldRoleCanBeUpdated() {                           $this->seeIfEnumFieldIsUpdated('role'); }
+    public function testFieldTwoFactorCanBeUpdated() {                      $this->seeIfEnumFieldIsUpdated('two_factor'); }
+    public function testFieldStatusCanBeUpdated() {                         $this->seeIfEnumFieldIsUpdated('status'); }
+
+    public function testAfterSubmitRedirectToViewUser() {
+        $this->actingAs($this->getActor());
+        $this->setUpPage();
+
+        $url = UserResource::getUrl('view', ['record' => $this->record]);
+        $this->submitForm()->assertRedirect($url);
+    }
+
+}

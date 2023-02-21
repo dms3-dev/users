@@ -24,6 +24,11 @@
       "Mediamouse\\Users\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Mediamouse\\Users\\Tests\\": "tests"
+    }
+  },
   "authors": [
     {
       "name": "Jeroen de Leur",

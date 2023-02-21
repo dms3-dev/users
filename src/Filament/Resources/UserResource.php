@@ -12,7 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Forms\Components;
-use App\Filament\Tables\Actions\ViewAction;
+use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Laravel\Support\Arr;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\LanguageStatus;
