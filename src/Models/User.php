@@ -15,6 +15,7 @@ use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * @property int id
@@ -40,7 +41,7 @@ use Mediamouse\Users\Enums\UserTwoFactor;
  * @property Language language
  * @property LoginAttempt lastLoginAttempt
  */
-class User extends Model
+class User extends Authenticatable
 {
     use HasFactory;
 
