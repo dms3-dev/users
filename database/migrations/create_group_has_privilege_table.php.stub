@@ -12,7 +12,7 @@ return new class extends Migration
             $table->string('group_key', 10);
             $table->string('policy', 255);
             $table->string('privilege', 50);
-            $table->bigInteger('privilege_id');
+            $table->bigInteger('privilege_id')->unsigned();
 
             $table->timestamps();
 
