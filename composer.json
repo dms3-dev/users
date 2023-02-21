@@ -16,7 +16,7 @@
     "spatie/laravel-package-tools": "^1.9"
   },
   "require-dev": {
-    "barryvdh/laravel-debugbar": "^3.7",
+    "barryvdh/laravel-debugbar": "^3.7"
   },
   "license": "private",
   "autoload": {
