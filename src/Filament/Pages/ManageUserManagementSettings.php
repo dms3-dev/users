@@ -51,14 +51,16 @@ class ManageUserManagementSettings extends SettingsPage
                     ]),
                     Forms\Components\Fieldset::make('Security')->columns(1)->columnSpan(1)->schema([
                         TextInput::make('reset_password_every_x_days_with_2fa')
-                            ->label('Reset password WITH 2FA every')
+                            ->label('Reset password WITH 2FA')
                             ->columnSpan('full')
+                            ->prefix('every')
                             ->suffix('days')
                             ->numeric()
                             ->required(),
                         TextInput::make('reset_password_every_x_days_without_2fa')
-                            ->label('Reset password WITHOUT 2FA every')
+                            ->label('Reset password WITHOUT 2FA')
                             ->columnSpan('full')
+                            ->prefix('every')
                             ->suffix('days')
                             ->numeric()
                             ->required(),

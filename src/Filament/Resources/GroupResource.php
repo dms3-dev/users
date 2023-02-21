@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Filament\Resources;
 
+use App\Filament\Tables\Actions\ViewAction;
 use Exception;
 use Filament\Forms;
 use Filament\Pages\Actions\DeleteAction;
@@ -75,7 +76,8 @@ class GroupResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()->visible(fn(Group $record) => $record->users_count === 0),
+                ViewAction::make()->color('info'),
             ]);
     }
 
