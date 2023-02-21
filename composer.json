@@ -16,12 +16,19 @@
     "spatie/laravel-package-tools": "^1.9"
   },
   "require-dev": {
-    "barryvdh/laravel-debugbar": "^3.7"
+    "barryvdh/laravel-debugbar": "^3.7",
+    "phpunit/phpunit": "*",
+    "orchestra/testbench": "*",
   },
   "license": "private",
   "autoload": {
     "psr-4": {
       "Mediamouse\\Users\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mediamouse\\Users\\Tests\\": "tests"
     }
   },
   "authors": [
