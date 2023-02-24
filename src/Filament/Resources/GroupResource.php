@@ -2,7 +2,7 @@
 
 namespace Mediamouse\Users\Filament\Resources;
 
-use App\Filament\Tables\Actions\ViewAction;
+use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Exception;
 use Filament\Forms;
 use Filament\Pages\Actions\DeleteAction;
@@ -29,18 +29,18 @@ class GroupResource extends Resource
             ->schema([
 
                 Forms\Components\Grid::make(1)->schema([
-                        Forms\Components\Fieldset::make('Group information')->columns(1)->schema([
-                            TextInput::make('key')
-                                ->unique()
-                                ->columns(1)
-                                ->label('Group key')
-                                ->maxLength('10')
-                                ->required(),
-                            TextInput::make('name')
-                                ->columns(1)
-                                ->label('Group name')
-                                ->maxLength('100')
-                                ->required(),
+                    Forms\Components\Fieldset::make('Group information')->columns(1)->schema([
+                        TextInput::make('key')
+                            ->unique()
+                            ->columns(1)
+                            ->label('Group key')
+                            ->maxLength('10')
+                            ->required(),
+                        TextInput::make('name')
+                            ->columns(1)
+                            ->label('Group name')
+                            ->maxLength('100')
+                            ->required(),
                     ]),
                 ]),
             ]);
@@ -75,7 +75,7 @@ class GroupResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()->color('info'),
                 Tables\Actions\DeleteAction::make()->visible(fn(Group $record) => $record->users_count === 0),
                 ViewAction::make()->color('info'),
             ]);
