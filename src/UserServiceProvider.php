@@ -24,6 +24,8 @@ class UserServiceProvider extends PackageServiceProvider
                 'create_password_resets_table',
                 'create_passwords_table',
                 'create_user_memberof_group_table',
+                'user_management_settings',
+                'add_languages',
             ])
             ;
     }

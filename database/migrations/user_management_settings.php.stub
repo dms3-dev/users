@@ -1,0 +1,26 @@
+<?php
+
+use Spatie\LaravelSettings\Migrations\SettingsMigration;
+
+return new class extends SettingsMigration
+{
+    /**
+     * @throws \Spatie\LaravelSettings\Exceptions\SettingAlreadyExists
+     */
+    public function up(): void
+    {
+        $this->migrator->add('mediamouse-users.password_min_length', 8);
+        $this->migrator->add('mediamouse-users.password_max_length', 20);
+        $this->migrator->add('mediamouse-users.special_characters', true);
+        $this->migrator->add('mediamouse-users.numbers', true);
+        $this->migrator->add('mediamouse-users.capital_letters', true);
+        $this->migrator->add('mediamouse-users.non_capital_letters', true);
+        $this->migrator->add('mediamouse-users.reset_password_every_x_days_with_2fa', 0);
+        $this->migrator->add('mediamouse-users.reset_password_every_x_days_without_2fa', 90);
+        $this->migrator->add('mediamouse-users.max_login_attempts', 10);
+        $this->migrator->add('mediamouse-users.max_failed_login_attempts_per_ip', 20);
+        $this->migrator->add('mediamouse-users.two_fa_MEMBER', ["NONE", "EMAIL"]);
+        $this->migrator->add('mediamouse-users.two_fa_ADMINISTRATOR', ["NONE", "EMAIL"]);
+        $this->migrator->add('mediamouse-users.two_fa_SA', ["NONE", "EMAIL"]);
+    }
+};
