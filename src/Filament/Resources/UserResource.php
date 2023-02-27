@@ -51,7 +51,7 @@ class UserResource extends Resource
                             TextInput::make('email')->required()->email()->maxLength(255),
                         ]),
                         Forms\Components\Fieldset::make('About')->columns(1)->columnSpan(1)->schema([
-                            Forms\Components\Select::make('language.name')
+                            Forms\Components\Select::make('language_iso')
                                 ->label('Language')
                                 ->options(function () {
                                     return Language::query()->where('status', LanguageStatus::ACTIVE->value)->orderBy('sort')->pluck('name', 'iso');
