@@ -30,8 +30,8 @@ class LanguageFactory extends Factory
             'created_at' => $created_at,
             'updated_at' => $updated_at,
 
-//            'iso' => fake()->languageCode,
-//            'name' => fake()->,
+            'iso' => fake()->languageCode,
+            'name' => fake()->name,
         ];
     }
 }

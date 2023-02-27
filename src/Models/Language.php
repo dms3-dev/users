@@ -25,6 +25,11 @@ class Language extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = [
+        'iso',
+        'name',
+    ];
+
     protected $casts = [
         'status' => LanguageStatus::class,
     ];
