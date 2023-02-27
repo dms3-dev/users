@@ -53,6 +53,7 @@ class UserResource extends Resource
                         Forms\Components\Fieldset::make('About')->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Select::make('language_iso')
                                 ->label('Language')
+                                ->required()
                                 ->options(function () {
                                     return Language::query()->where('status', LanguageStatus::ACTIVE->value)->orderBy('sort')->pluck('name', 'iso');
                                 }),
