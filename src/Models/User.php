@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use Mediamouse\Laravel\Models\Model;
+use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
@@ -111,6 +111,15 @@ class User extends Authenticatable
     public function lastLoginAttempt(): HasOne
     {
         return $this->hasOne(LoginAttempt::class)->latestOfMany();
+    }
+
+    public function privileges() {
+        $this->hasManyThrough(GroupHasPrivilege::class, UserMemberOfGroup::class);
+    }
+
+    public function isAllowed(string $policy, PolicyPrivilege $privilege): bool
+    {
+        return true;
     }
 
 

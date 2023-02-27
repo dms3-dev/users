@@ -11,7 +11,15 @@ return new class extends Migration
         Schema::create('group_has_privilege', function (Blueprint $table): void{
             $table->string('group_key', 10);
             $table->string('policy', 255);
-            $table->string('privilege', 50);
+            $table->enum('privilege', [
+                'VIEW_ANY',
+                'VIEW',
+                'CREATE',
+                'UPDATE',
+                'DELETE',
+                'RESTORE',
+                'FORCE_DELETE',
+            ]);
             $table->bigInteger('privilege_id')->unsigned();
 
             $table->timestamps();
