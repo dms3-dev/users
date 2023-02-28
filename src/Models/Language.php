@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Mediamouse\Users\Enums\LanguageStatus;
@@ -20,6 +21,8 @@ use Mediamouse\Laravel\Models\Model;
  */
 class Language extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'iso';
 
     protected $keyType = 'string';

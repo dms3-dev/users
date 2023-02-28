@@ -7,17 +7,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Forms\Components;
 use Mediamouse\Filament\Forms\Components\TextInput;
-use Mediamouse\Filament\Tables\Actions\ViewAction;
-use Mediamouse\Users\Filament\Resources\GroupResource\Pages\CreateLanguage;
-use Mediamouse\Users\Filament\Resources\GroupResource\Pages\EditLanguage;
-use Mediamouse\Users\Filament\Resources\GroupResource\Pages\ListLanguages;
-use Mediamouse\Users\Filament\Resources\GroupResource\Pages\ViewLanguage;
-use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\UserOverviewRelationManager;
 use Mediamouse\Users\Models\Language;
-use PHPUnit\TextUI\XmlConfiguration\Logging\TeamCity;
-use Svg\Tag\Text;
 
 class LanguageResource extends Resource
 {
@@ -34,9 +25,11 @@ class LanguageResource extends Resource
             ->schema([
                 TextInput::make('iso')
                     ->maxLength(2)
+                    ->alpha()
                     ->required(),
                 TextInput::make('name')
                     ->maxLength(20)
+                    ->alpha()
                     ->required(),
             ]);
     }

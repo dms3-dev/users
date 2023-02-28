@@ -2,8 +2,6 @@
 
 namespace Mediamouse\UsersDatabase\Factories;
 
-use App\Models\Project;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Mediamouse\Users\Models\Language;
 
@@ -20,7 +18,7 @@ class LanguageFactory extends Factory
     public function definition(): array
     {
         return [
-            'iso' => fake()->randomLetter(2),
+            'iso' => fake()->randomLetter() . fake()->randomLetter(),
             'name' => fake()->name,
 
         ];
