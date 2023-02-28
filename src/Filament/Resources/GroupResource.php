@@ -33,11 +33,13 @@ class GroupResource extends Resource
                         TextInput::make('key')
                             ->unique()
                             ->columns(1)
+                            ->alphaNum()
                             ->label('Group key')
                             ->maxLength('10')
                             ->required(),
                         TextInput::make('name')
                             ->columns(1)
+                            ->alphaNum()
                             ->label('Group name')
                             ->maxLength('100')
                             ->required(),
