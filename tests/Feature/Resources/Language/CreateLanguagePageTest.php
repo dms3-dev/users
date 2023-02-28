@@ -26,7 +26,8 @@ class CreateLanguagePageTest extends TestCase
 
     protected function setUpPage(): void
     {
-        $this->type = ResourceType::TABLE_ACTION;
+        Language::query()->delete();
+        $this->type = ResourceType::PAGE_ACTION;
         $this->submitAction = 'create';
         $this->modelClass = Language::class;
         $this->liveWireParameters = [];
@@ -34,7 +35,6 @@ class CreateLanguagePageTest extends TestCase
         $this->formDataSet = [
             'iso' => fake()->unique()->languageCode(),
             'name' => fake()->unique()->firstName(),
-
         ];
     }
 
@@ -56,7 +56,7 @@ class CreateLanguagePageTest extends TestCase
 
         $this->submitForm();
 
-        $this->assertTrue(Language::query()->count() === 3);
+        $this->assertTrue(Language::query()->count() === 1);
     }
 
     public function testAfterCreateAnotherLanguageIsCreated() {
@@ -66,7 +66,7 @@ class CreateLanguagePageTest extends TestCase
         $this->submitAction = 'createAnother';
         $this->submitForm();
 
-        $this->assertTrue(Language::query()->count() === 4);
+        $this->assertTrue(Language::query()->count() === 1);
     }
 
 }

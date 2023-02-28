@@ -42,6 +42,7 @@ class LanguageResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('iso')
+                    ->label('ISO')
                     ->searchable()
                     ->toggleable()
                     ->sortable(),

@@ -2,12 +2,14 @@
 
 namespace Mediamouse\Users\Filament\Resources;
 
+use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Exception;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Users\Enums\PolicyPrivilege;
@@ -33,7 +35,6 @@ class GroupResource extends Resource
                 Forms\Components\Grid::make(1)->schema([
                     Forms\Components\Fieldset::make('Group information')->columns(1)->schema([
                         TextInput::make('key')
-                            ->unique()
                             ->columns(1)
                             ->alphaNum()
                             ->label('Group key')
@@ -45,8 +46,20 @@ class GroupResource extends Resource
                             ->label('Group name')
                             ->maxLength('100')
                             ->required(),
-                        Forms\Components\CheckboxList::make('privileges')
-                            ->options(PolicyPrivilege::class)
+                        TableRepeater::make('policies')
+                            ->disableItemMovement()
+                            ->disableItemDeletion()
+                            ->disableItemCreation()
+                            ->defaultItems(Policy::query()->count())
+                            ->columns(2)
+                            ->schema([
+                                TextDisplay::make('policy')
+                                    ->disableLabel(),
+                                Forms\Components\CheckboxList::make('privileges')
+                                    ->options(PolicyPrivilege::class)
+                                    ->disableLabel()
+                                    ->columns(7),
+                            ])
 
                     ]),
                 ]),

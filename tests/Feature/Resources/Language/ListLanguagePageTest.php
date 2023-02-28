@@ -19,7 +19,6 @@ class ListLanguagePageTest extends TestCase
 
     protected function setUpPage($count = 10): void
     {
-
         Language::query()->delete();
 
         $this->records = Language::factory()->count($count)->create();
