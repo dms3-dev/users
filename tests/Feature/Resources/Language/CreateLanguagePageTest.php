@@ -26,7 +26,7 @@ class CreateLanguagePageTest extends TestCase
 
     protected function setUpPage(): void
     {
-        $this->type = ResourceType::PAGE_ACTION;
+        $this->type = ResourceType::TABLE_ACTION;
         $this->submitAction = 'create';
         $this->modelClass = Language::class;
         $this->liveWireParameters = [];
