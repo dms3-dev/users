@@ -18,7 +18,7 @@ abstract class PolicyAbstract {
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAllowed($this->type(), PolicyPrivilege::VIEW_ANY);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::VIEW_ANY);
     }
 
     /**
@@ -29,7 +29,7 @@ abstract class PolicyAbstract {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::VIEW);
         }
-        return $user->isAllowed($this->type(), PolicyPrivilege::VIEW);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::VIEW);
     }
 
     /**
@@ -37,7 +37,7 @@ abstract class PolicyAbstract {
      */
     public function create(User $user): bool
     {
-        return $user->isAllowed($this->type(), PolicyPrivilege::CREATE);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::CREATE);
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class PolicyAbstract {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::UPDATE);
         }
-        return $user->isAllowed($this->type(), PolicyPrivilege::UPDATE);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::UPDATE);
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class PolicyAbstract {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::DELETE);
         }
-        return $user->isAllowed($this->type(), PolicyPrivilege::DELETE);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::DELETE);
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class PolicyAbstract {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::RESTORE);
         }
-        return $user->isAllowed($this->type(), PolicyPrivilege::RESTORE);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::RESTORE);
     }
 
     /**
@@ -81,6 +81,6 @@ abstract class PolicyAbstract {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::FORCE_DELETE);
         }
-        return $user->isAllowed($this->type(), PolicyPrivilege::FORCE_DELETE);
+        return $user->hasPrivilege($this->type(), PolicyPrivilege::FORCE_DELETE);
     }
 }

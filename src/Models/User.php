@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,7 +42,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property Language language
  * @property LoginAttempt lastLoginAttempt
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory;
 
@@ -61,6 +62,7 @@ class User extends Authenticatable
         'role' => UserRole::class,
         'two_factor' => UserTwoFactor::class,
         'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime',
     ];
 
     public function language(): BelongsTo
@@ -117,10 +119,14 @@ class User extends Authenticatable
         $this->hasManyThrough(GroupHasPrivilege::class, UserMemberOfGroup::class);
     }
 
-    public function isAllowed(string $policy, PolicyPrivilege $privilege): bool
+    public function hasPrivilege(string $policy, PolicyPrivilege $privilege): bool
     {
         return true;
     }
 
 
+    public function canAccessFilament(): bool
+    {
+        return true;
+    }
 }

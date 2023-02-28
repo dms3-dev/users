@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Exception;
 use Mediamouse\Users\Enums\LanguageStatus;
@@ -34,12 +35,13 @@ class UserFactory extends Factory
             'created_at' => $created_at,
             'updated_at' => $updated_at,
 
+            'email_verified_at' => Carbon::now(),
+            'phone_verified_at' => Carbon::now(),
             'username' => fake()->company(),
             'name' => fake()->name(),
             'email' => fake()->email(),
             'language_iso' => fake()->randomElement(Language::query()->where('status', LanguageStatus::ACTIVE->value)->pluck('iso')),
             'role' => fake()->randomElement(UserRole::cases())->value,
-            'groups' => [fake()->randomElement(['K1', 'K2', 'K3'])],
             'two_factor' => fake()->randomElement(UserTwoFactor::cases())->value,
             'status' => fake()->randomElement(UserStatus::cases())->value,
 
