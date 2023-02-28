@@ -32,7 +32,7 @@ class CreateLanguagePageTest extends TestCase
         $this->liveWireParameters = [];
         $this->liveWireClass = ListLanguages::class;
         $this->formDataSet = [
-            'iso' => fake()->randomLetter() . fake()->randomLetter(),
+            'iso' => fake()->unique()->languageCode(),
             'name' => fake()->unique()->firstName(),
 
         ];

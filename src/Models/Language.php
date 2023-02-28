@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Laravel\Models\Model;
+use Mediamouse\Users\Factories\LanguageFactory;
 
 /**
  * @property string iso
@@ -52,5 +53,10 @@ class Language extends Model
         $self->save();
 
         return $self;
+    }
+
+    protected static function newFactory(): LanguageFactory
+    {
+        return LanguageFactory::new();
     }
 }

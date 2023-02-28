@@ -11,6 +11,8 @@ use Mediamouse\Users\Models\Language;
  */
 class LanguageFactory extends Factory
 {
+    protected $model = Language::class;
+
     /**
      * Define the model's default state.
      *
@@ -30,8 +32,9 @@ class LanguageFactory extends Factory
             'created_at' => $created_at,
             'updated_at' => $updated_at,
 
-            'iso' => fake()->languageCode,
-            'name' => fake()->name,
+            'iso' => fake()->unique()->languageCode(),
+            'name' => fake()->languageCode() . '_name',
+            'sort' => fake()->randomNumber(),
         ];
     }
 }

@@ -22,7 +22,7 @@ class EditLanguagePageTest extends TestCase
 
     protected function updateRecord() : void
     {
-        $this->record = Language::find($this->record->iso);
+        $this->record = Language::find($this->formDataSet['iso']);
     }
 
     protected function setUpPage(): void
@@ -33,8 +33,8 @@ class EditLanguagePageTest extends TestCase
         $this->liveWireParameters = ['record' => $this->record->iso];
         $this->liveWireClass = ListLanguages::class;
         $this->formDataSet = [
-            'iso' => fake()->randomLetter() . fake()->randomLetter(),
-            'name' => fake()->unique()->name(),
+            'iso' => fake()->unique()->languageCode(),
+            'name' => fake()->unique()->firstName(),
         ];
     }
 
