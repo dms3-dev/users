@@ -2,18 +2,19 @@
 
 namespace Mediamouse\Users\Filament\Resources;
 
-use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Exception;
 use Filament\Forms;
-use Filament\Pages\Actions\DeleteAction;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
+use Mediamouse\Filament\Tables\Actions\ViewAction;
+use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\UserMemberOfGroupRelationManager;
 use Mediamouse\Users\Models\Group;
+use Mediamouse\Users\Models\Policy;
 
 class GroupResource extends Resource
 {
@@ -25,6 +26,7 @@ class GroupResource extends Resource
 
     public static function form(Form $form): Form
     {
+
         return $form
             ->schema([
 
@@ -43,6 +45,9 @@ class GroupResource extends Resource
                             ->label('Group name')
                             ->maxLength('100')
                             ->required(),
+                        Forms\Components\CheckboxList::make('privileges')
+                            ->options(PolicyPrivilege::class)
+
                     ]),
                 ]),
             ]);

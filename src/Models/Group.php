@@ -16,7 +16,7 @@ use Ramsey\Collection\Collection;
  * @property string name
  *
  * @property Collection<User> users
- * @property Collection<Privilege> Privileges
+ * @property Collection<Privilege> privileges
  */
 
 class Group extends Model

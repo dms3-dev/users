@@ -3,9 +3,11 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Mediamouse\Laravel\Models\Model;
+use Mediamouse\Users\Factories\PolicyFactory;
 
 /**
  * @property string policy
@@ -18,6 +20,8 @@ use Mediamouse\Laravel\Models\Model;
 
 class Policy extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'policy';
 
     protected $keyType = 'string';
@@ -26,5 +30,10 @@ class Policy extends Model
     public function privileges(): HasMany
     {
         return $this->hasMany(Privilege::class);
+    }
+
+    protected static function newFactory(): PolicyFactory
+    {
+        return PolicyFactory::new();
     }
 }
