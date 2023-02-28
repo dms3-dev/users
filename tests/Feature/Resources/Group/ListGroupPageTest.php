@@ -82,4 +82,12 @@ class ListGroupPageTest extends TestCase
     public function testViewActionLinksToViewGroup() {
         $this->seeIfTableActionLinksToUrl('view');
     }
+
+    public function testEditActionExists() {
+        $this->seeIfTableHasAction('edit');
+    }
+
+    public function testDeleteActionExists() {
+        $this->seeIfTableHasAction('delete');
+    }
 }

@@ -57,4 +57,12 @@ class ListLanguagePageTest extends TestCase
     public function testNewLanguageActionExists() {
         $this->seeIfPageTableHasAction('create');
     }
+
+    public function testEditActionExists() {
+        $this->seeIfTableHasAction('edit');
+    }
+
+    public function testDeleteActionExists() {
+        $this->seeIfTableHasAction('delete');
+    }
 }
