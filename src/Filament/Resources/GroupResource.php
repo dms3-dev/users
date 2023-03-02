@@ -37,6 +37,7 @@ class GroupResource extends Resource
                         TextInput::make('key')
                             ->columns(1)
                             ->alphaNum()
+                            ->unique(ignoreRecord: true)
                             ->label('Group key')
                             ->maxLength('10')
                             ->required(),

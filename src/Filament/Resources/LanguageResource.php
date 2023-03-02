@@ -25,6 +25,7 @@ class LanguageResource extends Resource
             ->schema([
                 TextInput::make('iso')
                     ->maxLength(2)
+                    ->unique(ignoreRecord: true)
                     ->alpha()
                     ->required(),
                 TextInput::make('name')

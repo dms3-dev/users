@@ -3,7 +3,6 @@
 namespace Mediamouse\Users\Filament\Resources;
 
 use Carbon\Carbon;
-use Closure;
 use Exception;
 use Filament\Forms;
 use Filament\Notifications\Notification;
@@ -11,7 +10,6 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Forms\Components;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Laravel\Support\Arr;
 use Mediamouse\Filament\Forms\Components\TextInput;
@@ -21,8 +19,6 @@ use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Filament\Resources\UserResource\Pages;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\LoginAttemptsRelationManager;
-use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\UserOverviewRelationManager;
-use Mediamouse\Users\Models\Group;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
@@ -48,7 +44,7 @@ class UserResource extends Resource
                         Forms\Components\Fieldset::make('User information')->columns(1)->columnSpan(1)->schema([
                             TextInput::make('username')->required()->maxLength(50),
                             TextInput::make('name')->label('Full name')->required()->maxLength(255),
-                            TextInput::make('email')->required()->email()->maxLength(255),
+                            TextInput::make('email')->required()->email()->maxLength(255)->unique(ignoreRecord: true),
                         ]),
                         Forms\Components\Fieldset::make('About')->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Select::make('language_iso')
