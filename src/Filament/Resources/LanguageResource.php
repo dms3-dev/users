@@ -3,11 +3,15 @@
 namespace Mediamouse\Users\Filament\Resources;
 
 use Exception;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
+use Mediamouse\Filament\Tables\Columns\CheckColumn;
+use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Models\Language;
 
 class LanguageResource extends Resource
@@ -32,6 +36,10 @@ class LanguageResource extends Resource
                     ->maxLength(20)
                     ->alpha()
                     ->required(),
+                Select::make('status')
+                    ->options(LanguageStatus::class)
+                    ->enum(LanguageStatus::class)
+                    ->label('Status')
             ]);
     }
 
@@ -51,7 +59,8 @@ class LanguageResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                CheckColumn::make('status', LanguageStatus::ACTIVE->value, LanguageStatus::INACTIVE->value)
+                    ->label('Status')
                     ->searchable()
                     ->toggleable()
                     ->sortable(),

@@ -32,6 +32,7 @@ class Language extends Model
     protected $fillable = [
         'iso',
         'name',
+        'status',
     ];
 
     protected $casts = [
