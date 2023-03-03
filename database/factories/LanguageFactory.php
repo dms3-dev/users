@@ -3,6 +3,7 @@
 namespace Mediamouse\UsersDatabase\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Models\Language;
 
 /**
@@ -17,10 +18,11 @@ class LanguageFactory extends Factory
      */
     public function definition(): array
     {
+        $iso = fake()->unique()->languageCode();
         return [
-            'iso' => fake()->randomLetter() . fake()->randomLetter(),
-            'name' => fake()->name,
-
+            'iso' => $iso,
+            'name' => $iso . 'name',
+            'status' => fake()->randomElement(LanguageStatus::cases()),
         ];
     }
 }

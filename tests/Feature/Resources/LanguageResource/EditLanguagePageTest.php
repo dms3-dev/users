@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mediamouse\Filament\Testing\Enums\ResourceType;
 use Mediamouse\Filament\Testing\Traits\FilamentForm;
 use Mediamouse\Filament\Testing\Traits\Resource;
+use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Filament\Resources\LanguageResource\Pages\ListLanguages;
 use Mediamouse\Users\Models\Language;
 use Tests\TestCase;
@@ -20,10 +21,10 @@ class EditLanguagePageTest extends TestCase
     use FilamentForm;
     use RefreshDatabase;
 
-//    protected function updateRecord() : void
-//    {
-//        $this->record = Language::query()->first();
-//    }
+    protected function updateRecord() : void
+    {
+        $this->record = Language::query()->first();
+    }
 
     protected function setUpPage(): void
     {
@@ -31,11 +32,15 @@ class EditLanguagePageTest extends TestCase
         $this->type = ResourceType::TABLE_ACTION;
         $this->modelClass = Language::class;
         $this->record = Language::factory()->create();
+        $this->record->status = LanguageStatus::ACTIVE;
         $this->liveWireParameters = ['record' => $this->record->iso];
         $this->liveWireClass = ListLanguages::class;
+
+        $iso = fake()->unique()->languageCode();
         $this->formDataSet = [
-            'iso' => fake()->unique()->languageCode(),
-            'name' => fake()->unique()->firstName(),
+            'iso' => $iso,
+            'name' => $iso . 'name',
+            'status' => fake()->randomElement(LanguageStatus::cases())->value,
         ];
     }
 
@@ -46,10 +51,9 @@ class EditLanguagePageTest extends TestCase
     public function testFieldIsoIsNotTooLong() {                       $this->seeIfFieldIsNotTooLong('iso', 3); }
     public function testFieldNameIsNotTooLong() {                      $this->seeIfFieldIsNotTooLong('name', 21); }
 
-    public function testFieldIsoMustBeAValidIso() {               $this->seeIfFieldIsValidatedBy('iso', 'alpha','123'); }
-    public function testFieldNameMustBeAValidName() {             $this->seeIfFieldIsValidatedBy('name','alpha','123'); }
+    public function testFieldIsoMustBeAValidIso() {               $this->seeIfFieldIsValidatedBy('iso', 'alpha','12'); }
 
-//    public function testFieldIsoCanBeUpdated() {                       $this->seeIfFieldIsUpdated('iso'); }
-//    public function testFieldNameCanBeUpdated() {                           $this->seeIfFieldIsUpdated('name'); }
+    public function testFieldIsoCanBeUpdated() {                      $this->seeIfFieldIsUpdated('iso'); }
+    public function testFieldNameCanBeUpdated() {                           $this->seeIfFieldIsUpdated('name'); }
 
 }

@@ -28,18 +28,21 @@ class LanguageResource extends Resource
         return $form
             ->schema([
                 TextInput::make('iso')
-                    ->maxLength(2)
+                    ->required()
                     ->unique(ignoreRecord: true)
-                    ->alpha()
-                    ->required(),
+                    ->maxLength(2)
+                    ->alpha(),
                 TextInput::make('name')
                     ->maxLength(20)
-                    ->alpha()
                     ->required(),
                 Select::make('status')
-                    ->options(LanguageStatus::class)
+                    ->options([
+                        LanguageStatus::ACTIVE->value => 'Active',
+                        LanguageStatus::INACTIVE->value => 'In Active',
+                    ])
+                    ->default(LanguageStatus::ACTIVE)
                     ->enum(LanguageStatus::class)
-                    ->label('Status')
+                    ->label('Status'),
             ]);
     }
 

@@ -44,7 +44,7 @@ class Language extends Model
         return $this->hasMany(User::class);
     }
 
-    public static function make(string $iso, string $name, LanguageStatus $status = LanguageStatus::ACTIVE, int $sort = 0) {
+    public static function make(string $iso, string $name, LanguageStatus $status = LanguageStatus::ACTIVE, int $sort = 0): static {
         $self = self::findOrCreate($iso);
 
         $self->name = $name;

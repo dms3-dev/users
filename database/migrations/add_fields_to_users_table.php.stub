@@ -26,7 +26,7 @@ return new class extends Migration {
                 ->references('iso')
                 ->on('languages')
                 ->restrictOnDelete()
-                ->restrictOnUpdate();
+                ->cascadeOnUpdate();
         });
     }
 

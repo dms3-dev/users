@@ -6,8 +6,9 @@ use Exception;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Mediamouse\Users\Filament\Resources\LanguageResource;
+use Filament\Resources\Pages\ManageRecords;
 
-class ListLanguages extends ListRecords
+class ListLanguages extends ManageRecords
 {
     protected static string $resource = LanguageResource::class;
 
