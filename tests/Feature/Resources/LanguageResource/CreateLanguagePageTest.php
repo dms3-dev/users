@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Resources\Language;
+namespace Feature\Resources\LanguageResource;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mediamouse\Filament\Testing\Enums\ResourceType;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Resources\Group;
+namespace Feature\Resources\GroupResource;
 
 use Filament\Forms\Components\Group;
 use Illuminate\Foundation\Testing\RefreshDatabase;

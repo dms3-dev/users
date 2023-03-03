@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediamouse\Users\Tests\Feature\Resources\User;
+namespace Mediamouse\Users\Tests\Feature\Resources\UserResource;
 
 use App\Filament\Resources\CustomerResource;
 use App\Filament\Resources\CustomerResource\Pages\ListCustomers;

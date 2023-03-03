@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Resources\Language;
+namespace Feature\Resources\LanguageResource;
 
 use Mediamouse\Filament\Testing\Traits\FilamentTable;
 use Mediamouse\Filament\Testing\Traits\ResourcePage;

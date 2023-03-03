@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\Resources\Group;
+namespace Feature\Resources\GroupResource;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mediamouse\Filament\Testing\Traits\FilamentTable;

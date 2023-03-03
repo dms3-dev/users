@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediamouse\Users\Tests\Feature\Resources\User;
+namespace Mediamouse\Users\Tests\Feature\Resources\UserResource;
 
 use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Enums\UserRole;
