@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace Mediamouse\Users\Tests\Feature\Resources\UserResource;
 
@@ -28,7 +28,7 @@ class EditUserPageTest extends TestCase
 
     protected function updateRecord() : void
     {
-        $this->record = User::find($this->record->id);
+        $this->record = User::query()->first();
     }
 
     private function createGroup($id) : void {
@@ -44,8 +44,7 @@ class EditUserPageTest extends TestCase
         $this->createGroup('K2');
         $this->createGroup('K3');
 
-
-        $this->record = User::factory()->create();
+        $this->record = User::query()->first();
         $this->modelClass = User::class;
         $this->url = UserResource::getUrl('edit', ['record' => User::factory()->create()]);
         $this->liveWireParameters = ['record' => $this->record->id];
@@ -72,9 +71,9 @@ class EditUserPageTest extends TestCase
 
     public function testFieldGroupsIsNotRequired() {                        $this->seeIfFieldIsNotRequired('groups'); }
 
-    public function testFieldUserNameIsNotTooLong() {                       $this->seeIfFieldIsNotToLong('username', 51); }
-    public function testFieldNameIsNotTooLong() {                           $this->seeIfFieldIsNotToLong('name', 256); }
-    public function testFieldEmailIsNotTooLong() {                          $this->seeIfFieldIsNotToLong('email', 256); }
+    public function testFieldUserNameIsNotTooLong() {                       $this->seeIfFieldIsNotTooLong('username', 51); }
+    public function testFieldNameIsNotTooLong() {                           $this->seeIfFieldIsNotTooLong('name', 256); }
+    public function testFieldEmailIsNotTooLong() {                          $this->seeIfFieldIsNotTooLong('email', 256); }
 
     public function testFieldEmailMustBeAValidEmailAddress() {              $this->seeIfFieldIsValidatedBy('email', 'email', fake()->text(100)); }
     public function testFieldTwoFactorMustBeAValidTwoFactor() {             $this->seeIfFieldIsValidatedBy('two_factor', Enum::class, 'abc'); }

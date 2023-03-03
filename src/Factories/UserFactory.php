@@ -10,12 +10,15 @@ use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Models\Language;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Mediamouse\Users\Models\User>
  */
 class UserFactory extends Factory
 {
+    protected $model = User::class;
+
     /**
      * Define the model's default state.
      *

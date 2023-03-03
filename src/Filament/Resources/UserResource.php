@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources;
 
 use Carbon\Carbon;
+use Closure;
 use Exception;
 use Filament\Forms;
 use Filament\Notifications\Notification;
@@ -11,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
+use Mediamouse\Laravel\Livewire\Request;
 use Mediamouse\Laravel\Support\Arr;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\LanguageStatus;
@@ -18,6 +20,9 @@ use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Filament\Resources\UserResource\Pages;
+use Mediamouse\Users\Filament\Resources\UserResource\Pages\CreateUser;
+use Mediamouse\Users\Filament\Resources\UserResource\Pages\EditUser;
+use Mediamouse\Users\Filament\Resources\UserResource\Pages\ViewUser;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\LoginAttemptsRelationManager;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
@@ -76,12 +81,44 @@ class UserResource extends Resource
                                         app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
                                         app(UserManagementSettings::class)->two_fa_SA
                                     )))
-//                                        ->options(UserTwoFactor::class)
+                                        ->rules([
+                                            function (CreateUser|ViewUser|EditUser $livewire) {
+                                                return function (string $attribute, $value, Closure $fail) use ($livewire) {
+                                                    $role = Request::hasUpdatedValue('data.role', $livewire->record?->role->value);
+                                                    $allowed_values = [];
+                                                    switch($role) {
+                                                        case UserRole::NONE->value :
+                                                            $allowed_values = UserTwoFactor::options();
+                                                            break;
+                                                        case UserRole::MEMBER->value :
+                                                            $allowed_values = app(UserManagementSettings::class)->two_fa_MEMBER;
+                                                            break;
+                                                        case UserRole::ADMINISTRATOR->value :
+                                                            $allowed_values = app(UserManagementSettings::class)->two_fa_ADMINISTRATOR;
+                                                            break;
+                                                        case UserRole::SA->value :
+                                                            $allowed_values = app(UserManagementSettings::class)->two_fa_SA;
+                                                            break;
+                                                    }
+
+                                                    if(!in_array($value, $allowed_values)) {
+                                                        $the_values = implode(', ' , $allowed_values);
+//                                                        $fail("For {$role} only {$the_values} are allowed!");
+                                                    }
+
+
+                                                };
+                                            },
+                                    ])
                                     ->required(),
                                 Forms\Components\Select::make('status')
                                     ->label('Account status')
                                     ->enum(UserStatus::class)
-                                    ->options(UserStatus::class)
+                                    ->options([
+                                        UserStatus::ACTIVE->value => 'Active',
+                                        UserStatus::INACTIVE->value => 'In Active',
+                                        UserStatus::LOCKED->value => 'Locked',
+                                    ])
                                     ->required()
                             ]),
                         ]),

@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Exception;
+use Mediamouse\Users\Enums\LanguageStatus;
 use Mediamouse\Users\Models\Language;
 
 /**
@@ -35,6 +36,7 @@ class LanguageFactory extends Factory
             'iso' => fake()->unique()->languageCode(),
             'name' => fake()->languageCode() . '_name',
             'sort' => fake()->randomNumber(),
+            'status' => fake()->randomElement(LanguageStatus::cases()),
         ];
     }
 }

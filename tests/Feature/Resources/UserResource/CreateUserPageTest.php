@@ -39,6 +39,7 @@ class CreateUserPageTest extends TestCase
 
     protected function setUpPage(): void
     {
+        User::query()->delete();
         $this->createGroup('K1');
         $this->createGroup('K2');
         $this->createGroup('K3');
@@ -53,7 +54,7 @@ class CreateUserPageTest extends TestCase
             'name' => fake()->name(),
             'email' => fake()->email(),
             'language_iso' => fake()->randomElement(Language::query()->where('status', LanguageStatus::ACTIVE->value)->pluck('iso')),
-            'role' => fake()->randomElement(UserRole::cases())->value,
+            'role' => UserRole::NONE->value,
             'groups' => [fake()->randomElement(['K1', 'K2', 'K3'])],
             'two_factor' => fake()->randomElement(UserTwoFactor::cases())->value,
             'status' => fake()->randomElement(UserStatus::cases())->value,
@@ -71,16 +72,16 @@ class CreateUserPageTest extends TestCase
 
     public function testFieldGroupsIsNotRequired() {                        $this->seeIfFieldIsNotRequired('groups'); }
 
-    public function testFieldUserNameIsNotTooLong() {                       $this->seeIfFieldIsNotToLong('username', 51); }
-    public function testFieldNameIsNotTooLong() {                           $this->seeIfFieldIsNotToLong('name', 256); }
-    public function testFieldEmailIsNotTooLong() {                          $this->seeIfFieldIsNotToLong('email', 256); }
+    public function testFieldUserNameIsNotTooLong() {                       $this->seeIfFieldIsNotTooLong('username', 51); }
+    public function testFieldNameIsNotTooLong() {                           $this->seeIfFieldIsNotTooLong('name', 256); }
+    public function testFieldEmailIsNotTooLong() {                          $this->seeIfFieldIsNotTooLong('email', 256); }
 
     public function testFieldEmailMustBeAValidEmailAddress() {              $this->seeIfFieldIsValidatedBy('email', 'email', fake()->text(100)); }
     public function testFieldTwoFactorMustBeAValidTwoFactor() {             $this->seeIfFieldIsValidatedBy('two_factor', Enum::class, 'abc'); }
     public function testFieldStatusMustBeAValidStatus() {                   $this->seeIfFieldIsValidatedBy('status', Enum::class, 'abc'); }
     public function testFieldRoleMustBeAValidStatus() {                     $this->seeIfFieldIsValidatedBy('role', Enum::class, 'abc'); }
 
-    public function testFieldUserNameCanBeUpdated() {                       $this->seeIfFieldIsUpdated('username'); }
+    public function testFieldUsernameCanBeUpdated() {                       $this->seeIfFieldIsUpdated('username'); }
     public function testFieldNameCanBeUpdated() {                           $this->seeIfFieldIsUpdated('name'); }
     public function testFieldEmailCanBeUpdated() {                          $this->seeIfFieldIsUpdated('email'); }
     public function testFieldLanguageIsoCanBeUpdated() {                    $this->seeIfFieldIsUpdated('language_iso'); }
@@ -92,15 +93,16 @@ class CreateUserPageTest extends TestCase
         $this->actingAs($this->getActor());
         $this->setUpPage();
 
+        $count = User::query()->count();
         $this->submitForm();
 
-        $this->assertTrue(User::query()->count() === 2);
+        $this->assertTrue(User::query()->count() === $count + 1);
+        $this->updateRecord();
     }
 
     public function testAfterSubmitRedirectToViewUser() {
         $this->actingAs($this->getActor());
         $this->setUpPage();
-
 
         $this
             ->submitForm()
@@ -111,10 +113,11 @@ class CreateUserPageTest extends TestCase
         $this->actingAs($this->getActor());
         $this->setUpPage();
 
+        $count = User::query()->count();
         $this->submitAction = 'createAnother';
         $this->submitForm();
 
-        $this->assertTrue(User::query()->count() === 2);
+        $this->assertTrue(User::query()->count() === $count + 1);
     }
 
     public function testAfterCreateAnotherNoRedirection() {

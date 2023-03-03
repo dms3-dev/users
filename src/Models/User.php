@@ -11,12 +11,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\HasApiTokens;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Mediamouse\Users\Factories\UserFactory;
 
 /**
  * @property int id
@@ -45,6 +48,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements FilamentUser
 {
     use HasFactory;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'username',
@@ -63,6 +69,11 @@ class User extends Authenticatable implements FilamentUser
         'two_factor' => UserTwoFactor::class,
         'email_verified_at' => 'datetime',
         'phone_verified_at' => 'datetime',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     public function language(): BelongsTo
@@ -128,5 +139,10 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessFilament(): bool
     {
         return true;
+    }
+
+    protected static function newFactory()
+    {
+        return UserFactory::new();
     }
 }
