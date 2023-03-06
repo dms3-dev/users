@@ -87,8 +87,7 @@ class GroupResource extends Resource
                 Tables\Columns\TextColumn::make('users_count')
                     ->counts('users')
                     ->label('Amount of users')
-                    ->toggleable()
-                    ->sortable(),
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created on')
                     ->toggleable()

@@ -31,7 +31,7 @@ class CreateGroupPageTest extends TestCase
         $this->liveWireParameters = [];
         $this->liveWireClass = GroupResource\Pages\CreateGroup::class;
         $this->formDataSet = [
-            'key' => fake()->randomLetter() . fake()->randomNumber() . fake()->randomLetter(),
+            'key' => fake()->randomLetter() . fake()->randomLetter(),
             'name' => fake()->unique()->word(),
         ];
     }
@@ -42,11 +42,11 @@ class CreateGroupPageTest extends TestCase
     public function testFieldKeyIsNotTooLong() {    $this->seeIfFieldIsNotToLong('key', 11); }
     public function testFieldNameIsNotTooLong() {          $this->seeIfFieldIsNotToLong('name', 101); }
 
-    public function testFieldKeyMustBeAValidKey() {          $this->seeIfFieldIsValidatedBy('key', 'alphaNum', '@#$'); } // Werkt niet
-    public function testFieldNameMustBeAValidName() {     $this->seeIfFieldIsValidatedBy('name', 'alphaNum', '@#$'); } // Werkt niet
+    public function testFieldKeyMustBeAValidKey() {          $this->seeIfFieldIsValidatedBy('key', 'alphaNum', '@#$'); }
+    public function testFieldNameMustBeAValidName() {     $this->seeIfFieldIsValidatedBy('name', 'alphaNum', '@#$'); }
 
     public function testFieldKeyCanBeUpdated() {    $this->seeIfFieldIsUpdated('key'); }
-//    public function testFieldNameCanBeUpdated() {          $this->seeIfFieldIsUpdated('name'); } // Werkt niet
+    public function testFieldNameCanBeUpdated() {          $this->seeIfFieldIsUpdated('name'); }
 
     public function testAfterSubmitGroupIsCreated() {
         $this->actingAs($this->getActor());

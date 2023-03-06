@@ -39,6 +39,8 @@ class CreateUserPageTest extends TestCase
 
     protected function setUpPage(): void
     {
+        Language::make('nl', 'Nederlands');
+        Language::make('en', 'English');
         User::query()->delete();
         $this->createGroup('K1');
         $this->createGroup('K2');

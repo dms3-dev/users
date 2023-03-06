@@ -64,14 +64,11 @@ class LanguageResource extends Resource
                     ->sortable(),
                 CheckColumn::make('status', LanguageStatus::ACTIVE->value, LanguageStatus::INACTIVE->value)
                     ->label('Status')
-                    ->searchable()
                     ->toggleable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('users_count')
                     ->counts('users')
-                    ->searchable()
-                    ->toggleable()
-                    ->sortable(),
+                    ->toggleable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

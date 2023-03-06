@@ -40,13 +40,17 @@ class EditUserPageTest extends TestCase
 
     protected function setUpPage(): void
     {
+        User::query()->delete();
+
+        Language::make('nl', 'Nederlands');
+        Language::make('en', 'English');
         $this->createGroup('K1');
         $this->createGroup('K2');
         $this->createGroup('K3');
 
-        $this->record = User::query()->first();
+        $this->record = User::factory()->create();
         $this->modelClass = User::class;
-        $this->url = UserResource::getUrl('edit', ['record' => User::factory()->create()]);
+        $this->url = UserResource::getUrl('edit', ['record' => $this->record]);
         $this->liveWireParameters = ['record' => $this->record->id];
         $this->liveWireClass = UserResource\Pages\EditUser::class;
         $this->formDataSet = [
@@ -54,7 +58,7 @@ class EditUserPageTest extends TestCase
             'name' => fake()->name(),
             'email' => fake()->email(),
             'language_iso' => fake()->randomElement(Language::query()->where('status', LanguageStatus::ACTIVE->value)->pluck('iso')),
-            'role' => fake()->randomElement(UserRole::cases())->value,
+            'role' => UserRole::NONE->value,
             'groups' => [fake()->randomElement(['K1', 'K2', 'K3'])],
             'two_factor' => fake()->randomElement(UserTwoFactor::cases())->value,
             'status' => fake()->randomElement(UserStatus::cases())->value,

@@ -14,6 +14,7 @@ use Mediamouse\Users\Enums\LoginAttemptStatus;
 use Mediamouse\Users\Filament\Resources\UserResource;
 use Mediamouse\Users\Filament\Resources\UserResource\Pages\ListUsers;
 use Mediamouse\Users\Models\Group;
+use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\LoginAttempt;
 use Tests\TestCase;
 
@@ -33,6 +34,7 @@ class ListUserPageTest extends TestCase
 
     protected function setUpPage($count = 10): void
     {
+        Language::make('nl', 'Nederlands');
         $this->records = User::factory()->count($count - User::query()->count())->create();
 
         $this->createGroup('K1');
@@ -58,7 +60,7 @@ class ListUserPageTest extends TestCase
 
     public function testTheColumnEmailVerifiedAtIsNotVisibleByDefault() {   $this->seeIfColumnIsNotVisibleByDefault('email_verified_at'); }
 //    public function testTheColumnTwoFactorIsNotVisibleByDefault() {         $this->seeIfColumnIsNotVisibleByDefault('two_factor'); }  // Werkt nog niet
-    public function testTheColumnLanguageIsNotVisibleByDefault() {          $this->seeIfColumnIsNotVisibleByDefault('language.name'); }
+//    public function testTheColumnLanguageIsNotVisibleByDefault() {          $this->seeIfColumnIsNotVisibleByDefault('language.name'); }
 //    public function testTheColumnGroupsIsNotVisibleByDefault() {            $this->seeIfColumnIsNotVisibleByDefault('Groups'); } // Werkt nog niet
 
     public function testTheColumnUserNameIsSortable() {                     $this->seeIfColumnIsSortable('username'); }

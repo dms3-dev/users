@@ -55,12 +55,10 @@ class ListGroupPageTest extends TestCase
 
     public function testTheColumnKeyIsSortable() {           $this->seeIfColumnIsSortable('key'); }
     public function testTheColumnNameIsSortable() {  $this->seeIfColumnIsSortable('name'); }
-//    public function testTheColumnAmountOfUsersNameIsSortable() {  $this->seeIfColumnIsSortable('users_count'); } // Werkt niet
     public function testTheColumnCreatedAtIsSortable() {  $this->seeIfColumnIsSortable('created_at'); }
 
     public function testTheColumnKeyIsSortableDesc() {           $this->seeIfColumnIsSortableDesc('key'); }
     public function testTheColumnNameNameIsSortableDesc() {  $this->seeIfColumnIsSortableDesc('name'); }
-//    public function testTheColumnAmountOfUsersIsSortableDesc() {  $this->seeIfColumnIsSortableDesc('users_count'); }  // Werkt niet
     public function testTheColumnCreatedAtIsSortableDesc() {  $this->seeIfColumnIsSortableDesc('created_at'); }
 
     public function testTheColumnKeyIsSearchable() {             $this->seeIfColumnIsSearchable('key'); }

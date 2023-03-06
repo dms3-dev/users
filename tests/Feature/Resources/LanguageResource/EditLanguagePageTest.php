@@ -23,12 +23,16 @@ class EditLanguagePageTest extends TestCase
 
     protected function updateRecord() : void
     {
-        $this->record = Language::query()->first();
+        try {
+            $this->record->refresh();
+        }
+        catch(\Throwable $e) {
+            $this->record = Language::query()->where('iso', $this->formDataSet['iso'])->first();
+        }
     }
 
     protected function setUpPage(): void
     {
-        Language::query()->delete();
         $this->type = ResourceType::TABLE_ACTION;
         $this->modelClass = Language::class;
         $this->record = Language::factory()->create();

@@ -18,6 +18,11 @@ class EditGroupPageTest extends TestCase
     use FilamentForm;
     use RefreshDatabase;
 
+    protected function updateRecord(): void
+    {
+        $this->record = Group::query()->first();
+    }
+
     protected function setUpPage(): void
     {
         $this->record = new Group();
@@ -29,7 +34,7 @@ class EditGroupPageTest extends TestCase
         $this->liveWireParameters = ['record' => $this->record->key];
         $this->liveWireClass = GroupResource\Pages\EditGroup::class;
         $this->formDataSet = [
-            'key' => fake()->randomLetter() . fake()->randomNumber() . fake()->randomLetter(),
+            'key' => fake()->randomLetter() . fake()->randomLetter(),
             'name' => fake()->unique()->word(),
         ];
     }
@@ -40,11 +45,11 @@ class EditGroupPageTest extends TestCase
     public function testFieldKeyIsNotTooLong() {    $this->seeIfFieldIsNotToLong('key', 11); }
     public function testFieldNameIsNotTooLong() {          $this->seeIfFieldIsNotToLong('name', 101); }
 
-    public function testFieldKeyMustBeAValidKey() {          $this->seeIfFieldIsValidatedBy('key', 'alphaNum', '@$%'); } // Werkt niet
-    public function testFieldNameMustBeAValidName() {     $this->seeIfFieldIsValidatedBy('name', 'alphaNum', '@$%'); } // Werkt niet
+    public function testFieldKeyMustBeAValidKey() {          $this->seeIfFieldIsValidatedBy('key', 'alphaNum', '@$%'); }
+    public function testFieldNameMustBeAValidName() {     $this->seeIfFieldIsValidatedBy('name', 'alphaNum', '@$%'); }
 
-//    public function testFieldKeyCanBeUpdated() {    $this->seeIfFieldIsUpdated('key'); } // Werkt niet
-//    public function testFieldNameCanBeUpdated() {          $this->seeIfFieldIsUpdated('name'); } // Werkt niet
+    public function testFieldKeyCanBeUpdated() {    $this->seeIfFieldIsUpdated('key'); }
+    public function testFieldNameCanBeUpdated() {          $this->seeIfFieldIsUpdated('name'); }
 
 
     public function testAfterSubmitRedirectToViewGroup() {
