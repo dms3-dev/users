@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediamouse\Users\Filament\Http\Livewire\Auth;
+namespace Mediamouse\Users\Http\Livewire\Auth;
 
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
@@ -23,9 +23,9 @@ class Login extends Component implements HasForms
     use InteractsWithForms;
     use WithRateLimiting;
 
-    public string $email = '';
+    public ?string $email = '';
 
-    public string $password = '';
+    public ?string $password = '';
 
     public bool $remember = false;
 
@@ -38,6 +38,9 @@ class Login extends Component implements HasForms
         $this->form->fill();
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function authenticate(): ?LoginResponse
     {
         try {
@@ -84,9 +87,10 @@ class Login extends Component implements HasForms
         ];
     }
 
+    /** @noinspection PhpUndefinedMethodInspection */
     public function render(): View
     {
-        return view('filament::login')
+        return view('mediamouse-users::login')
             ->layout('filament::components.layouts.card', [
                 'title' => __('filament::login.title'),
             ]);

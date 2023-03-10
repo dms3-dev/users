@@ -13,6 +13,7 @@ class UserServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('mediamouse-users')
+            ->hasViews()
             ->hasMigrations([
                 'create_languages_table',
                 'add_fields_to_users_table',
