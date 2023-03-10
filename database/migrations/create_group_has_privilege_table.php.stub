@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('group_has_privilege', function (Blueprint $table): void{
+        Schema::create('group_has_policies', function (Blueprint $table): void{
             $table->string('group_key', 10);
             $table->string('policy', 255);
             $table->enum('privilege', [
@@ -50,6 +50,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('group_has_privilege');
+        Schema::dropIfExists('group_has_policies');
     }
 };

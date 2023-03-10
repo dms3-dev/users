@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Filament\Resources;
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Exception;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -14,8 +15,10 @@ use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Filament\Resources\GroupResource\Pages;
+use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\GroupHasPolicyRelationManager;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\UserMemberOfGroupRelationManager;
 use Mediamouse\Users\Models\Group;
+use Mediamouse\Users\Models\GroupHasPolicy;
 use Mediamouse\Users\Models\Policy;
 
 class GroupResource extends Resource
@@ -31,9 +34,6 @@ class GroupResource extends Resource
 
         return $form
             ->schema([
-
-                Forms\Components\Grid::make(1)->schema([
-                    Forms\Components\Fieldset::make('Group information')->columns(1)->schema([
                         TextInput::make('key')
                             ->columns(1)
                             ->alphaNum()
@@ -47,23 +47,27 @@ class GroupResource extends Resource
                             ->label('Group name')
                             ->maxLength('100')
                             ->required(),
-                        TableRepeater::make('policies')
-                            ->disableItemMovement()
-                            ->disableItemDeletion()
-                            ->disableItemCreation()
-                            ->defaultItems(Policy::query()->count())
-                            ->columns(2)
-                            ->schema([
-                                TextDisplay::make('policy')
-                                    ->disableLabel(),
-                                Forms\Components\CheckboxList::make('privileges')
-                                    ->options(PolicyPrivilege::class)
-                                    ->disableLabel()
-                                    ->columns(7),
-                            ])
+//                        Repeater::make('policies')
+//                            ->relationship()
+//                            ->disableLabel()
+//                            ->disableItemMovement()
+//                            ->disableItemDeletion()
+//                            ->disableItemCreation()
+//                            ->grid(4)
+//                            ->columns(2)
+//                            ->columnSpan('full')
+//                            ->itemLabel(fn (array $state): ?string => Policy::query()->where('policy', $state['policy'])->value('name'))
+//                            ->schema([
+//                                Forms\Components\Toggle::make('view_any'),
+//                                Forms\Components\Toggle::make('view'),
+//                                Forms\Components\Toggle::make('create'),
+//                                Forms\Components\Toggle::make('update'),
+//                                Forms\Components\Toggle::make('delete'),
+//                                Forms\Components\Toggle::make('restore'),
+//                                Forms\Components\Toggle::make('force_delete'),
+//                                Forms\Components\Toggle::make('reorder'),
+//                            ])
 
-                    ]),
-                ]),
             ]);
     }
 
@@ -94,10 +98,11 @@ class GroupResource extends Resource
                     ->sortable(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make()->color('info'),
-                Tables\Actions\DeleteAction::make()->visible(fn(Group $record) => $record->users_count === 0),
                 ViewAction::make()->color('info'),
+                Tables\Actions\DeleteAction::make()->visible(fn(Group $record) =>
+                                        $record->users_count === 0 || ($record->users_count === null && $record->users()->count() === 0)
+                                ),
+
             ]);
     }
 
@@ -105,7 +110,7 @@ class GroupResource extends Resource
     {
         return [
             'index' => Pages\ListGroups::route('/'),
-            'create' => Pages\CreateGroup::route('/create'),
+//            'create' => Pages\CreateGroup::route('/create'),
             'edit' => Pages\EditGroup::route('/{record}/edit'),
             'view' => Pages\ViewGroup::route('/{record}/view'),
         ];
@@ -114,7 +119,8 @@ class GroupResource extends Resource
     public static function getRelations(): array
     {
         return [
-            UserMemberOfGroupRelationManager::class
+            GroupHasPolicyRelationManager::class,
+            UserMemberOfGroupRelationManager::class,
         ];
     }
 

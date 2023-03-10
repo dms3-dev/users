@@ -2,6 +2,8 @@
 
 namespace Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 
+use Filament\Resources\Form;
+use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Filament\Resources\GroupResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -16,7 +18,7 @@ class ViewGroup extends ViewRecord
 
     protected function getTitle(): string
     {
-        return "Group `{$this->record->name}`";
+        return "Group {$this->record->name} ({$this->record->key})";
     }
 
     /**
@@ -26,6 +28,7 @@ class ViewGroup extends ViewRecord
     {
         return [
             Actions\EditAction::make(),
+            Actions\DeleteAction::make(),
         ];
     }
 
@@ -40,6 +43,13 @@ class ViewGroup extends ViewRecord
     {
         return [
         ];
+    }
+
+    protected function form(Form $form): Form
+    {
+        return $form->schema([
+
+        ]);
     }
 
 }

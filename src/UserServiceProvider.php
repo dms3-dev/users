@@ -19,7 +19,7 @@ class UserServiceProvider extends PackageServiceProvider
                 'create_groups_table',
                 'create_policies_table',
                 'create_privileges_table',
-                'create_group_has_privilege_table',
+                'create_group_has_policies_table',
                 'create_login_attempts_table',
                 'create_password_resets_table',
                 'create_passwords_table',

@@ -127,7 +127,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function privileges() {
-        $this->hasManyThrough(GroupHasPrivilege::class, UserMemberOfGroup::class);
+        $this->hasManyThrough(GroupHasPolicy::class, UserMemberOfGroup::class);
     }
 
     public function hasPrivilege(string $policy, PolicyPrivilege $privilege): bool

@@ -36,7 +36,7 @@ class Privilege extends Model
 
     public function privileges() : BelongsToMany
     {
-        return $this->belongsToMany(Group::class, 'group_has_privilege', 'privilege_id', 'group_key');
+        return $this->belongsToMany(Group::class, 'group_has_policies', 'privilege_id', 'group_key');
     }
 
     protected static function newFactory(): PrivilegeFactory

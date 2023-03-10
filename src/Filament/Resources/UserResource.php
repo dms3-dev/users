@@ -103,7 +103,7 @@ class UserResource extends Resource
 
                                                     if(!in_array($value, $allowed_values)) {
                                                         $the_values = implode(', ' , $allowed_values);
-//                                                        $fail("For {$role} only {$the_values} are allowed!");
+                                                        $fail("For {$role} only {$the_values} are allowed!");
                                                     }
 
 
@@ -213,9 +213,9 @@ class UserResource extends Resource
                             ->icon('heroicon-o-check')
                             ->send();
                     }),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ViewAction::make(),
+//                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 ViewAction::make()->color('info'),
             ]);
     }

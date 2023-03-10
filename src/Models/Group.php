@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Mediamouse\Laravel\Models\Model;
 use Ramsey\Collection\Collection;
 
@@ -15,7 +16,7 @@ use Ramsey\Collection\Collection;
  * @property string name
  *
  * @property Collection<User> users
- * @property Collection<Privilege> privileges
+ * @property Collection<GroupHasPolicy> policies
  */
 class Group extends Model
 {
@@ -37,10 +38,49 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'user_memberof_group', 'group_key', 'user_id');
     }
 
-    public function privileges(): BelongsToMany
+    public function policies(): HasMany
     {
-        return $this->belongsToMany(Privilege::class, 'group_has_privilege', 'group_key', 'privilege_id');
+        return $this->hasMany(GroupHasPolicy::class);
     }
 
+    /** @noinspection PhpIncompatibleReturnTypeInspection */
+    public function findPolicy(Policy|string $policy): ?GroupHasPolicy {
+        $policy_name = is_string($policy) ? $policy : $policy->policy;
+
+        return $this->hasMany(GroupHasPolicy::class)->where('policy', $policy_name)->first();
+    }
+
+    public function findOrCreatePolicy(Policy|string $policy): GroupHasPolicy
+    {
+        $group_policy = $this->findPolicy($policy);
+
+        if($group_policy === null) {
+            $group_policy = new GroupHasPolicy();
+
+            $group_policy->group_key = $this->key;
+            $group_policy->policy = is_string($policy) ? $policy : $policy->policy;
+
+            $group_policy->save();
+        }
+
+        return $group_policy;
+    }
+
+    public function createPolicies() : static {
+        foreach(Policy::query()->get() as $policy) {
+            $this->findOrCreatePolicy($policy);
+        }
+
+        return $this;
+    }
+
+    public function save(array $options = []): bool
+    {
+        $result = parent::save($options);
+
+        $this->createPolicies();
+
+        return $result;
+    }
 
 }
