@@ -4,6 +4,8 @@ namespace Mediamouse\Users;
 
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
+use Livewire\Livewire;
+use Mediamouse\Users\Http\Livewire\Auth\Login;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -34,6 +36,8 @@ class UserServiceProvider extends PackageServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Livewire::component(Login::getName(), Login::class);
 
         Filament::serving(function () {
             Filament::registerNavigationGroups([

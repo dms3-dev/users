@@ -82,8 +82,8 @@ class Login extends Component implements HasForms
                 ->label(__('filament::login.fields.password.label'))
                 ->password()
                 ->required(),
-            Checkbox::make('remember')
-                ->label(__('filament::login.fields.remember.label')),
+//            Checkbox::make('remember')
+//                ->label(__('filament::login.fields.remember.label')),
         ];
     }
 
