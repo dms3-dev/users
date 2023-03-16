@@ -11,9 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
+use Mediamouse\Mails\Models\Mail;
+use Mediamouse\Mails\Models\MailTemplate;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
@@ -119,6 +122,58 @@ class User extends Authenticatable implements FilamentUser
             })
             ;
         return $result;
+    }
+
+    private function createChallengeCode() {
+        return rand(100000, 999999);
+    }
+
+    private function sendLoginChallengeTemplate(): MailTemplate
+    {
+        /** @var MailTemplate $template */
+        $template = MailTemplate::find('UserLoginChallenge');
+
+        if(!$template) {
+            /** @var MailTemplate $template */
+            MailTemplate::insert([
+                'key' => 'UserLoginChallenge',
+                'name' => 'Login Challenge',
+            ]);
+            $template = MailTemplate::find('UserLoginChallenge');
+
+            $template->addField('name', 'Full name', test: 'John Doe', tooltip: 'The Full name of the person trying to login');
+            $template->addField('email', 'Email address', test: 'john.doe@example.com', tooltip: 'The Email address of the person trying to login');
+            $template->addField('ip', 'IP address', test: '212.126.25.38', tooltip: 'The IP-Address of the person trying to login');
+            $template->addField('challenge', 'Challenge code', test: '682495', tooltip: 'Challenge code required for login');
+
+            $template->createTranslations();
+
+        }
+
+        return $template;
+    }
+
+    public function sendLoginChallenge(): string {
+        $challenge = $this->createChallengeCode();
+
+        $template = $this->sendLoginChallengeTemplate();
+
+        $template->translation($this->language_iso)->send(
+            $this->mailableAddress(),
+            [
+                'name' => $this->name,
+                'email' => $this->email,
+                'ip' => request()->server('REMOTE_ADDR'),
+                'challenge' => $challenge,
+            ]
+        );
+
+        return (string) $challenge;
+    }
+
+    public function mailableAddress(): Address
+    {
+        return new Address($this->email, $this->name);
     }
 
     public function lastLoginAttempt(): HasOne

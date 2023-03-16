@@ -5,17 +5,30 @@ namespace Mediamouse\Users;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Livewire\Livewire;
+use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\Login;
 use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Filament\PluginServiceProvider;
 
-class UserServiceProvider extends PackageServiceProvider
+class UserServiceProvider extends PluginServiceProvider
 {
+
+    protected array $resources = [
+        \Mediamouse\Users\Filament\Resources\GroupResource::class,
+        \Mediamouse\Users\Filament\Resources\UserResource::class,
+        \Mediamouse\Users\Filament\Resources\LanguageResource::class,
+    ];
+
+    protected array $pages = [
+        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
+    ];
+
     public function configurePackage(Package $package): void
     {
         $package
             ->name('mediamouse-users')
             ->hasViews()
+            ->hasRoutes('web')
             ->hasMigrations([
                 'create_languages_table',
                 'add_fields_to_users_table',
@@ -38,6 +51,7 @@ class UserServiceProvider extends PackageServiceProvider
         parent::boot();
 
         Livewire::component(Login::getName(), Login::class);
+        Livewire::component(Challenge::getName(), Challenge::class);
 
         Filament::serving(function () {
             Filament::registerNavigationGroups([

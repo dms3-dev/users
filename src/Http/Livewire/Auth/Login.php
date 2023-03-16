@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Http\Livewire\Auth;
 
+use App\Models\User;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Facades\Filament;
@@ -14,6 +15,8 @@ use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Filament\Http\Livewire\Auth\Login as BaseLogin;
+use Mediamouse\Users\Http\Responses\Auth\TwoFactorLoginResponse;
 
 /**
  * @property ComponentContainer $form
@@ -24,10 +27,9 @@ class Login extends Component implements HasForms
     use WithRateLimiting;
 
     public ?string $email = '';
-
     public ?string $password = '';
 
-    public bool $remember = false;
+    private ?User $user = null;
 
     public function mount(): void
     {
@@ -36,13 +38,59 @@ class Login extends Component implements HasForms
         }
 
         $this->form->fill();
+
+        if(session()->get('login.error') === 'timeout') {
+            session()->put([
+                'login.error' => null
+            ]);
+
+            throw ValidationException::withMessages([
+                'email' => 'Timeout',
+            ]);
+        }
     }
 
     /**
      * @throws ValidationException
      */
-    public function authenticate(): ?LoginResponse
+    public function authenticate()
     {
+        $this->loginRateLimit();
+
+        $data = $this->form->getState();
+
+        if(!$this->validateUserLogin($data['email'], $data['password'])) {
+
+            throw ValidationException::withMessages([
+                'email' => __('filament::login.messages.failed'),
+            ]);
+        }
+
+        request()->session()->put([
+            'login.email' => $data['email'],
+            'login.challenge' => $this->getUser()->sendLoginChallenge(),
+        ]);
+
+        return app(TwoFactorLoginResponse::class);
+
+    }
+
+    private function validateUserLogin(string $email, string $password) {
+        if(Filament::auth()->validate([
+            'email' => $email,
+            'password' => $password,
+        ])) {
+            $this->user = User::query()->where('email', $email)->first();
+            return true;
+        }
+        return false;
+    }
+
+    private function getUser(): ?User {
+        return $this->user;
+    }
+
+    private function loginRateLimit() {
         try {
             $this->rateLimit(5);
         } catch (TooManyRequestsException $exception) {
@@ -54,20 +102,6 @@ class Login extends Component implements HasForms
             ]);
         }
 
-        $data = $this->form->getState();
-
-        if (! Filament::auth()->attempt([
-            'email' => $data['email'],
-            'password' => $data['password'],
-        ], $data['remember'])) {
-            throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.failed'),
-            ]);
-        }
-
-        session()->regenerate();
-
-        return app(LoginResponse::class);
     }
 
     protected function getFormSchema(): array
@@ -82,8 +116,6 @@ class Login extends Component implements HasForms
                 ->label(__('filament::login.fields.password.label'))
                 ->password()
                 ->required(),
-//            Checkbox::make('remember')
-//                ->label(__('filament::login.fields.remember.label')),
         ];
     }
 
