@@ -6,6 +6,8 @@ use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Livewire\Livewire;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
+use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
+use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
 use Mediamouse\Users\Http\Livewire\Auth\Login;
 use Spatie\LaravelPackageTools\Package;
 use Filament\PluginServiceProvider;
@@ -28,7 +30,7 @@ class UserServiceProvider extends PluginServiceProvider
         $package
             ->name('mediamouse-users')
             ->hasViews()
-            ->hasRoutes('web')
+//            ->hasRoutes('web')
             ->hasMigrations([
                 'create_languages_table',
                 'add_fields_to_users_table',
@@ -52,6 +54,8 @@ class UserServiceProvider extends PluginServiceProvider
 
         Livewire::component(Login::getName(), Login::class);
         Livewire::component(Challenge::getName(), Challenge::class);
+        Livewire::component(ForgotPassword::getName(), ForgotPassword::class);
+        Livewire::component(EnterNewPassword::getName(), EnterNewPassword::class);
 
         Filament::serving(function () {
             Filament::registerNavigationGroups([

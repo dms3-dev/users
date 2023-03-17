@@ -1,7 +1,17 @@
-<form wire:submit.prevent="authenticate" class="space-y-8">
-    {{ $this->form }}
+<div>
+    @if(strlen($message_text) > 0)
+        <div class="mb-2 {{ $message_class }}">
+            {{ $message_text }}
+        </div>
+    @endif
+    <form wire:submit.prevent="authenticate" class="space-y-8">
+        {{ $this->form }}
 
-    <x-filament::button type="submit" form="authenticate" class="w-full">
-        {{ __('filament::login.buttons.submit.label') }}
-    </x-filament::button>
-</form>
+        <x-filament::button type="submit" form="authenticate" class="w-full">
+            {{ __('filament::login.buttons.submit.label') }}
+        </x-filament::button>
+    </form>
+    <div class="mt-1 text-center">
+        <a wire:click="forgotPassword" class="text-primary-500 cursor-pointer">Forgot password?</a>
+    </div>
+</div>

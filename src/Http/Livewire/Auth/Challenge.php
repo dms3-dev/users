@@ -31,9 +31,13 @@ class Challenge extends Component implements HasForms
 
     public ?string $message = '';
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function mount(): void
     {
-        if (Filament::auth()->check()) {
+        if (Filament::auth()->check() || !$this->getUser()) {
             redirect()->intended(Filament::getUrl());
         }
 

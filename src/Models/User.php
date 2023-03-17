@@ -14,15 +14,21 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Mediamouse\Mails\Enums\MailPriority;
 use Mediamouse\Mails\Models\Mail;
 use Mediamouse\Mails\Models\MailTemplate;
+use Mediamouse\Users\Enums\PasswordResetStatus;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Mediamouse\Users\Factories\UserFactory;
+use Mediamouse\Users\MailTemplate\LoginChallengeMail;
+use Mediamouse\Users\MailTemplate\PasswordIsChangedMail;
+use Mediamouse\Users\MailTemplate\ResetPasswordLinkMail;
 
 /**
  * @property int id
@@ -124,39 +130,31 @@ class User extends Authenticatable implements FilamentUser
         return $result;
     }
 
-    private function createChallengeCode() {
-        return rand(100000, 999999);
+    private function createChallengeCode() : string {
+        return (string) rand(100000, 999999);
     }
 
-    private function sendLoginChallengeTemplate(): MailTemplate
+    private function createPasswordLink() : string {
+        $token = new PasswordReset();
+
+        $token->user_id = $this->id;
+        $token->token = Str::uuid();
+        $token->status = PasswordResetStatus::ACTIVE;
+
+        $token->save();
+
+        return env('APP_URL', request()->schemeAndHttpHost()) . config('filament.path') . '/reset-password/' . $token->token;
+    }
+
+    public function mailableAddress(): Address
     {
-        /** @var MailTemplate $template */
-        $template = MailTemplate::find('UserLoginChallenge');
-
-        if(!$template) {
-            /** @var MailTemplate $template */
-            MailTemplate::insert([
-                'key' => 'UserLoginChallenge',
-                'name' => 'Login Challenge',
-            ]);
-            $template = MailTemplate::find('UserLoginChallenge');
-
-            $template->addField('name', 'Full name', test: 'John Doe', tooltip: 'The Full name of the person trying to login');
-            $template->addField('email', 'Email address', test: 'john.doe@example.com', tooltip: 'The Email address of the person trying to login');
-            $template->addField('ip', 'IP address', test: '212.126.25.38', tooltip: 'The IP-Address of the person trying to login');
-            $template->addField('challenge', 'Challenge code', test: '682495', tooltip: 'Challenge code required for login');
-
-            $template->createTranslations();
-
-        }
-
-        return $template;
+        return new Address($this->email, $this->name);
     }
 
     public function sendLoginChallenge(): string {
         $challenge = $this->createChallengeCode();
 
-        $template = $this->sendLoginChallengeTemplate();
+        $template = LoginChallengeMail::template();
 
         $template->translation($this->language_iso)->send(
             $this->mailableAddress(),
@@ -165,15 +163,38 @@ class User extends Authenticatable implements FilamentUser
                 'email' => $this->email,
                 'ip' => request()->server('REMOTE_ADDR'),
                 'challenge' => $challenge,
-            ]
-        );
+            ],
+            MailPriority::URGENT);
 
-        return (string) $challenge;
+        return $challenge;
     }
 
-    public function mailableAddress(): Address
-    {
-        return new Address($this->email, $this->name);
+    public function sendForgotPasswordLink(): void {
+        $link = $this->createPasswordLink();
+
+        $template = ResetPasswordLinkMail::template();
+
+        $template->translation($this->language_iso)->send(
+            $this->mailableAddress(),
+            [
+                'name' => $this->name,
+                'email' => $this->email,
+                'ip' => request()->server('REMOTE_ADDR'),
+                'link' => $link,
+            ],
+            MailPriority::URGENT);
+    }
+
+    public function informPasswordHasBeenResetted(): void {
+        $template = PasswordIsChangedMail::template();
+
+        $template->translation($this->language_iso)->send(
+            $this->mailableAddress(),
+            [
+                'name' => $this->name,
+                'email' => $this->email,
+                'ip' => request()->server('REMOTE_ADDR'),
+            ]);
     }
 
     public function lastLoginAttempt(): HasOne

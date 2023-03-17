@@ -16,22 +16,19 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Filament\Http\Livewire\Auth\Login as BaseLogin;
-use Mediamouse\Users\Http\Responses\Auth\Login\ForgotPasswordResponse;
+use Mediamouse\Users\Http\Responses\Auth\Login\ResetPasswordLinkSendResponse;
 use Mediamouse\Users\Http\Responses\Auth\TwoFactorLoginResponse;
 
 /**
  * @property ComponentContainer $form
  */
-class Login extends Component implements HasForms
+class EnterNewPassword extends Component implements HasForms
 {
     use InteractsWithForms;
     use WithRateLimiting;
 
     public ?string $email = '';
     public ?string $password = '';
-
-    public string $message_text = '';
-    public string $message_class = '';
 
     private ?User $user = null;
 
@@ -43,57 +40,23 @@ class Login extends Component implements HasForms
 
         $this->form->fill();
 
-        switch(session()->get('login.error')) {
-            case 'timeout' :
-                $this->message_class = 'text-danger-500';
-                $this->message_text = 'Timeout.';
-                break;
-            case 'forgot-password' :
-                $this->message_text = 'If your email address is known in our system a link to reset your password has been sent.';
-                break;
-        }
-
-        session()->put('login.error', null);
     }
 
     /**
      * @throws ValidationException
      */
-    public function authenticate()
+    public function forgotPassword()
     {
         $this->loginRateLimit();
 
         $data = $this->form->getState();
 
-        if(!$this->validateUserLogin($data['email'], $data['password'])) {
+        /** @var User $user */
+        $user = User::query()->where('email', $data['email']);
+        $user?->sendForgotPasswordLink();
 
-            throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.failed'),
-            ]);
-        }
+        return app(ResetPasswordLinkSendResponse::class);
 
-        request()->session()->put([
-            'login.email' => $data['email'],
-            'login.challenge' => $this->getUser()->sendLoginChallenge(),
-        ]);
-
-        return app(TwoFactorLoginResponse::class);
-
-    }
-
-    public function forgotPassword() {
-        return app(ForgotPasswordResponse::class);
-    }
-
-    private function validateUserLogin(string $email, string $password) {
-        if(Filament::auth()->validate([
-            'email' => $email,
-            'password' => $password,
-        ])) {
-            $this->user = User::query()->where('email', $email)->first();
-            return true;
-        }
-        return false;
     }
 
     private function getUser(): ?User {
@@ -120,11 +83,6 @@ class Login extends Component implements HasForms
             TextInput::make('email')
                 ->label(__('filament::login.fields.email.label'))
                 ->email()
-                ->required()
-                ->autocomplete(),
-            TextInput::make('password')
-                ->label(__('filament::login.fields.password.label'))
-                ->password()
                 ->required(),
         ];
     }
@@ -132,7 +90,7 @@ class Login extends Component implements HasForms
     /** @noinspection PhpUndefinedMethodInspection */
     public function render(): View
     {
-        return view('mediamouse-users::login')
+        return view('mediamouse-users::forgot-password')
             ->layout('filament::components.layouts.card', [
                 'title' => __('filament::login.title'),
             ]);

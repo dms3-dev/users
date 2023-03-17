@@ -8,7 +8,9 @@ use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\PasswordResetStatus;
 
 /**
+ * @property Carbon user_id
  * @property Carbon created_at
+ * @property Carbon updated_at
  * @property string token
  *
  * @property PasswordResetStatus status
