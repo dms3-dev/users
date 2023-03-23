@@ -298,7 +298,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function passwordNeedsReset() : ?PasswordReset {
-        return $this->createPasswordResetToken();
+//        return $this->createPasswordResetToken();
         if($this->needsResetInDays() === 0) return null;
 
         /** @var Carbon $date */
