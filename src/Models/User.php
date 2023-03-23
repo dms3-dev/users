@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Composer\CaBundle\CaBundle;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Mediamouse\Mails\Enums\MailPriority;
 use Mediamouse\Mails\Models\Mail;
 use Mediamouse\Mails\Models\MailTemplate;
+use Mediamouse\Users\Enums\LoginAttemptStatus;
 use Mediamouse\Users\Enums\PasswordResetStatus;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
@@ -29,6 +31,7 @@ use Mediamouse\Users\Factories\UserFactory;
 use Mediamouse\Users\MailTemplate\LoginChallengeMail;
 use Mediamouse\Users\MailTemplate\PasswordIsChangedMail;
 use Mediamouse\Users\MailTemplate\ResetPasswordLinkMail;
+use Mediamouse\Users\Settings\UserManagementSettings;
 
 /**
  * @property int id
@@ -134,16 +137,23 @@ class User extends Authenticatable implements FilamentUser
         return (string) rand(100000, 999999);
     }
 
-    private function createPasswordLink() : string {
+    private function createPasswordResetToken() : PasswordReset
+    {
         $token = new PasswordReset();
 
         $token->user_id = $this->id;
         $token->token = Str::uuid();
-        $token->status = PasswordResetStatus::ACTIVE;
+        $token->status = PasswordResetStatus::CREATED;
 
         $token->save();
 
-        return env('APP_URL', request()->schemeAndHttpHost()) . config('filament.path') . '/reset-password/' . $token->token;
+        return $token;
+    }
+
+    private function createPasswordLink() : string {
+        $token = $this->createPasswordResetToken();
+
+        return env('APP_URL', request()->schemeAndHttpHost()) . '/' . config('filament.path') . '/reset-password/' . $token->token;
     }
 
     public function mailableAddress(): Address
@@ -151,8 +161,21 @@ class User extends Authenticatable implements FilamentUser
         return new Address($this->email, $this->name);
     }
 
-    public function sendLoginChallenge(): string {
-        $challenge = $this->createChallengeCode();
+    public function createLoginAttempt(): LoginAttempt {
+        $attempt = new LoginAttempt();
+
+        $attempt->user_id = $this->id;
+        $attempt->status = LoginAttemptStatus::CREATED;
+        $attempt->ip = request()->ip();
+        $attempt->token = $this->createChallengeCode();
+
+        $attempt->save();
+
+        return $attempt;
+    }
+
+    public function sendLoginChallenge(LoginAttempt $attempt): static {
+        $challenge = $attempt->token;
 
         $template = LoginChallengeMail::template();
 
@@ -166,7 +189,11 @@ class User extends Authenticatable implements FilamentUser
             ],
             MailPriority::URGENT);
 
-        return $challenge;
+        $attempt->status = LoginAttemptStatus::PENDING_2FA;
+        $attempt->save();
+
+
+        return $this;
     }
 
     public function sendForgotPasswordLink(): void {
@@ -185,7 +212,40 @@ class User extends Authenticatable implements FilamentUser
             MailPriority::URGENT);
     }
 
-    public function informPasswordHasBeenResetted(): void {
+    public function sendFailedLoginAttempt(): void {
+        $nr_of_attempts = $this->nrOfFailedAttemptsFrom(request()->ip());
+
+        $template = ResetPasswordLinkMail::template();
+
+        if(in_array($nr_of_attempts, [1,5]) || ($nr_of_attempts > 1 && $nr_of_attempts % 10 === 0)) {
+            $template->translation($this->language_iso)->send(
+                $this->mailableAddress(),
+                [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'ip' => request()->server('REMOTE_ADDR'),
+                    'count' => $nr_of_attempts,
+                ]);
+        }
+        if($nr_of_attempts > 1 && $nr_of_attempts % 10 === 0) {
+            $template->translation($this->language_iso)->send(
+                new Address('alert@mediamouse.nl', 'MediaMouse Alert'),
+                [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'ip' => request()->server('REMOTE_ADDR'),
+                    'count' => $nr_of_attempts,
+                ]);
+        }
+    }
+
+
+    private function nrOfFailedAttemptsFrom(?string $ip)
+    {
+
+    }
+
+    public function informPasswordHasBeenReset(): void {
         $template = PasswordIsChangedMail::template();
 
         $template->translation($this->language_iso)->send(
@@ -211,14 +271,43 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
+    /**
+     * @return bool
+     *
+     * @todo Make sure user can be blocked
+     */
+    public function isBlocked() : bool {
+        return $this->status !== UserStatus::ACTIVE;
+    }
 
     public function canAccessFilament(): bool
     {
-        return true;
+        return in_array($this->role, [UserRole::ADMINISTRATOR, UserRole::SA]) && !$this->isBlocked();
     }
 
     protected static function newFactory()
     {
         return UserFactory::new();
+    }
+
+    private function needsResetInDays(): int {
+        if($this->two_factor == UserTwoFactor::NONE) {
+            return app(UserManagementSettings::class)->reset_password_every_x_days_without_2fa;
+        }
+        return app(UserManagementSettings::class)->reset_password_every_x_days_with_2fa;
+    }
+
+    public function passwordNeedsReset() : ?PasswordReset {
+        return $this->createPasswordResetToken();
+        if($this->needsResetInDays() === 0) return null;
+
+        /** @var Carbon $date */
+        $date = $this->passwords()->latest()->first()?->created_at ?? $this->created_at;
+
+        if($date->addDays($this->needsResetInDays()) > Carbon::now()) {
+            return null;
+        }
+
+        return $this->createPasswordResetToken();
     }
 }

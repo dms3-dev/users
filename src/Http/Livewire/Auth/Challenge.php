@@ -12,10 +12,14 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Mediamouse\Users\Enums\LoginAttemptStatus;
+use Mediamouse\Users\Http\Responses\Auth\Login\EnterNewPasswordResponse;
 use Mediamouse\Users\Http\Responses\Auth\Login\LoginResponse;
 use Mediamouse\Users\Http\Responses\Auth\Login\TimeOutResponse;
+use Mediamouse\Users\Models\LoginAttempt;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -39,6 +43,7 @@ class Challenge extends Component implements HasForms
     {
         if (Filament::auth()->check() || !$this->getUser()) {
             redirect()->intended(Filament::getUrl());
+            return;
         }
 
         $this->form->fill();
@@ -64,8 +69,9 @@ class Challenge extends Component implements HasForms
         }
 
         $data = $this->form->getState();
+        $user = $this->getUser();
 
-        if(!$this->getUser()) {
+        if(!$user) {
             return app(TimeOutResponse::class);
         }
 
@@ -77,6 +83,15 @@ class Challenge extends Component implements HasForms
 
         Filament::auth()->login($this->getUser());
 
+        $attempt = $this->getLoginAttempt();
+        $attempt->status = LoginAttemptStatus::SUCCESSFUL;
+        $attempt->save();
+
+        $token = $user->passwordNeedsReset();
+        if($token !== null) {
+            session()->put('login.reset-token', $token->token);
+            return app(EnterNewPasswordResponse::class);
+        }
         return app(LoginResponse::class);
     }
 
@@ -113,7 +128,15 @@ class Challenge extends Component implements HasForms
      */
     private function getUser(): ?User {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return User::query()->where('email', session()->get('login.email'))->first();
+        return User::find(session()->get('login.id'));
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function getLoginAttempt(): ?LoginAttempt {
+        return LoginAttempt::find(session()->get('login.attempt'));
     }
 
     /**

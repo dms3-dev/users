@@ -36,6 +36,7 @@ class ForgotPassword extends Component implements HasForms
     {
         if (Filament::auth()->check()) {
             redirect()->intended(Filament::getUrl());
+            return;
         }
 
         $this->form->fill();
@@ -52,8 +53,10 @@ class ForgotPassword extends Component implements HasForms
         $data = $this->form->getState();
 
         /** @var User $user */
-        $user = User::query()->where('email', $data['email']);
+        $user = User::query()->where('email', $data['email'])->first();
         $user?->sendForgotPasswordLink();
+
+
 
         return app(ResetPasswordLinkSendResponse::class);
 

@@ -8,18 +8,22 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Mediamouse\Users\Enums\LanguageStatus;
-use Mediamouse\Users\Enums\UserRole;
-use Mediamouse\Users\Enums\UserStatus;
-use Mediamouse\Users\Enums\UserTwoFactor;
-use Mediamouse\Users\Models\Language;
-use Mediamouse\Users\Models\User;
 
 class LoginAttemptsRelationManager extends RelationManager
 {
     protected static string $relationship = 'loginAttempts';
 
     protected static ?string $recordTitleAttribute = 'loginAttempt';
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'created_at';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
+    }
 
     public static function form(Form $form): Form
     {

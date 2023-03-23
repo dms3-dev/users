@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\PasswordResetStatus;
+use App\Models\User as AppUser;
 
 /**
  * @property Carbon user_id
@@ -15,7 +16,7 @@ use Mediamouse\Users\Enums\PasswordResetStatus;
  *
  * @property PasswordResetStatus status
  *
- * @property User user
+ * @property AppUser user
  */
 
 class PasswordReset extends Model
@@ -26,6 +27,6 @@ class PasswordReset extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(AppUser::class);
     }
 }

@@ -16,8 +16,16 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use Filament\Http\Livewire\Auth\Login as BaseLogin;
+use Mediamouse\Users\Enums\LoginAttemptStatus;
+use Mediamouse\Users\Enums\UserTwoFactor;
+use Mediamouse\Users\Filament\Pages\ManageUserManagementSettings;
+use Mediamouse\Users\Http\Responses\Auth\Login\EnterNewPasswordResponse;
 use Mediamouse\Users\Http\Responses\Auth\Login\ForgotPasswordResponse;
 use Mediamouse\Users\Http\Responses\Auth\TwoFactorLoginResponse;
+use Mediamouse\Users\Models\LoginAttempt;
+use Mediamouse\Users\Settings\UserManagementSettings;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @property ComponentContainer $form
@@ -39,6 +47,7 @@ class Login extends Component implements HasForms
     {
         if (Filament::auth()->check()) {
             redirect()->intended(Filament::getUrl());
+            return;
         }
 
         $this->form->fill();
@@ -46,10 +55,14 @@ class Login extends Component implements HasForms
         switch(session()->get('login.error')) {
             case 'timeout' :
                 $this->message_class = 'text-danger-500';
-                $this->message_text = 'Timeout.';
+                $this->message_text = 'Your session is expired please try again';
+                break;
+            case 'invalid-link' :
+                $this->message_class = 'text-danger-500';
+                $this->message_text = 'The link used to reset your password is not valid';
                 break;
             case 'forgot-password' :
-                $this->message_text = 'If your email address is known in our system a link to reset your password has been sent.';
+                $this->message_text = 'If your email address is known in our system a link to reset your password has been sent';
                 break;
         }
 
@@ -61,54 +74,81 @@ class Login extends Component implements HasForms
      */
     public function authenticate()
     {
-        $this->loginRateLimit();
-
         $data = $this->form->getState();
 
-        if(!$this->validateUserLogin($data['email'], $data['password'])) {
+        /** @var User $user */
+        $user = User::query()->where('email', $data['email'])->first();
+        $password = $data['password'];
 
-            throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.failed'),
-            ]);
+        $attempt = $user->createLoginAttempt();
+
+        $this->loginRateLimit();
+        $this->validateUserLoginOrFail($user, $password, $attempt);
+
+        if($user->two_factor == UserTwoFactor::NONE) {
+            $this->loginUser($user, $attempt);
+
+            $token = $user->passwordNeedsReset();
+            if($token !== null) {
+                session()->put('login.reset-token', $token->token);
+                return app(EnterNewPasswordResponse::class);
+            }
+            return app(LoginResponse::class);
         }
 
-        request()->session()->put([
-            'login.email' => $data['email'],
-            'login.challenge' => $this->getUser()->sendLoginChallenge(),
-        ]);
+        $user->sendLoginChallenge($attempt);
+        $this->writeToSession($user, $attempt);
 
         return app(TwoFactorLoginResponse::class);
-
     }
 
     public function forgotPassword() {
         return app(ForgotPasswordResponse::class);
     }
 
-    private function validateUserLogin(string $email, string $password) {
-        if(Filament::auth()->validate([
-            'email' => $email,
+    /**
+     * @throws ValidationException
+     */
+    private function validateUserLoginOrFail(User $user, string $password, LoginAttempt $attempt): true {
+        if($user->isBlocked()) {
+            $attempt->status = LoginAttemptStatus::FAILED;
+            $attempt->save();
+
+            throw ValidationException::withMessages([
+                'email' => __('filament::login.messages.failed'),
+            ]);
+
+        }
+        if(!Filament::auth()->validate([
+            'email' => $user->email,
             'password' => $password,
         ])) {
-            $this->user = User::query()->where('email', $email)->first();
-            return true;
+            $attempt->status = LoginAttemptStatus::FAILED;
+            $attempt->save();
+
+            $user->sendFailedLoginAttempt();
+
+            throw ValidationException::withMessages([
+                'email' => __('filament::login.messages.failed'),
+            ]);
         }
-        return false;
+
+        return true;
     }
 
     private function getUser(): ?User {
         return $this->user;
     }
 
+    /**
+     * @throws ValidationException
+     */
     private function loginRateLimit() {
         try {
-            $this->rateLimit(5);
+            $this->rateLimit(app(UserManagementSettings::class)->max_failed_login_attempts_per_ip, env('APP_ENV') == 'local' ? 10 : 1800);
         } catch (TooManyRequestsException $exception) {
             throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.throttled', [
-                    'seconds' => $exception->secondsUntilAvailable,
-                    'minutes' => ceil($exception->secondsUntilAvailable / 60),
-                ]),
+                'email' => 'Too many login attempts. Please try again later.',
             ]);
         }
 
@@ -136,5 +176,23 @@ class Login extends Component implements HasForms
             ->layout('filament::components.layouts.card', [
                 'title' => __('filament::login.title'),
             ]);
+    }
+
+    private function writeToSession(User $user, LoginAttempt $attempt)
+    {
+        request()->session()->put([
+            'login.id' => $user->id,
+            'login.email' => $user->email,
+            'login.challenge' => $attempt->token,
+            'login.attempt' => $attempt->id,
+        ]);
+    }
+
+    private function loginUser(User $user, LoginAttempt $attempt)
+    {
+        Filament::auth()->login($user);
+
+        $attempt->status = LoginAttemptStatus::SUCCESSFUL;
+        $attempt->save();
     }
 }

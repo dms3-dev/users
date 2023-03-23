@@ -30,7 +30,7 @@ class UserServiceProvider extends PluginServiceProvider
         $package
             ->name('mediamouse-users')
             ->hasViews()
-//            ->hasRoutes('web')
+            ->hasRoutes('web')
             ->hasMigrations([
                 'create_languages_table',
                 'add_fields_to_users_table',

@@ -17,6 +17,8 @@ use Mediamouse\Users\Enums\LoginAttemptStatus;
  * @property string ip
  * @property string token
  *
+ * @property int id
+ *
  * @property User user
  */
 
