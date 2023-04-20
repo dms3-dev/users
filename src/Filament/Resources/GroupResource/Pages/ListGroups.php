@@ -13,7 +13,9 @@ class ListGroups extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->color('success')
+                ->icon('heroicon-s-plus'),
         ];
     }
 }

@@ -27,7 +27,8 @@ class ViewGroup extends ViewRecord
     protected function getActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\EditAction::make()
+                ->color('warning'),
             Actions\DeleteAction::make(),
         ];
     }
