@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Cassandra\Type\UserType;
 use Composer\CaBundle\CaBundle;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Collection;
@@ -263,12 +264,28 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function privileges() {
-        $this->hasManyThrough(GroupHasPolicy::class, UserMemberOfGroup::class);
+        return $this->hasManyThrough(GroupHasPolicy::class, UserMemberOfGroup::class, 'user_id', 'group_key', 'id', 'group_key');
     }
 
-    public function hasPrivilege(string $policy, PolicyPrivilege $privilege): bool
+    public function hasPrivilege(string $policy_class, PolicyPrivilege $privilege): bool
     {
-        return true;
+        if($this->role === UserRole::SA) return true;
+        $value = $privilege->value;
+        $policy = $this->privileges()->where('policy', $policy_class)->first();
+        if($policy === null && $this->groups()->count() > 0) {
+            try {
+                $newPolicy = new Policy();
+                $newPolicy->policy = $policy_class;
+                $newPolicy->name = $policy_class;
+                $newPolicy->save();
+            } catch(\Throwable $e) { }
+
+            /** @var Group $group */
+            foreach($this->groups as $group) {
+                $group->createPolicies();
+            }
+        }
+        return $policy !== null && $policy?->$value;
     }
 
     /**

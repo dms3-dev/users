@@ -20,6 +20,7 @@ use Mediamouse\Laravel\Models\Model;
  *
  * @property int id
  *
+ * @property Policy policyObject
  * @property Carbon created_at
  * @property Carbon updated_at
  */
@@ -31,4 +32,8 @@ class GroupHasPolicy extends Model
     protected $fillable = [
         'policy',
     ];
+
+    public function policyObject() {
+        return $this->belongsTo(Policy::class, 'policy', 'policy');
+    }
 }

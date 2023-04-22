@@ -5,6 +5,7 @@ namespace Mediamouse\Users;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Livewire\Livewire;
+use Mediamouse\Users\Console\Commands\UpdatePolicies;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
@@ -22,7 +23,7 @@ class UserServiceProvider extends PluginServiceProvider
     ];
 
     protected array $pages = [
-        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
+        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class, 
     ];
 
     public function configurePackage(Package $package): void
@@ -31,6 +32,7 @@ class UserServiceProvider extends PluginServiceProvider
             ->name('mediamouse-users')
             ->hasViews()
             ->hasRoutes('web')
+            ->hasCommands([UpdatePolicies::class])
             ->hasMigrations([
                 'create_languages_table',
                 'add_fields_to_users_table',

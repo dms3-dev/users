@@ -41,8 +41,9 @@ class GroupHasPolicyRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('policy')
+
                     ->label('Name')
-//                    ->formatStateUsing(fn(String $state) => Policy::find($state)->name)
+                    ->formatStateUsing(fn(String $state, GroupHasPolicy $record) => strlen($record->policyObject?->name) > 0 ? $record->policyObject?->name : $state)
                     ->searchable(),
                 Tables\Columns\CheckboxColumn::make('view_any'),
                 Tables\Columns\CheckboxColumn::make('view'),

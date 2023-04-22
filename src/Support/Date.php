@@ -26,12 +26,12 @@ class Date {
 
     public static function userFormat(): string
     {
-        return 'M d Y H:i:s';
+        return 'M jS, Y H:i:s';
     }
 
     public static function userDateFormat(): string
     {
-        return 'M d Y';
+        return 'M jS, Y';
     }
 
     public static function userTimeFormat(): string
@@ -41,12 +41,12 @@ class Date {
 
     public static function userDateTimeFormat(): string
     {
-        return 'M d Y H:i:s';
+        return 'M jS, Y H:i:s';
     }
 
     public static function globalFormat(): string
     {
-        return 'M d Y H:i:s';
+        return 'M jS, Y H:i:s';
     }
 
     public static function globalTimeFormat(): string
@@ -56,11 +56,11 @@ class Date {
 
     public static function globalDateFormat(): string
     {
-        return 'M d Y';
+        return 'M jS, Y';
     }
 
     public static function globalDateTimeFormat(): string
     {
-        return 'M d Y H:i:s';
+        return 'M jS, Y H:i:s';
     }
 }

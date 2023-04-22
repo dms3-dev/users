@@ -9,8 +9,14 @@ use Mediamouse\Users\Models\Contracts\HasUserDependentPolicy;
 
 abstract class PolicyAbstract {
 
+    protected string $name = '';
+
     protected function type(): string {
         return get_class($this);
+    }
+
+    public function name(): string {
+        return $this->name;
     }
 
     /**
