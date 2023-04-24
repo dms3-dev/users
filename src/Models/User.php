@@ -3,8 +3,6 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
-use Cassandra\Type\UserType;
-use Composer\CaBundle\CaBundle;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,8 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Mediamouse\Mails\Enums\MailPriority;
-use Mediamouse\Mails\Models\Mail;
-use Mediamouse\Mails\Models\MailTemplate;
 use Mediamouse\Users\Enums\LoginAttemptStatus;
 use Mediamouse\Users\Enums\PasswordResetStatus;
 use Mediamouse\Users\Enums\PolicyPrivilege;

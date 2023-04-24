@@ -6,6 +6,7 @@ use App\Models\User;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Models\Contracts\HasUserDependentPolicy;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 abstract class PolicyAbstract {
 
@@ -30,7 +31,7 @@ abstract class PolicyAbstract {
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Model $model): bool
+    public function view(User $user, Model|Authenticatable $model): bool
     {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::VIEW);
@@ -60,7 +61,7 @@ abstract class PolicyAbstract {
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Model $model): bool
+    public function delete(User $user, Model|Authenticatable $model): bool
     {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::DELETE);
@@ -71,7 +72,7 @@ abstract class PolicyAbstract {
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Model $model): bool
+    public function restore(User $user, Model|Authenticatable $model): bool
     {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::RESTORE);
@@ -82,7 +83,7 @@ abstract class PolicyAbstract {
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Model $model): bool
+    public function forceDelete(User $user, Model|Authenticatable $model): bool
     {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::FORCE_DELETE);
