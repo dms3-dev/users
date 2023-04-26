@@ -23,7 +23,7 @@ class UserServiceProvider extends PluginServiceProvider
     ];
 
     protected array $pages = [
-        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class, 
+        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
     ];
 
     public function configurePackage(Package $package): void
@@ -60,11 +60,11 @@ class UserServiceProvider extends PluginServiceProvider
         Livewire::component(EnterNewPassword::getName(), EnterNewPassword::class);
 
         Filament::serving(function () {
-            Filament::registerNavigationGroups([
-                NavigationGroup::make()
-                    ->label('User Management')
-                    ->icon('heroicon-s-user'),
-            ]);
+//            Filament::registerNavigationGroups([
+//                NavigationGroup::make()
+//                    ->label('User Management')
+//                    ->icon('heroicon-s-user'),
+//            ]);
         });
     }
 }
