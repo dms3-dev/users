@@ -23,7 +23,7 @@ class UserServiceProvider extends PluginServiceProvider
     ];
 
     protected array $pages = [
-        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
+//        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
     ];
 
     public function configurePackage(Package $package): void
