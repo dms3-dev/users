@@ -50,7 +50,7 @@ abstract class PolicyAbstract {
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Model $model): bool
+    public function update(User $user, Model|Authenticatable $model): bool
     {
         if($model instanceof HasUserDependentPolicy) {
             return $model->userIsAllowed($user, $this->type(), PolicyPrivilege::UPDATE);
