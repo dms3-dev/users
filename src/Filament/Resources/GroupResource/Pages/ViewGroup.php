@@ -29,7 +29,7 @@ class ViewGroup extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->color('warning'),
-            Actions\DeleteAction::make(),
+//            Actions\DeleteAction::make(),
         ];
     }
 

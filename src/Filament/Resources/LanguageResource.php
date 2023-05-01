@@ -38,7 +38,7 @@ class LanguageResource extends Resource
                 Select::make('status')
                     ->options([
                         LanguageStatus::ACTIVE->value => 'Active',
-                        LanguageStatus::INACTIVE->value => 'In Active',
+                        LanguageStatus::INACTIVE->value => 'Inactive',
                     ])
                     ->default(LanguageStatus::ACTIVE)
                     ->enum(LanguageStatus::class)

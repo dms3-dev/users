@@ -40,8 +40,6 @@ class UserResource extends Resource
     {
 
         return $form
-
-
             ->schema([
 
                 Forms\Components\Grid::make(2)->schema([
@@ -116,7 +114,7 @@ class UserResource extends Resource
                                     ->enum(UserStatus::class)
                                     ->options([
                                         UserStatus::ACTIVE->value => 'Active',
-                                        UserStatus::INACTIVE->value => 'In Active',
+                                        UserStatus::INACTIVE->value => 'Inactive',
                                         UserStatus::LOCKED->value => 'Locked',
                                     ])
                                     ->required()
