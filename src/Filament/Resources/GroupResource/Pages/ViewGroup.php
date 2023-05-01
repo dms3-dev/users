@@ -28,7 +28,8 @@ class ViewGroup extends ViewRecord
     {
         return [
             Actions\EditAction::make()
-                ->color('warning'),
+                ->color('warning')
+                ->icon('heroicon-s-pencil'),
 //            Actions\DeleteAction::make(),
         ];
     }
