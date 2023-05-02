@@ -27,9 +27,7 @@ class ViewGroup extends ViewRecord
     protected function getActions(): array
     {
         return [
-            Actions\EditAction::make()
-                ->color('warning')
-                ->icon('heroicon-s-pencil'),
+            GroupResource\Actions\EditGroup::make(),
 //            Actions\DeleteAction::make(),
         ];
     }
@@ -47,12 +45,12 @@ class ViewGroup extends ViewRecord
         ];
     }
 
-    protected function form(Form $form): Form
-    {
-        return $form->schema([
-
-        ]);
-    }
+//    protected function form(Form $form): Form
+//    {
+//        return $form->schema([
+//
+//        ]);
+//    }
 
 }
 
