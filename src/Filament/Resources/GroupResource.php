@@ -2,24 +2,17 @@
 
 namespace Mediamouse\Users\Filament\Resources;
 
-use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Exception;
-use Filament\Forms;
-use Filament\Forms\Components\Repeater;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
-use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\GroupHasPolicyRelationManager;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\UserMemberOfGroupRelationManager;
 use Mediamouse\Users\Models\Group;
-use Mediamouse\Users\Models\GroupHasPolicy;
-use Mediamouse\Users\Models\Policy;
 
 class GroupResource extends Resource
 {
@@ -34,19 +27,19 @@ class GroupResource extends Resource
 
         return $form
             ->schema([
-                        TextInput::make('key')
-                            ->columns(1)
-                            ->alphaNum()
-                            ->unique(ignoreRecord: true)
-                            ->label('Group key')
-                            ->maxLength('10')
-                            ->required(),
-                        TextInput::make('name')
-                            ->columns(1)
-                            ->alphaNum()
-                            ->label('Group name')
-                            ->maxLength('100')
-                            ->required(),
+                TextInput::make('key')
+                    ->columns(1)
+                    ->alphaNum()
+                    ->unique(ignoreRecord: true)
+                    ->label('Group key')
+                    ->maxLength('10')
+                    ->required(),
+                TextInput::make('name')
+                    ->columns(1)
+                    ->alphaNum()
+                    ->label('Group name')
+                    ->maxLength('100')
+                    ->required(),
 //                        Repeater::make('policies')
 //                            ->relationship()
 //                            ->disableLabel()
@@ -99,9 +92,10 @@ class GroupResource extends Resource
             ])
             ->actions([
                 ViewAction::make()->color('info'),
-                Tables\Actions\DeleteAction::make()->visible(fn(Group $record) =>
-                                        $record->users_count === 0 || ($record->users_count === null && $record->users()->count() === 0)
-                                ),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn(Group $record) => $record->users_count === 0 ||
+                        ($record->users_count === null && $record->users()->count() === 0)
+                ),
 
             ]);
     }
