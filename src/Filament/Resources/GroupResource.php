@@ -13,6 +13,7 @@ use Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\GroupHasPolicyRelationManager;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\UserMemberOfGroupRelationManager;
 use Mediamouse\Users\Models\Group;
+use Mediamouse\Users\Support\Date;
 
 class GroupResource extends Resource
 {
@@ -87,6 +88,7 @@ class GroupResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created on')
+                    ->dateTime(Date::userDateTimeFormat())
                     ->toggleable()
                     ->sortable(),
             ])

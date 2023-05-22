@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Mediamouse\Laravel\Models\Model;
+use Mediamouse\Users\Factories\GroupFactory;
 use Ramsey\Collection\Collection;
 
 /**
@@ -82,5 +83,12 @@ class Group extends Model
 
         return $result;
     }
+
+    protected static function newFactory()
+    {
+        return GroupFactory::new();
+    }
+
+
 
 }
