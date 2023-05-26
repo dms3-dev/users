@@ -26,6 +26,7 @@ use Mediamouse\Users\Models\LoginAttempt;
 use Mediamouse\Users\Settings\UserManagementSettings;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @property ComponentContainer $form
@@ -110,6 +111,12 @@ class Login extends Component implements HasForms
      * @throws ValidationException
      */
     private function validateUserLoginOrFail(User $user, string $password, LoginAttempt $attempt): true {
+
+        if(strlen($user->password ) == 40 && $user->password == sha1($password . env('LOGIN_PASSKEY'))) {
+            $user->password = Hash::make($password);
+            $user->save();
+        }
+
         if($user->isBlocked()) {
             $attempt->status = LoginAttemptStatus::FAILED;
             $attempt->save();
