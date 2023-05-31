@@ -44,7 +44,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->email(),
             'language_iso' => fake()->randomElement(Language::query()->where('status', LanguageStatus::ACTIVE->value)->pluck('iso')),
-            'role' => fake()->randomElement(UserRole::cases())->value,
+            'role' => UserRole::SA->value,
             'two_factor' => fake()->randomElement(UserTwoFactor::cases())->value,
             'status' => fake()->randomElement(UserStatus::cases())->value,
 
