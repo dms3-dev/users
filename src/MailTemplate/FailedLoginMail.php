@@ -5,7 +5,7 @@ namespace Mediamouse\Users\MailTemplate;
 use Mediamouse\Mails\MailTemplate\MailTemplateAbstract;
 use Mediamouse\Mails\Models\MailTemplate;
 
-class LoginChallengeMail extends MailTemplateAbstract {
+class FailedLoginMail extends MailTemplateAbstract {
     protected static string $key = 'UserFailedLogin';
     protected static string $name = 'Sent failed login email to user';
 
