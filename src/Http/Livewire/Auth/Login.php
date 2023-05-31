@@ -13,12 +13,11 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
-use Filament\Http\Livewire\Auth\Login as BaseLogin;
 use Mediamouse\Users\Enums\LoginAttemptStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
-use Mediamouse\Users\Filament\Pages\ManageUserManagementSettings;
 use Mediamouse\Users\Http\Responses\Auth\Login\EnterNewPasswordResponse;
 use Mediamouse\Users\Http\Responses\Auth\Login\ForgotPasswordResponse;
 use Mediamouse\Users\Http\Responses\Auth\TwoFactorLoginResponse;
@@ -26,7 +25,6 @@ use Mediamouse\Users\Models\LoginAttempt;
 use Mediamouse\Users\Settings\UserManagementSettings;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * @property ComponentContainer $form
