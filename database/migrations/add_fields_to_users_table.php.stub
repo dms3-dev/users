@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('username', 50)->after('status')->nullable();
 
             $table->string('phone_number', 20)->default('');
-            $table->timestamp('phone_verified_at')->nullable();
+            $table->dateTime('phone_verified_at')->nullable();
 
             $table->string('password', 255)->nullable()->change();
 

@@ -1,0 +1,49 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('group_has_policies', function (Blueprint $table): void{
+            $table->string('group_key', 10);
+            $table->string('policy', 255);
+
+            $table->datetimes();
+
+            $table->boolean('view_any')->default(0);
+            $table->boolean('view')->default(0);
+            $table->boolean('create')->default(0);
+            $table->boolean('update')->default(0);
+            $table->boolean('delete')->default(0);
+            $table->boolean('restore')->default(0);
+            $table->boolean('force_delete')->default(0);
+            $table->boolean('reorder')->default(0);
+
+
+            $table->foreign('group_key')
+                ->references('key')
+                ->on('groups')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->foreign('policy')
+                ->references('policy')
+                ->on('policies')
+                ->restrictOnUpdate()
+                ->restrictOnDelete();
+
+            $table->unique(['group_key', 'policy'], 'DEFINING');
+
+            $table->id();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('group_has_policies');
+    }
+};

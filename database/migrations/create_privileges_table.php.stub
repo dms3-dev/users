@@ -20,7 +20,7 @@ return new class extends Migration
                 'FORCE_DELETE',
             ]);
 
-            $table->timestamps();
+            $table->datetimes();
 
             $table->foreign('policy')
                 ->references('policy')
