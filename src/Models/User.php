@@ -14,6 +14,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Mediamouse\Mails\Enums\MailPriority;
@@ -322,5 +323,60 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return $this->createPasswordResetToken();
+    }
+
+    public function validatePassword($password): bool
+    {
+        return Hash::check($password, $this->password);
+    }
+
+    public function updatePassword(string $password): bool
+    {
+        $this->password = Hash::make($password);
+        $this->save();
+
+        $newPassword = new Password();
+        $newPassword->password = $this->password;
+        $newPassword->user_id = $this->id;
+
+        $newPassword->save();
+
+        $this->informPasswordHasBeenReset();
+        return true;
+    }
+
+    public function updateUserSetting($property, $value) {
+        [$group, $name] = explode('.', $property);
+
+        $setting = UserSettings::query()
+            ->where('user_id', $this->id)
+            ->where('group', $group)
+            ->where('name', $name)
+            ->first();
+
+        if($setting === null) {
+            $setting = new UserSettings();
+            $setting->user_id = $this->id;
+            $setting->group = $group;
+            $setting->name = $name;
+        }
+
+        $setting->payload = json_encode($value);
+        $setting->save();
+
+    }
+
+    public function getUserSetting($property) {
+        [$group, $name] = explode('.', $property);
+
+        $setting = UserSettings::query()
+            ->where('user_id', $this->id)
+            ->where('group', $group)
+            ->where('name', $name)
+            ->first('payload');
+
+        if($setting === null) return null;
+        return json_decode($setting->getAttribute('payload'));
+
     }
 }

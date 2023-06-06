@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Filament\Pages;
 
+use Filament\Facades\Filament;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Models\User;
@@ -21,6 +22,17 @@ class ManageUserManagementSettings extends SettingsPage
     protected static ?int $navigationSort = 6;
 
     protected static string $settings = UserManagementSettings::class;
+
+    public function __construct($id = null)
+    {
+        if(Filament::auth()->user()->role !== UserRole::SA) abort(403);
+        parent::__construct($id);
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return Filament::auth()->user()->role === UserRole::SA;
+    }
 
     protected function getFormSchema(): array
     {

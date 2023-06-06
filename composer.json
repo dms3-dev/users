@@ -11,6 +11,7 @@
     "laravel/framework": "^9.0|^10.0",
     "filament/filament": "^2.0",
     "filament/forms": "^2.0",
+    "filament/spatie-laravel-settings-plugin": "^2.0",
     "mediamouse/laravel" : "dev-master",
     "mediamouse/filament": "dev-master",
     "spatie/laravel-package-tools": "^1.9"

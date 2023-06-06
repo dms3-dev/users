@@ -1,0 +1,125 @@
+<?php
+
+namespace Mediamouse\Users\Filament\Pages;
+
+use Carbon\Carbon;
+use Filament\Facades\Filament;
+use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Enums\UserTwoFactor;
+use Mediamouse\Users\Models\User;
+use Mediamouse\Users\Settings\GlobalSettings as GlobalSettingsModel;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Pages\SettingsPage;
+use Filament\Forms;
+
+class GlobalSettings extends SettingsPage
+{
+    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static ?string $slug = 'global-settings';
+
+    protected static string $settings = GlobalSettingsModel::class;
+
+    public function __construct($id = null)
+    {
+        if(Filament::auth()->user()->role !== UserRole::SA) abort(403);
+        parent::__construct($id);
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
+    protected static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? static::$title ?? __('mediamouse-users::pages/global-settings.title');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return static::$title ?? __('mediamouse-users::pages/global-settings.title');
+    }
+
+    protected function getFormSchema(): array
+    {
+        $date = Carbon::create(2023, 8, 1, 16, 35, 59);
+
+        $date_formats = [
+            'M jS, Y',
+            'j M Y',
+            'j F Y',
+            'D j M Y',
+            'D M jS, Y',
+            'l j F Y',
+            'j-n-Y',
+            'd-m-Y',
+            'm-d-Y',
+            'n-j-Y',
+            'Y-m-d',
+        ];
+
+        $time_formats = [
+            'H:i:s',
+            'h:i:s a',
+            'h:i:s A',
+            'G:i:s',
+            'g:i:s a',
+            'g:i:s A',
+        ];
+
+        $date_options = [];
+        $datetime_options = ['auto' => __('mediamouse-users::pages/global-settings.datetime-auto-setting')];
+        $time_options = [];
+        foreach($date_formats as $date_format) {
+            $date_options[$date_format] = $date->format($date_format);
+            foreach($time_formats as $time_format) {
+                $datetime_format = $date_format . ' ' . $time_format;
+                $datetime_options[$datetime_format] = $date->translatedFormat($datetime_format);
+            }
+        }
+
+        foreach($time_formats as $time_format) {
+            $time_options[$time_format] = $date->translatedFormat($time_format);
+        }
+
+        return [
+            Forms\Components\Grid::make(2)->schema([
+                Forms\Components\Fieldset::make(__('mediamouse-users::pages/global-settings.date-settings'))
+                    ->columnSpan(1)
+                    ->columns(1)
+                    ->schema([
+                        Forms\Components\Select::make('date_format')
+                            ->inlineLabel()
+                            ->label(__('mediamouse-users::pages/global-settings.date-notation'))
+                            ->options($date_options),
+                        Forms\Components\Select::make('time_format')
+                            ->inlineLabel()
+                            ->label(__('mediamouse-users::pages/global-settings.time-notation'))
+                            ->options($time_options),
+                        Forms\Components\Select::make('dateTime_format')
+                            ->inlineLabel()
+                            ->label(__('mediamouse-users::pages/global-settings.datetime-notation'))
+                            ->options($datetime_options),
+                    ]),
+                Forms\Components\Fieldset::make(__('mediamouse-users::pages/global-settings.number-settings'))
+                    ->columnSpan(1)
+                    ->columns(1)
+                    ->schema([
+                        Forms\Components\Select::make('number_format')
+                            ->inlineLabel()
+                            ->label(__('mediamouse-users::pages/global-settings.number-notation'))
+                            ->options([
+                                'COMMA' => number_format(1234.56, 2, ',', ''),
+                                'DOT' => number_format(1234.56, 2, '.', ''),
+                                'COMMA_DOT' => number_format(1234.56, 2, ',', '.'),
+                                'DOT_COMMA' => number_format(1234.56, 2, '.', ','),
+                            ]),
+                    ]),
+            ])
+        ];
+    }
+}

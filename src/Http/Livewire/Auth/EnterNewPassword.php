@@ -99,19 +99,10 @@ class EnterNewPassword extends Component implements HasForms
 
         $user = $passReset->user;
 
-        $user->password = Hash::make($data['new-password']);
-        $user->save();
-
-        $newPassword = new Password();
-        $newPassword->password = $user->password;
-        $newPassword->user_id = $user->id;
-
-        $newPassword->save();
+        $user->updatePassword($data['new-password']);
 
         $passReset->status = PasswordResetStatus::USED;
         $passReset->save();
-
-        $user->informPasswordHasBeenReset();
 
         if($this->isLoggedIn) {
             Filament::auth()->login($user);
@@ -153,19 +144,7 @@ class EnterNewPassword extends Component implements HasForms
                 ->minLength(8)
                 ->maxLength(20)
                 ->rules([
-                    function () {
-                        return function (string $attribute, $value, Closure $fail) {
-                            $settings = new UserManagementSettings();
-                            if(
-                                ($settings->non_capital_letters && !preg_match('/[a-z]/', $value)) ||
-                                ($settings->capital_letters && !preg_match('/[A-Z]/', $value)) ||
-                                ($settings->numbers && !preg_match('/[0-9]/', $value)) ||
-                                ($settings->special_characters && !preg_match('/[^a-zA-Z0-9]/', $value))
-                                ) {
-                                $fail("Your password should contain at least 1 letter, 1 capital, 1 number and 1 special character!");
-                            }
-                        };
-                    },
+                    new \Mediamouse\Users\Validate\Password()
                 ])
                 ->required(),
             TextInput::make('repeat-password')

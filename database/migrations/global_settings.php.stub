@@ -1,0 +1,18 @@
+<?php
+
+use Spatie\LaravelSettings\Migrations\SettingsMigration;
+
+return new class extends SettingsMigration
+{
+    /**
+     * @throws \Spatie\LaravelSettings\Exceptions\SettingAlreadyExists
+     */
+    public function up(): void
+    {
+        $this->migrator->add('mediamouse-users-global.date_format', 'M jS, Y');
+        $this->migrator->add('mediamouse-users-global.dateTime_format', 'auto');
+        $this->migrator->add('mediamouse-users-global.time_format', 'H:i:s');
+
+        $this->migrator->add('mediamouse-users-global.number_format', 'COMMA');
+    }
+};

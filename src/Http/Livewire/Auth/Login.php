@@ -156,7 +156,6 @@ class Login extends Component implements HasForms
                 'email' => 'Too many login attempts. Please try again later.',
             ]);
         }
-
     }
 
     protected function getFormSchema(): array

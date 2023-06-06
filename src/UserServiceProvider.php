@@ -4,12 +4,16 @@ namespace Mediamouse\Users;
 
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\UserMenuItem;
+use Illuminate\Support\Facades\App;
 use Livewire\Livewire;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
+use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
 use Mediamouse\Users\Http\Livewire\Auth\Login;
+use Mediamouse\Users\Models\User;
 use Spatie\LaravelPackageTools\Package;
 use Filament\PluginServiceProvider;
 
@@ -23,7 +27,10 @@ class UserServiceProvider extends PluginServiceProvider
     ];
 
     protected array $pages = [
-//        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
+        \Mediamouse\Users\Filament\Pages\ManageUserManagementSettings::class,
+        \Mediamouse\Users\Filament\Pages\GlobalSettings::class,
+        \Mediamouse\Users\Filament\Pages\UserSettings::class,
+        \Mediamouse\Users\Filament\Pages\ChangePassword::class,
     ];
 
     public function configurePackage(Package $package): void
@@ -33,6 +40,7 @@ class UserServiceProvider extends PluginServiceProvider
             ->hasViews()
             ->hasRoutes('web')
             ->hasCommands([UpdatePolicies::class])
+            ->hasTranslations()
             ->hasMigrations([
                 'create_languages_table',
                 'add_fields_to_users_table',
@@ -46,6 +54,8 @@ class UserServiceProvider extends PluginServiceProvider
                 'create_user_memberof_group_table',
                 'user_management_settings',
                 'add_languages',
+                'global_settings',
+                'create_user_settings_table',
             ])
             ;
     }
@@ -60,11 +70,35 @@ class UserServiceProvider extends PluginServiceProvider
         Livewire::component(EnterNewPassword::getName(), EnterNewPassword::class);
 
         Filament::serving(function () {
-//            Filament::registerNavigationGroups([
-//                NavigationGroup::make()
-//                    ->label('User Management')
-//                    ->icon('heroicon-s-user'),
-//            ]);
+
+            Filament::registerUserMenuItems([
+                // ...
+            ]);
+
+            Filament::registerUserMenuItems([
+                'account' => UserMenuItem::make()->url(route('filament.pages.user-settings')),
+                UserMenuItem::make()
+                    ->label(__('mediamouse-users::pages/change-password.title'))
+                    ->url(route('filament.pages.change-password'))
+                    ->sort(1)
+                    ->icon('heroicon-s-cog'),
+            ]);
+
+            if(Filament::auth()->user() !== null) {
+                /** @var User $current_user */
+                $current_user = Filament::auth()->user();
+                App::setLocale($current_user->language_iso);
+
+                if($current_user->role == UserRole::SA) {
+                    Filament::registerUserMenuItems([
+                        UserMenuItem::make()
+                            ->label(__('mediamouse-users::pages/global-settings.title'))
+                            ->url(route('filament.pages.global-settings'))
+                            ->sort(2)
+                            ->icon('heroicon-s-cog'),
+                    ]);
+                }
+            }
         });
     }
 }
