@@ -69,7 +69,7 @@ class Date {
             /** @var User $current_user */
             $current_user = Filament::auth()->user();
 
-            $format = $current_user->getUserSetting('mediamouse-users.time_format');
+            $format = $current_user->getUserSetting('mediamouse-users.dateTime_format');
 
             if($format !== null && $format !== 'global' && $format !== 'auto') {
                 return $format;
