@@ -41,7 +41,7 @@ class Date {
 
             $format = $current_user->getUserSetting('mediamouse-users.date_format');
 
-            if($format !== null || $format !== 'global') {
+            if($format !== null && $format !== 'global') {
                 return $format;
             }
         }
