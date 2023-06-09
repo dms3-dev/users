@@ -25,13 +25,13 @@ class ManageUserManagementSettings extends SettingsPage
 
     public function __construct($id = null)
     {
-        if(Filament::auth()->user()->role !== UserRole::SA) abort(403);
+        if(Filament::auth()->user()?->role !== UserRole::SA) abort(403);
         parent::__construct($id);
     }
 
     protected static function shouldRegisterNavigation(): bool
     {
-        return Filament::auth()->user()->role === UserRole::SA;
+        return Filament::auth()->user()?->role === UserRole::SA;
     }
 
     protected function getFormSchema(): array
