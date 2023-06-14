@@ -46,6 +46,19 @@ class GlobalSettings extends SettingsPage
 
     protected function getFormSchema(): array
     {
+
+        return [
+            Forms\Components\Grid::make(2)->schema([
+                $this->fieldSetDateSettings(),
+                $this->fieldsetCsvSettings(),
+                $this->fieldSetNumberSettings(),
+            ])
+        ];
+    }
+
+
+    private function fieldSetDateSettings(): Forms\Components\Fieldset {
+
         $date = Carbon::create(2023, 8, 1, 16, 35, 59);
 
         $date_formats = [
@@ -85,41 +98,76 @@ class GlobalSettings extends SettingsPage
         foreach($time_formats as $time_format) {
             $time_options[$time_format] = $date->translatedFormat($time_format);
         }
+        return Forms\Components\Fieldset::make(__('mediamouse-users::pages/global-settings.date-settings'))
+            ->columnSpan(1)
+            ->columns(1)
+            ->schema([
+                Forms\Components\Select::make('date_format')
+                    ->inlineLabel()
+                    ->label(__('mediamouse-users::pages/global-settings.date-notation'))
+                    ->options($date_options),
+                Forms\Components\Select::make('time_format')
+                    ->inlineLabel()
+                    ->label(__('mediamouse-users::pages/global-settings.time-notation'))
+                    ->options($time_options),
+                Forms\Components\Select::make('dateTime_format')
+                    ->inlineLabel()
+                    ->label(__('mediamouse-users::pages/global-settings.datetime-notation'))
+                    ->options($datetime_options),
+            ]);
+    }
 
-        return [
-            Forms\Components\Grid::make(2)->schema([
-                Forms\Components\Fieldset::make(__('mediamouse-users::pages/global-settings.date-settings'))
-                    ->columnSpan(1)
-                    ->columns(1)
-                    ->schema([
-                        Forms\Components\Select::make('date_format')
-                            ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/global-settings.date-notation'))
-                            ->options($date_options),
-                        Forms\Components\Select::make('time_format')
-                            ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/global-settings.time-notation'))
-                            ->options($time_options),
-                        Forms\Components\Select::make('dateTime_format')
-                            ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/global-settings.datetime-notation'))
-                            ->options($datetime_options),
-                    ]),
-                Forms\Components\Fieldset::make(__('mediamouse-users::pages/global-settings.number-settings'))
-                    ->columnSpan(1)
-                    ->columns(1)
-                    ->schema([
-                        Forms\Components\Select::make('number_format')
-                            ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/global-settings.number-notation'))
-                            ->options([
-                                'COMMA' => number_format(1234.56, 2, ',', ''),
-                                'DOT' => number_format(1234.56, 2, '.', ''),
-                                'COMMA_DOT' => number_format(1234.56, 2, ',', '.'),
-                                'DOT_COMMA' => number_format(1234.56, 2, '.', ','),
-                            ]),
-                    ]),
-            ])
-        ];
+    private function fieldSetNumberSettings(): Forms\Components\Fieldset {
+        return
+            Forms\Components\Fieldset::make(__('mediamouse-users::pages/global-settings.number-settings'))
+                ->columnSpan(1)
+                ->columns(1)
+                ->schema([
+                    Forms\Components\Select::make('number_format')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/global-settings.number-notation'))
+                        ->options([
+                            'COMMA' => number_format(1234.56, 2, ',', ''),
+                            'DOT' => number_format(1234.56, 2, '.', ''),
+                            'COMMA_DOT' => number_format(1234.56, 2, ',', '.'),
+                            'DOT_COMMA' => number_format(1234.56, 2, '.', ','),
+                        ]),
+                ]);
+    }
+
+    private function fieldsetCsvSettings(): Forms\Components\Fieldset
+    {
+        return
+            Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.csv-settings'))
+                ->columnSpan(1)
+                ->columns(1)
+                ->schema([
+                    Forms\Components\Select::make('csv_delimiter')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/user-settings.csv-delimiter'))
+                        ->disablePlaceholderSelection()
+                        ->options([
+                            'COMMA' => __('mediamouse-users::pages/user-settings.csv-delimiter-comma'),
+                            'SEMICOLON' => __('mediamouse-users::pages/user-settings.csv-delimiter-semicolon'),
+                            'TAB' => __('mediamouse-users::pages/user-settings.csv-delimiter-tab'),
+                        ]),
+                    Forms\Components\Select::make('csv_enclosure')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/user-settings.csv-enclosure'))
+                        ->disablePlaceholderSelection()
+                        ->options([
+                            'single' => __('mediamouse-users::pages/user-settings.csv-enclosure-single'),
+                            'double' => __('mediamouse-users::pages/user-settings.csv-enclosure-double'),
+                        ]),
+                    Forms\Components\Select::make('csv_new_line')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/user-settings.csv-new-line'))
+                        ->disablePlaceholderSelection()
+                        ->options([
+                            'R' => __('mediamouse-users::pages/user-settings.csv-new-line-r'),
+                            'N' => __('mediamouse-users::pages/user-settings.csv-new-line-n'),
+                            'RN' => __('mediamouse-users::pages/user-settings.csv-new-line-rn'),
+                        ]),
+                ]);
     }
 }

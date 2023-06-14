@@ -14,6 +14,10 @@ class GlobalSettings extends Settings
 
     public string $number_format;
 
+    public string $csv_delimiter;
+    public string $csv_enclosure;
+    public string $csv_new_line;
+
     public static function group(): string
     {
         return 'mediamouse-users-global';

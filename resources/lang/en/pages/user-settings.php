@@ -24,4 +24,17 @@ return [
 
     'user-updated' => 'Your profile has been updated!',
 
+    'csv-settings' => 'CSV Export Settings',
+    'csv-delimiter' => 'Separator',
+    'csv-delimiter-comma' => 'Comma',
+    'csv-delimiter-semicolon' => 'Semicolon',
+    'csv-delimiter-tab' => 'Tab',
+    'csv-enclosure' => 'Enclosure',
+    'csv-enclosure-single' => 'Single Quotes',
+    'csv-enclosure-double' => 'Double Quotes',
+    'csv-new-line' => 'New line',
+    'csv-new-line-r' => 'Carriage return (Old Mac OS)',
+    'csv-new-line-n' => 'Line feed (Unix, Mac OSx)',
+    'csv-new-line-rn' => 'CR + LF (Windows)',
+
 ];

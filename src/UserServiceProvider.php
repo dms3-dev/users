@@ -56,6 +56,7 @@ class UserServiceProvider extends PluginServiceProvider
                 'add_languages',
                 'global_settings',
                 'create_user_settings_table',
+                'global_settings_csv',
             ])
             ;
     }

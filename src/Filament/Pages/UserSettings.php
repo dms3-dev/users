@@ -55,6 +55,9 @@ class UserSettings extends Page implements HasFormActions
             'time_format' => $current_user->getUserSetting('mediamouse-users.time_format'),
             'dateTime_format' => $current_user->getUserSetting('mediamouse-users.dateTime_format'),
             'number_format' => $current_user->getUserSetting('mediamouse-users.number_format'),
+            'csv_delimeter' => $current_user->getUserSetting('mediamouse-users.csv_delimiter'),
+            'csv_enclosure' => $current_user->getUserSetting('mediamouse-users.csv_enclosure'),
+            'csv_new_line' => $current_user->getUserSetting('mediamouse-users.csv_new_line'),
         ];
 
         $this->form->fill($data);
@@ -99,7 +102,7 @@ class UserSettings extends Page implements HasFormActions
                 ->schema([
                     Forms\Components\Select::make('number_format')
                         ->inlineLabel()
-                        ->label(__('mediamouse-users::pages/global-settings.number-notation'))
+                        ->label(__('mediamouse-users::pages/user-settings.number-notation'))
                         ->disablePlaceholderSelection()
                         ->options([
                             'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
@@ -107,6 +110,45 @@ class UserSettings extends Page implements HasFormActions
                             'DOT' => number_format(1234.56, 2, '.', ''),
                             'COMMA_DOT' => number_format(1234.56, 2, ',', '.'),
                             'DOT_COMMA' => number_format(1234.56, 2, '.', ','),
+                        ]),
+                ]);
+    }
+
+    private function fieldsetCsvSettings(): Forms\Components\Fieldset
+    {
+        return
+            Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.csv-settings'))
+                ->columnSpan(1)
+                ->columns(1)
+                ->schema([
+                    Forms\Components\Select::make('csv_delimiter')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/user-settings.csv-delimiter'))
+                        ->disablePlaceholderSelection()
+                        ->options([
+                            'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
+                            'COMMA' => __('mediamouse-users::pages/user-settings.csv-delimiter-comma'),
+                            'SEMICOLON' => __('mediamouse-users::pages/user-settings.csv-delimiter-semicolon'),
+                            'TAB' => __('mediamouse-users::pages/user-settings.csv-delimiter-tab'),
+                        ]),
+                    Forms\Components\Select::make('csv_enclosure')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/user-settings.csv-enclosure'))
+                        ->disablePlaceholderSelection()
+                        ->options([
+                            'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
+                            'single' => __('mediamouse-users::pages/user-settings.csv-enclosure-single'),
+                            'double' => __('mediamouse-users::pages/user-settings.csv-enclosure-double'),
+                        ]),
+                    Forms\Components\Select::make('csv_new_line')
+                        ->inlineLabel()
+                        ->label(__('mediamouse-users::pages/user-settings.csv-new-line'))
+                        ->disablePlaceholderSelection()
+                        ->options([
+                            'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
+                            'R' => __('mediamouse-users::pages/user-settings.csv-new-line-r'),
+                            'N' => __('mediamouse-users::pages/user-settings.csv-new-line-n'),
+                            'RN' => __('mediamouse-users::pages/user-settings.csv-new-line-rn'),
                         ]),
                 ]);
     }
@@ -183,10 +225,11 @@ class UserSettings extends Page implements HasFormActions
                 Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                         $this->fieldsetDetailsSettings(),
                         $this->fieldsetLanguageSettings(),
+                        $this->fieldsetNumberSettings(),
                     ]),
                 Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                         $this->fieldsetDateSettings(),
-                        $this->fieldsetNumberSettings(),
+                        $this->fieldsetCsvSettings(),
                     ]),
                 ])
         ];
@@ -218,6 +261,9 @@ class UserSettings extends Page implements HasFormActions
         $current_user->updateUserSetting('mediamouse-users.time_format', $data['time_format']);
         $current_user->updateUserSetting('mediamouse-users.dateTime_format', $data['dateTime_format']);
         $current_user->updateUserSetting('mediamouse-users.number_format', $data['number_format']);
+        $current_user->updateUserSetting('mediamouse-users.csv_delimiter', $data['csv_delimiter']);
+        $current_user->updateUserSetting('mediamouse-users.csv_enclosure', $data['csv_enclosure']);
+        $current_user->updateUserSetting('mediamouse-users.csv_new_line', $data['csv_new_line']);
 
         Notification::make()
             ->success()

@@ -1,0 +1,16 @@
+<?php
+
+use Spatie\LaravelSettings\Migrations\SettingsMigration;
+
+return new class extends SettingsMigration
+{
+    /**
+     * @throws \Spatie\LaravelSettings\Exceptions\SettingAlreadyExists
+     */
+    public function up(): void
+    {
+        $this->migrator->add('mediamouse-users-global.csv_delimiter', 'COMMA');
+        $this->migrator->add('mediamouse-users-global.csv_enclosure', 'DOUBLE');
+        $this->migrator->add('mediamouse-users-global.csv_new_line', 'RN');
+    }
+};
