@@ -74,7 +74,7 @@ class Date {
             if($format !== null && $format !== 'global' && $format !== 'auto') {
                 return $format;
             }
-            if($format == 'auto') {
+            if($format === 'auto' || $format === 'global') {
                 return self::userDateFormat() . ' ' . self::userTimeFormat();
             }
         }
