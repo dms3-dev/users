@@ -2,6 +2,7 @@
 
 return [
     'title' => 'Change password',
+    'password-settings' => 'Change password',
     'current-password' => 'Current password',
     'new-password' => 'New password',
     'repeat-password' => 'Repeat password',
