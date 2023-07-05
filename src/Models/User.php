@@ -131,7 +131,7 @@ class User extends Authenticatable implements FilamentUser
         return $result;
     }
 
-    private function createChallengeCode() : string {
+    public function createChallengeCode() : string {
         return (string) rand(100000, 999999);
     }
 

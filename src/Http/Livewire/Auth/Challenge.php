@@ -110,8 +110,14 @@ class Challenge extends Component implements HasForms
      * @throws NotFoundExceptionInterface
      */
     public function requestNewCode() {
+        $attempt = $this->getLoginAttempt();
+        $attempt->token = $this->getUser()->createChallengeCode();
+        $attempt->save();
+
+        $this->getUser()->sendLoginChallenge($this->getLoginAttempt());
+
         request()->session()->put([
-            'login.challenge' => $this->getUser()->sendLoginChallenge(),
+            'login.challenge' => $attempt->token,
         ]);
 
         $this->message = 'A new challenge code has been sent to your email address';
