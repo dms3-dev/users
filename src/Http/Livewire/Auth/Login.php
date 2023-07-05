@@ -79,9 +79,16 @@ class Login extends Component implements HasForms
         $user = User::query()->where('email', $data['email'])->first();
         $password = $data['password'];
 
-        $attempt = $user->createLoginAttempt();
+        $attempt = $user?->createLoginAttempt();
 
         $this->loginRateLimit();
+
+        if($user === null) {
+            throw ValidationException::withMessages([
+                'email' => __('filament::login.messages.failed'),
+            ]);
+        }
+
         $this->validateUserLoginOrFail($user, $password, $attempt);
 
         if($user->two_factor == UserTwoFactor::NONE) {
