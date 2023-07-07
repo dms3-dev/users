@@ -13,10 +13,10 @@ class UserOverview extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make('Username', $this->record->username)
-                        ->description("Full name: {$this->record->name}"),
-            Card::make('E-mail address', $this->record->email),
-            Card::make('Role: ', $this->record->role),
+            Card::make((__('mediamouse-users::pages/user-resource.username')), $this->record->username)
+                        ->description((__('mediamouse-users::pages/user-resource.full_name')) . ': ' . $this->record->name),
+            Card::make((__('mediamouse-users::pages/user-resource.email_address')), $this->record->email),
+            Card::make((__('mediamouse-users::pages/user-resource.role')), $this->record->role),
         ];
     }
 }

@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'user_information' => 'Gebruiker informatie',
+    'username' => 'Gebruikersnaam',
+    'full_name' => 'Volledige naam',
+    'email_address' => 'Email adres',
+    'about' => 'Over',
+    'language' => 'Taal',
+    'role' => 'Rol',
+    'groups' => 'Groepen',
+    'security' => 'Beveiliging',
+    'account_status' => 'Account status',
+    'active' => 'Actief',
+    'inactive' => 'Inactief',
+    'locked' => 'Gesloten',
+    'email_verified_at' => 'Email geverifieerd op',
+    'last_login_attempt' => 'Laatste login poging',
+    'user_is_verified' => 'Gebruiker is geverifieerd',
+    'verify' => 'Verifieren',
+    'login_attempts' => 'Login pogingen',
+    'attempt_date' => 'Poging datum',
+    'attempt_status' => 'Poging status',
+    'ip_address' => 'IP Adres',
+];

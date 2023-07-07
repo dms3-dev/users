@@ -59,7 +59,7 @@ class GlobalSettings extends SettingsPage
 
     private function fieldSetDateSettings(): Forms\Components\Fieldset {
 
-        $date = Carbon::create(2023, 8, 1, 16, 35, 59);
+        $date = Carbon::create(2023, 8, 1, 4, 35, 59);
 
         $date_formats = [
             'M jS, Y',

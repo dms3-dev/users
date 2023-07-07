@@ -33,12 +33,13 @@ class LanguageResource extends Resource
                     ->maxLength(2)
                     ->alpha(),
                 TextInput::make('name')
+                    ->label((__('mediamouse-users::pages/language-resource.name')))
                     ->maxLength(20)
                     ->required(),
                 Select::make('status')
                     ->options([
-                        LanguageStatus::ACTIVE->value => 'Active',
-                        LanguageStatus::INACTIVE->value => 'Inactive',
+                        LanguageStatus::ACTIVE->value => (__('mediamouse-users::pages/language-resource.active')),
+                        LanguageStatus::INACTIVE->value => (__('mediamouse-users::pages/language-resource.inactive')),
                     ])
                     ->default(LanguageStatus::ACTIVE)
                     ->enum(LanguageStatus::class)
@@ -59,6 +60,7 @@ class LanguageResource extends Resource
                     ->toggleable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label((__('mediamouse-users::pages/language-resource.name')))
                     ->searchable()
                     ->toggleable()
                     ->sortable(),
@@ -67,6 +69,7 @@ class LanguageResource extends Resource
                     ->toggleable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('users_count')
+                    ->label((__('mediamouse-users::pages/language-resource.users_count')))
                     ->counts('users')
                     ->toggleable(),
             ])

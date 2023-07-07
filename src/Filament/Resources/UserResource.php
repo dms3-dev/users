@@ -44,35 +44,48 @@ class UserResource extends Resource
 
                 Forms\Components\Grid::make(2)->schema([
                     Forms\Components\Grid::make(1)->columnSpan(1)->schema([
-                        Forms\Components\Fieldset::make('User information')->columns(1)->columnSpan(1)->schema([
-                            TextInput::make('username')->required()->maxLength(50),
-                            TextInput::make('name')->label('Full name')->required()->maxLength(255),
-                            TextInput::make('email')->required()->email()->maxLength(255)->unique(ignoreRecord: true),
+                        Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.user_information'))->columns(1)->columnSpan(1)->schema([
+                            TextInput::make('username')
+                                ->label((__('mediamouse-users::model/user-model.username')))
+                                ->required()
+                                ->maxLength(50),
+                            TextInput::make('name')
+                                ->label((__('mediamouse-users::model/user-model.full_name')))
+                                ->required()
+                                ->maxLength(255),
+                            TextInput::make('email')
+                                ->label((__('mediamouse-users::model/user-model.email_address')))
+                                ->required()
+                                ->email()
+                                ->maxLength(255)
+                                ->unique(ignoreRecord: true),
                         ]),
-                        Forms\Components\Fieldset::make('About')->columns(1)->columnSpan(1)->schema([
+                        Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.about'))->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Select::make('language_iso')
-                                ->label('Language')
+                                ->label((__('mediamouse-users::model/user-model.language')))
                                 ->required()
                                 ->options(function () {
                                     return Language::query()->where('status', LanguageStatus::ACTIVE->value)->orderBy('sort')->pluck('name', 'iso');
                                 }),
                             Forms\Components\Select::make('role')
+                                ->label((__('mediamouse-users::model/user-model.role')))
                                 ->options(UserRole::class)
                                 ->enum(UserRole::class)
                                 ->required(),
                         ]),
                     ]),
                     Forms\Components\Grid::make(1)->columnSpan(1)->schema([
-                        Forms\Components\Fieldset::make('Groups')->columns(1)->columnSpan(1)->schema([
+                        Forms\Components\Fieldset::make(__('mediamouse-users::model/user-model.groups'))->columns(1)->columnSpan(1)->schema([
                             Forms\Components\CheckboxList::make('groups')
                                 ->columns(2)
                                 ->relationship('groups', 'name')
                                 ->inlineLabel()
                                 ->disableLabel(),
                         ]),
-                        Forms\Components\Fieldset::make('Security')->columns(1)->columnSpan(1)->schema([
+                        Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.security'))->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                                 Forms\Components\Select::make('two_factor')
+                                    ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                                     ->enum(UserTwoFactor::class)
                                     ->options(Arr::setKeysEqualToValues(Arr::combine(
                                         app(UserManagementSettings::class)->two_fa_MEMBER,
@@ -110,13 +123,9 @@ class UserResource extends Resource
                                     ])
                                     ->required(),
                                 Forms\Components\Select::make('status')
-                                    ->label('Account status')
+                                    ->label((__('mediamouse-users::pages/user-resource.account_status')))
                                     ->enum(UserStatus::class)
-                                    ->options([
-                                        UserStatus::ACTIVE->value => 'Active',
-                                        UserStatus::INACTIVE->value => 'Inactive',
-                                        UserStatus::LOCKED->value => 'Locked',
-                                    ])
+                                    ->options(UserStatus::translated())
                                     ->required()
                             ]),
                         ]),
@@ -134,49 +143,45 @@ class UserResource extends Resource
             ->columns([
 
                 Tables\Columns\TextColumn::make('username')
-                    ->label('Username')
+                    ->label((__('mediamouse-users::pages/user-resource.username')))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Full name')
+                    ->label((__('mediamouse-users::pages/user-resource.full_name')))
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
-                    ->label('E-mail')
+                    ->label((__('mediamouse-users::pages/user-resource.email_address')))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
-                    ->label('E-mail verified at')
+                    ->label((__('mediamouse-users::pages/user-resource.email_verified_at')))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('two_factor')
-                    ->label('2FA')
+                    ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('role')
-                    ->label('Role')
+                    ->label((__('mediamouse-users::pages/user-resource.role')))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('language.name')
-                    ->label('Language')
+                    ->label((__('mediamouse-users::pages/user-resource.language')))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Account status')
+                    ->label((__('mediamouse-users::pages/user-resource.account_status')))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('two_factor')
-                    ->label('2FA')
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('groups.name')
-                    ->label('Group(s)')
+                    ->label((__('mediamouse-users::pages/user-resource.groups')))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->formatStateUsing(
@@ -191,12 +196,13 @@ class UserResource extends Resource
 
                     ),
                 Tables\Columns\TextColumn::make('lastLoginAttempt.created_at')
-                    ->label('Last login attempt')
+                    ->label((__('mediamouse-users::pages/user-resource.last_login_attempt')))
                     ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s'))
                     ->sortable(),
             ])
             ->actions([
                 Tables\Actions\Action::make('verify')
+                    ->label((__('mediamouse-users::pages/user-resource.verify')))
                     ->color('success')
                     ->icon('heroicon-o-check')
                     ->visible(fn(User $record) => $record->email_verified_at === null)
@@ -207,7 +213,7 @@ class UserResource extends Resource
 
                         Notification::make('verified')
                             ->iconColor('success')
-                            ->title('User is verified')
+                            ->title((__('mediamouse-users::pages/user-resource.user_is_verified')))
                             ->icon('heroicon-o-check')
                             ->send();
                     }),

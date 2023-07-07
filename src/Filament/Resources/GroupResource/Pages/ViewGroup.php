@@ -9,7 +9,7 @@ use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
 /**
- * @property \Mediamouse\Users\Models\User record
+ * @property \Mediamouse\Users\Models\Group record
  */
 class ViewGroup extends ViewRecord
 {
@@ -27,7 +27,8 @@ class ViewGroup extends ViewRecord
     protected function getActions(): array
     {
         return [
-            GroupResource\Actions\EditGroup::make(),
+            GroupResource\Actions\EditGroup::make()
+                ->label((__('mediamouse-users::pages/group-resource.edit'))),
 //            Actions\DeleteAction::make(),
         ];
     }

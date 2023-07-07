@@ -15,6 +15,8 @@ class LoginAttemptsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'loginAttempt';
 
+//    protected static ?string $title = (__('mediamouse-users::pages/user-resource.login_attempts'));
+
     protected function getDefaultTableSortColumn(): ?string
     {
         return 'created_at';
@@ -42,12 +44,12 @@ class LoginAttemptsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Attempt date')
+                    ->label((__('mediamouse-users::pages/user-resource.attempt_date')))
                     ->formatStateUsing(fn (?Carbon $state) => $state?->format('j F Y H:i:s')),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Attempt status'),
+                    ->label((__('mediamouse-users::pages/user-resource.attempt_status'))),
                 Tables\Columns\TextColumn::make('IP')
-                    ->label('IP Address'),
+                    ->label((__('mediamouse-users::pages/user-resource.ip_address'))),
             ])
             ->filters([
                 //

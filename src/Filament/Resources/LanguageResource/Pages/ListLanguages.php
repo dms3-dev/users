@@ -19,6 +19,7 @@ class ListLanguages extends ManageRecords
     {
         return [
             Actions\CreateAction::make()
+                ->label((__('mediamouse-users::pages/language-resource.create_language')))
                 ->color('success')
                 ->icon('heroicon-s-plus'),
         ];
