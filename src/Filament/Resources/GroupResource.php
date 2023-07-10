@@ -87,7 +87,7 @@ class GroupResource extends Resource
                     ->label((__('mediamouse-users::pages/group-resource.users_count')))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label((__('mediamouse-users::pages/group-resource.created_at')))
+                    ->label((__('mediamouse-users::model/group-model.created_at')))
                     ->dateTime(Date::userDateTimeFormat())
                     ->toggleable()
                     ->sortable(),
