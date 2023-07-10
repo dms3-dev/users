@@ -203,6 +203,7 @@ class User extends Authenticatable implements FilamentUser
             $this->mailableAddress(),
             [
                 'name' => $this->name,
+                'username' => $this->email,
                 'email' => $this->email,
                 'ip' => request()->server('REMOTE_ADDR'),
                 'link' => $link,
