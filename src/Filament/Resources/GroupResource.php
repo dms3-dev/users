@@ -32,13 +32,13 @@ class GroupResource extends Resource
                     ->columns(1)
                     ->alphaNum()
                     ->unique(ignoreRecord: true)
-                    ->label((__('mediamouse-users::pages/group-resource.group_key')))
+                    ->label((__('mediamouse-users::model/group-model.group_key')))
                     ->maxLength('10')
                     ->required(),
                 TextInput::make('name')
                     ->columns(1)
                     ->alphaNum()
-                    ->label((__('mediamouse-users::pages/group-resource.group_name')))
+                    ->label((__('mediamouse-users::model/group-model.group_name')))
                     ->maxLength('100')
                     ->required(),
 //                        Repeater::make('policies')
@@ -73,18 +73,18 @@ class GroupResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('key')
-                    ->label((__('mediamouse-users::pages/group-resource.group_key')))
+                    ->label((__('mediamouse-users::model/group-model.group_key')))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label((__('mediamouse-users::pages/group-resource.group_name')))
+                    ->label((__('mediamouse-users::model/group-model.group_name')))
                     ->sortable()
                     ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('users_count')
                     ->counts('users')
-                    ->label((__('mediamouse-users::pages/group-resource.users_count')))
+                    ->label((__('mediamouse-users::model/group-model.users_count')))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label((__('mediamouse-users::model/group-model.created_at')))
