@@ -21,6 +21,16 @@ class ManageUserManagementSettings extends SettingsPage
     protected static ?string $navigationGroup = 'User Management';
     protected static ?int $navigationSort = 6;
 
+    protected static function getNavigationLabel(): string
+    {
+        return __('mediamouse-users::pages/security-settings.navigation_label');
+    }
+
+    protected function getTitle(): string
+    {
+        return __('mediamouse-users::pages/security-settings.navigation_label');
+    }
+
     protected static string $settings = UserManagementSettings::class;
 
     public function __construct($id = null)

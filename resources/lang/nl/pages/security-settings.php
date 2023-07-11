@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'navigation_label' => 'Gebruikers Instellingen',
+
     'security' => 'Beveiliging',
     'max_failed_login_attempts_per_ip' => 'Max. gefaalde login pogingen per IP',
     'two_factor_auth' => 'Twee-Factor Authenticatie',

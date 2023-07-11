@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'navigation_label' => 'User settings',
+
     'security' => 'Security',
     'max_failed_login_attempts_per_ip' => 'Max. Failed login attempts per IP',
     'two_factor_auth' => 'Two-Factor Authentication',
