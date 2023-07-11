@@ -23,6 +23,12 @@ class GroupResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 5;
 
+
+    protected static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('mediamouse-users::pages/group-resource.title');
+    }
+
     public static function form(Form $form): Form
     {
 

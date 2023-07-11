@@ -22,6 +22,11 @@ class GroupHasPolicyRelationManager extends RelationManager
 {
     protected static string $relationship = 'policies';
 
+    public static function getTitle(): string
+    {
+        return __('mediamouse-users::pages/policy-relation.title');
+    }
+
     protected static ?string $recordTitleAttribute = 'Policy';
 
     public static function form(Form $form): Form
@@ -41,8 +46,7 @@ class GroupHasPolicyRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('policy')
-
-                    ->label('Name')
+                    ->label(__('mediamouse-users::pages/policy-relation.name'))
                     ->formatStateUsing(fn(String $state, GroupHasPolicy $record) => strlen($record->policyObject?->name) > 0 ? $record->policyObject?->name : $state)
                     ->searchable(),
                 Tables\Columns\CheckboxColumn::make('view_any'),

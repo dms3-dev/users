@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 
+use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Filament\Resources\GroupResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;

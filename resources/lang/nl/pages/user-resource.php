@@ -14,4 +14,6 @@ return [
     'attempt_date' => 'Poging datum',
     'attempt_status' => 'Poging status',
     'ip_address' => 'IP Adres',
+    'title' => 'Gebruikers',
+    'record_title' => 'Gebruiker',
 ];

@@ -4,13 +4,23 @@ namespace Mediamouse\Users\Filament\Resources\LanguageResource\Pages;
 
 use Exception;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\ListRecords;
-use Mediamouse\Users\Filament\Resources\LanguageResource;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Database\Eloquent\Model;
+use Mediamouse\Users\Filament\Resources\LanguageResource;
 
 class ListLanguages extends ManageRecords
 {
     protected static string $resource = LanguageResource::class;
+
+    public function getTableRecordTitle(Model $record): string
+    {
+        return __('mediamouse-users::pages/language-resource.record_title');
+    }
+
+    protected function getTitle(): string
+    {
+        return __('mediamouse-users::pages/language-resource.title');
+    }
 
     /**
      * @throws Exception

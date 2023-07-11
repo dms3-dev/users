@@ -6,4 +6,6 @@ return [
     'active' => 'Actief',
     'inactive' => 'Inactief',
     'users_count' => 'Gebruikers aantal',
+    'title' => 'Talen',
+    'record_title' => 'Taal',
 ];

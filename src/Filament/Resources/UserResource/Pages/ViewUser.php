@@ -16,7 +16,7 @@ class ViewUser extends ViewRecord
 
     protected function getTitle(): string
     {
-        return "User `{$this->record->name}`";
+        return __('mediamouse-users::pages/user-resource.record_title') . ' ' . $this->record->name;
     }
 
     /**

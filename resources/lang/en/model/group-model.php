@@ -7,7 +7,4 @@ return [
     'created_at' => 'Created at',
     'name' => 'Name',
     'message' => 'Message',
-    'username' => 'Username',
-    'full_name' => 'Full name',
-    'user_role' => 'User role',
 ];

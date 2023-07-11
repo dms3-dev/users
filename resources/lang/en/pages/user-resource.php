@@ -18,4 +18,7 @@ return [
     'attempt_date' => 'Attempt date',
     'attempt_status' => 'Attempt status',
     'ip_address' => 'IP Address',
+
+    'title' => 'Gebruikers',
+    'record_title' => 'Gebruiker',
 ];

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'settings_title' => 'Systeem Instellingen',
 
     'title' => 'Systeem Instellingen',
     'date-settings' => 'Datum instellingen',

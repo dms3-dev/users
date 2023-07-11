@@ -11,6 +11,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Laravel\Livewire\Request;
 use Mediamouse\Laravel\Support\Arr;
@@ -35,6 +37,14 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 5;
+
+    protected static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('mediamouse-users::pages/user-resource.title');
+    }
+
+
+
 
     public static function form(Form $form): Form
     {

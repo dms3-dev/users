@@ -18,7 +18,7 @@ class ViewGroup extends ViewRecord
 
     protected function getTitle(): string
     {
-        return "Group {$this->record->name} ({$this->record->key})";
+        return __('mediamouse-users::pages/group-resource.record_title') . ' ' . $this->record->name . ' (' . $this->record->key . ')';
     }
 
     /**

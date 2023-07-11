@@ -22,6 +22,15 @@ class LanguageResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-translate';
     protected static ?int $navigationSort = 5;
 
+    /**
+     * @return string|null
+     */
+
+    protected static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('mediamouse-users::pages/language-resource.title');
+    }
+
     public static function form(Form $form): Form
     {
 

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'title' => 'Mijn account',
     'datetime-auto-setting' => 'Automatisch',
     'datetime-global-setting' => 'Gebruik globale instellingen',

@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Filament\Pages;
 
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Illuminate\Contracts\Support\Htmlable;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Models\User;
@@ -33,15 +34,12 @@ class GlobalSettings extends SettingsPage
 
     protected static function getNavigationLabel(): string
     {
-        return static::$navigationLabel ?? static::$title ?? __('mediamouse-users::pages/global-settings.title');
+        return __('mediamouse-users::pages/global-settings.settings_title');
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle(): string
+    protected function getTitle(): string
     {
-        return static::$title ?? __('mediamouse-users::pages/global-settings.title');
+        return __('mediamouse-users::pages/global-settings.settings_title');
     }
 
     protected function getFormSchema(): array

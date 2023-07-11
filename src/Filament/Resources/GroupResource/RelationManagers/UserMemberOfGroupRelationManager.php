@@ -20,13 +20,9 @@ class UserMemberOfGroupRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
 
-    protected static ?string $title;
-
-    public function __construct()
+    public static function getTitle(): string
     {
-        parent::__construct();
-
-        self::$title = __('mediamouse-users::pages/group-resource.users');
+       return __('mediamouse-users::model/user-relation-model.title');
     }
 
     protected static ?string $recordTitleAttribute = 'Group';
@@ -65,26 +61,26 @@ class UserMemberOfGroupRelationManager extends RelationManager
         /** @noinspection DuplicatedCode */
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make((__('mediamouse-users::pages/group-resource.username')))
-                    ->label('Username')
+                Tables\Columns\TextColumn::make('username')
+                    ->label((__('mediamouse-users::model/user-relation-model.username')))
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label((__('mediamouse-users::pages/group-resource.full_name')))
+                    ->label((__('mediamouse-users::model/user-relation-model.full_name')))
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user_role')
-                    ->label((__('mediamouse-users::pages/group-resource.user_role')))
+                    ->label((__('mediamouse-users::model/user-relation-model.user_role')))
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('groups')
-                    ->label((__('mediamouse-users::pages/group-resource.assigned_groups')))
+                    ->label((__('mediamouse-users::model/user-relation-model.assigned_groups')))
                     ->formatStateUsing(
                         function($state) {
                             $groups = array();
