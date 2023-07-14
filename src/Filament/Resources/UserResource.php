@@ -191,7 +191,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('groups.name')
-                    ->label((__('mediamouse-users::pages/user-model.groups')))
+                    ->label((__('mediamouse-users::model/user-model.groups')))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->formatStateUsing(
