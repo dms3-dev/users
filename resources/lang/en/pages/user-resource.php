@@ -19,6 +19,6 @@ return [
     'attempt_status' => 'Attempt status',
     'ip_address' => 'IP Address',
 
-    'title' => 'Gebruikers',
-    'record_title' => 'Gebruiker',
+    'title' => 'Users',
+    'record_title' => 'User',
 ];

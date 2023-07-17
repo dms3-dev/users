@@ -2,7 +2,7 @@
 
 return [
     'username' => 'Username',
-    'full_name' => 'full name',
+    'full_name' => 'Full name',
     'email_address' => 'Email address',
     'language' => 'Language',
     'role' => 'Role',
