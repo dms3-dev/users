@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'title' => 'Beleid',
-    'name' => 'Naam',
+    'title' => 'Policies',
+    'name' => 'Name',
 ];

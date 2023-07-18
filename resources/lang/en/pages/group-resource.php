@@ -2,7 +2,7 @@
 
 return [
     'edit' => 'Edit',
-    'users' => 'Gebruikers',
+    'users' => 'Users',
     'title' => 'Groups',
     'record_title' => 'Group',
 ];
