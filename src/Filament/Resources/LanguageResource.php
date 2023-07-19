@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources;
 
 use Exception;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
@@ -12,7 +13,9 @@ use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Columns\CheckColumn;
 use Mediamouse\Users\Enums\LanguageStatus;
+use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Models\Language;
+use Mediamouse\Users\Policies\LanguagePolicy;
 
 class LanguageResource extends Resource
 {
@@ -84,8 +87,10 @@ class LanguageResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
+                    ->visible(Filament::auth()->user()->hasPrivilege(LanguagePolicy::class, PolicyPrivilege::UPDATE))
                     ->color('warning'),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(Filament::auth()->user()->hasPrivilege(LanguagePolicy::class, PolicyPrivilege::DELETE)),
             ]);
     }
 

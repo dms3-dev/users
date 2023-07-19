@@ -11,4 +11,5 @@ enum PolicyPrivilege : string {
     case DELETE = 'delete';
     case RESTORE = 'restore';
     case FORCE_DELETE = 'force_delete';
+    case REORDER = 'reorder';
 }

@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Filament\Resources;
 use Carbon\Carbon;
 use Closure;
 use Exception;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Resources\Form;
@@ -18,6 +19,7 @@ use Mediamouse\Laravel\Livewire\Request;
 use Mediamouse\Laravel\Support\Arr;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\LanguageStatus;
+use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
 use Mediamouse\Users\Enums\UserTwoFactor;
@@ -28,6 +30,8 @@ use Mediamouse\Users\Filament\Resources\UserResource\Pages\ViewUser;
 use Mediamouse\Users\Filament\Resources\UserResource\RelationManagers\LoginAttemptsRelationManager;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
+use Mediamouse\Users\Policies\LanguagePolicy;
+use Mediamouse\Users\Policies\UserPolicy;
 use Mediamouse\Users\Settings\UserManagementSettings;
 
 class UserResource extends Resource
@@ -215,7 +219,7 @@ class UserResource extends Resource
                     ->label((__('mediamouse-users::pages/user-resource.verify')))
                     ->color('success')
                     ->icon('heroicon-o-check')
-                    ->visible(fn(User $record) => $record->email_verified_at === null)
+                    ->visible(fn(User $record) => $record->email_verified_at === null && Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::UPDATE))
                     ->requiresConfirmation()
                     ->action(function (User $record) {
                         $record->email_verified_at = Carbon::now();
@@ -227,10 +231,13 @@ class UserResource extends Resource
                             ->icon('heroicon-o-check')
                             ->send();
                     }),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->visible(Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::VIEW)),
 //                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                ViewAction::make()->color('info'),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(Filament::auth()->user()->hasPrivilege(LanguagePolicy::class, PolicyPrivilege::DELETE)),
+                ViewAction::make()->color('info')
+                    ->visible(Filament::auth()->user()->hasPrivilege(LanguagePolicy::class, PolicyPrivilege::VIEW)),
             ]);
     }
 

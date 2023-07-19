@@ -2,11 +2,14 @@
 
 namespace Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 
+use Filament\Facades\Filament;
 use Filament\Resources\Form;
 use Mediamouse\Filament\Forms\Components\TextInput;
+use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Filament\Resources\GroupResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
+use Mediamouse\Users\Policies\GroupPolicy;
 
 /**
  * @property \Mediamouse\Users\Models\Group record
@@ -28,7 +31,8 @@ class ViewGroup extends ViewRecord
     {
         return [
             GroupResource\Actions\EditGroup::make()
-                ->label((__('mediamouse-users::pages/group-resource.edit'))),
+                ->label((__('mediamouse-users::pages/group-resource.edit')))
+                ->visible(Filament::auth()->user()->hasPrivilege(GroupPolicy::class, PolicyPrivilege::UPDATE)),
 //            Actions\DeleteAction::make(),
         ];
     }

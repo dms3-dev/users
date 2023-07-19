@@ -3,16 +3,19 @@
 namespace Mediamouse\Users\Filament\Resources;
 
 use Exception;
+use Filament\Facades\Filament;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
+use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\GroupHasPolicyRelationManager;
 use Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers\UserMemberOfGroupRelationManager;
 use Mediamouse\Users\Models\Group;
+use Mediamouse\Users\Policies\GroupPolicy;
 use Mediamouse\Users\Support\Date;
 
 class GroupResource extends Resource
@@ -99,10 +102,11 @@ class GroupResource extends Resource
                     ->sortable(),
             ])
             ->actions([
-                ViewAction::make()->color('info'),
+                ViewAction::make()->color('info')
+                    ->visible(Filament::auth()->user()->hasPrivilege(GroupPolicy::class, PolicyPrivilege::VIEW)),
                 Tables\Actions\DeleteAction::make()
                     ->visible(fn(Group $record) => $record->users_count === 0 ||
-                        ($record->users_count === null && $record->users()->count() === 0)
+                        ($record->users_count === null && $record->users()->count() === 0 && Filament::auth()->user()->hasPrivilege(GroupPolicy::class, PolicyPrivilege::DELETE))
                 ),
 
             ]);
