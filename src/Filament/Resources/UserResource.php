@@ -47,12 +47,8 @@ class UserResource extends Resource
         return static::$navigationLabel ?? __('mediamouse-users::pages/user-resource.title');
     }
 
-
-
-
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
 
@@ -83,8 +79,11 @@ class UserResource extends Resource
                                 }),
                             Forms\Components\Select::make('role')
                                 ->label((__('mediamouse-users::model/user-model.role')))
-                                ->options(UserRole::class)
+                                ->options(Filament::auth()->user()->role == UserRole::ADMINISTRATOR ? [UserRole::ADMINISTRATOR] : UserRole::class)
+                                ->default(UserRole::ADMINISTRATOR)
+                                ->visible(Filament::auth()->user()->role == UserRole::SA)
                                 ->enum(UserRole::class)
+                                ->reactive()
                                 ->required(),
                         ]),
                     ]),
@@ -101,39 +100,47 @@ class UserResource extends Resource
                                 Forms\Components\Select::make('two_factor')
                                     ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                                     ->enum(UserTwoFactor::class)
-                                    ->options(Arr::setKeysEqualToValues(Arr::combine(
-                                        app(UserManagementSettings::class)->two_fa_MEMBER,
-                                        app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
-                                        app(UserManagementSettings::class)->two_fa_SA
-                                    )))
-                                        ->rules([
-                                            function (CreateUser|ViewUser|EditUser $livewire) {
-                                                return function (string $attribute, $value, Closure $fail) use ($livewire) {
-                                                    $role = Request::hasUpdatedValue('data.role', $livewire->record?->role->value);
-                                                    $allowed_values = [];
-                                                    switch($role) {
-                                                        case UserRole::NONE->value :
-                                                            $allowed_values = UserTwoFactor::options();
-                                                            break;
-                                                        case UserRole::MEMBER->value :
-                                                            $allowed_values = app(UserManagementSettings::class)->two_fa_MEMBER;
-                                                            break;
-                                                        case UserRole::ADMINISTRATOR->value :
-                                                            $allowed_values = app(UserManagementSettings::class)->two_fa_ADMINISTRATOR;
-                                                            break;
-                                                        case UserRole::SA->value :
-                                                            $allowed_values = app(UserManagementSettings::class)->two_fa_SA;
-                                                            break;
-                                                    }
+                                    ->options(fn(Closure $get) => match ($get('role')) {
+                                        UserRole::ADMINISTRATOR->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_ADMINISTRATOR),
 
-                                                    if(!in_array($value, $allowed_values)) {
-                                                        $the_values = implode(', ' , $allowed_values);
-                                                        $fail("For {$role} only {$the_values} are allowed!");
-                                                    }
+                                        UserRole::SA->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_SA),
+                                        UserRole::MEMBER->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_MEMBER),
+                                        default =>
+                                        Arr::setKeysEqualToValues(Arr::combine(
+                                            app(UserManagementSettings::class)->two_fa_MEMBER,
+                                            app(UserManagementSettings::class)->two_fa_ADMINISTRATOR,
+                                            app(UserManagementSettings::class)->two_fa_SA
+                                        ))
+                                    }
+                                    )
+                                    ->rules([
+                                        function (CreateUser|ViewUser|EditUser $livewire) {
+                                            return function (string $attribute, $value, Closure $fail) use ($livewire) {
+                                                $role = Request::hasUpdatedValue('data.role', $livewire->record?->role->value);
+                                                $allowed_values = [];
+                                                switch ($role) {
+                                                    case UserRole::NONE->value :
+                                                        $allowed_values = UserTwoFactor::options();
+                                                        break;
+                                                    case UserRole::MEMBER->value :
+                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_MEMBER;
+                                                        break;
+                                                    case UserRole::ADMINISTRATOR->value :
+                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_ADMINISTRATOR;
+                                                        break;
+                                                    case UserRole::SA->value :
+                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_SA;
+                                                        break;
+                                                }
+
+                                                if (!in_array($value, $allowed_values)) {
+                                                    $the_values = implode(', ', $allowed_values);
+                                                    $fail("For {$role} only {$the_values} are allowed!");
+                                                }
 
 
-                                                };
-                                            },
+                                            };
+                                        },
                                     ])
                                     ->required(),
                                 Forms\Components\Select::make('status')
@@ -199,13 +206,13 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->formatStateUsing(
-                        function(User $record) {
+                        function (User $record) {
                             $groups = array();
 
-                            foreach($record->groups as $group) {
+                            foreach ($record->groups as $group) {
                                 $groups[] = $group->name;
                             }
-                            return implode(', ',  $groups);
+                            return implode(', ', $groups);
                         }
 
                     ),
