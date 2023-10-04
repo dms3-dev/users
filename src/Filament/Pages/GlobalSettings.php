@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Illuminate\Contracts\Support\Htmlable;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
+use Mediamouse\Users\Filament\Pages\Actions\ToggleMaintenanceAction;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\GlobalSettings as GlobalSettingsModel;
 use Filament\Forms\Components\TextInput;
@@ -34,12 +35,12 @@ class GlobalSettings extends SettingsPage
 
     protected static function getNavigationLabel(): string
     {
-        return __('mediamouse-users::pages/global-settings.settings_title');
+        return __('mediamouse-users::pages/global-settings.menu-label');
     }
 
     protected function getTitle(): string
     {
-        return __('mediamouse-users::pages/global-settings.settings_title');
+        return __('mediamouse-users::pages/global-settings.title');
     }
 
     protected function getFormSchema(): array
@@ -50,7 +51,8 @@ class GlobalSettings extends SettingsPage
                 $this->fieldSetDateSettings(),
                 $this->fieldsetCsvSettings(),
                 $this->fieldSetNumberSettings(),
-            ])
+            ]),
+
         ];
     }
 
@@ -167,5 +169,12 @@ class GlobalSettings extends SettingsPage
                             'RN' => __('mediamouse-users::pages/user-settings.csv-new-line-rn'),
                         ]),
                 ]);
+    }
+    protected function getActions(): array
+    {
+        return [
+            ToggleMaintenanceAction::make()
+            ->color('danger')
+        ];
     }
 }

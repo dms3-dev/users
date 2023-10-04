@@ -6,6 +6,8 @@ use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
 use Mediamouse\Users\Enums\UserRole;
@@ -14,6 +16,7 @@ use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
 use Mediamouse\Users\Http\Livewire\Auth\Login;
 use Mediamouse\Users\Models\User;
+use Mediamouse\Users\Settings\UserManagementSettings;
 use Spatie\LaravelPackageTools\Package;
 use Filament\PluginServiceProvider;
 
@@ -57,8 +60,8 @@ class UserServiceProvider extends PluginServiceProvider
                 'global_settings',
                 'create_user_settings_table',
                 'global_settings_csv',
-            ])
-            ;
+                'maintenance_settings',
+            ]);
     }
 
     public function boot()
@@ -85,20 +88,26 @@ class UserServiceProvider extends PluginServiceProvider
                     ->icon('heroicon-s-cog'),
             ]);
 
-            if(Filament::auth()->user() !== null) {
+            if (Filament::auth()->user() !== null) {
                 /** @var User $current_user */
                 $current_user = Filament::auth()->user();
                 App::setLocale($current_user->language_iso);
 
-                if($current_user->role == UserRole::SA) {
+                if ($current_user->role == UserRole::SA) {
                     Filament::registerUserMenuItems([
                         UserMenuItem::make()
-                            ->label(__('mediamouse-users::pages/global-settings.title'))
+                            ->label(__('mediamouse-users::pages/global-settings.menu-label'))
                             ->url(route('filament.pages.global-settings'))
                             ->sort(2)
                             ->icon('heroicon-s-cog'),
                     ]);
                 }
+            }
+
+            if (app()->isDownForMaintenance()) {
+                Filament::registerRenderHook('global-search.start', fn() => View::make('mediamouse-users::maintenance-badge', [
+                    'secret' => (new UserManagementSettings())->maintenance_secret
+                ]));
             }
         });
     }

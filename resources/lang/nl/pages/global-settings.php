@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'settings_title' => 'Systeem Instellingen',
-
+    'title' => 'Systeem Instellingen',
+    'menu-label' => 'Systeem Instellingen',
     'title' => 'Systeem Instellingen',
     'date-settings' => 'Datum instellingen',
     'date-notation' => 'Datum notatie',
@@ -11,6 +11,7 @@ return [
     'number-settings' => 'Nummer instellingen',
     'number-notation' => 'Nummer notatie',
     'datetime-auto-setting' => 'Automatisch',
+    'toggle-maintenance-button' => 'Schakel Maintenance',
 
     'csv-settings' => 'CSV Export Instellingen',
     'csv-delimiter' => 'Separator',

@@ -28,6 +28,8 @@ class UserManagementSettings extends Settings
     public array $two_fa_ADMINISTRATOR;
     public array $two_fa_SA;
 
+    public string $maintenance_secret;
+
     public static function group(): string
     {
         return 'mediamouse-users';

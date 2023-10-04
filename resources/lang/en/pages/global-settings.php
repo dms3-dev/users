@@ -3,6 +3,7 @@
 return [
 
     'title' => 'Global Settings',
+    'menu-label' => 'Global Settings',
     'date-settings' => 'Date Settings',
     'date-notation' => 'Date format',
     'datetime-notation' => 'Date/Time format',
@@ -10,6 +11,7 @@ return [
     'number-settings' => 'Number Settings',
     'number-notation' => 'Number format',
     'datetime-auto-setting' => 'Automatic',
+    'toggle-maintenance-button' => 'Toggle Maintenance',
 
     'csv-settings' => 'CSV Export Settings',
     'csv-delimiter' => 'Separator',
