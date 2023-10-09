@@ -34,6 +34,7 @@ class UserServiceProvider extends PluginServiceProvider
         \Mediamouse\Users\Filament\Pages\GlobalSettings::class,
         \Mediamouse\Users\Filament\Pages\UserSettings::class,
         \Mediamouse\Users\Filament\Pages\ChangePassword::class,
+        \Mediamouse\Users\Filament\Pages\SystemHealth::class,
     ];
 
     public function configurePackage(Package $package): void
@@ -61,6 +62,8 @@ class UserServiceProvider extends PluginServiceProvider
                 'create_user_settings_table',
                 'global_settings_csv',
                 'maintenance_settings',
+                'create_system_health_table',
+                'create_system_health_stats_table',
             ]);
     }
 
@@ -100,8 +103,17 @@ class UserServiceProvider extends PluginServiceProvider
                             ->url(route('filament.pages.global-settings'))
                             ->sort(2)
                             ->icon('heroicon-s-cog'),
+
+                        UserMenuItem::make()
+                            ->label(__('mediamouse-users::pages/system-health.menu-label'))
+                            ->url(route('filament.pages.system-health'))
+                            ->sort(2)
+                            ->icon('heroicon-s-heart'),
+
                     ]);
                 }
+
+
             }
 
             if (app()->isDownForMaintenance()) {

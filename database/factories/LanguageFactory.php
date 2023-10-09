@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediamouse\UsersDatabase\Factories;
+namespace Mediamouse\Users\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Mediamouse\Users\Enums\LanguageStatus;

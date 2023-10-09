@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Mediamouse\Users\Enums\SystemHealthStatus;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('system_health', function (Blueprint $table): void{
+            $table->id();
+            $table->datetimes();
+            $table->datetime('update_after');
+            $table->datetime('checked_at');
+            $table->datetime('valid_until');
+            $table->string('health_check',255);
+            $table->enum('status',SystemHealthStatus::options())->nullable;
+            $table->json('payload')->nullable;
+
+
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('system_health');
+    }
+};

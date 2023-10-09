@@ -3,6 +3,8 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Mediamouse\Users\Factories\LoginAttemptFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\LoginAttemptStatus;
@@ -24,6 +26,8 @@ use Mediamouse\Users\Enums\LoginAttemptStatus;
 
 class LoginAttempt extends Model
 {
+    use HasFactory;
+
     protected $casts = [
         'status' => LoginAttemptStatus::class,
     ];
@@ -31,5 +35,10 @@ class LoginAttempt extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function newFactory()
+    {
+        return LoginAttemptFactory::new();
     }
 }

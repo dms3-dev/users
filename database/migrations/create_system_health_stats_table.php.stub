@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Mediamouse\Users\Enums\SystemHealthStatus;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('system_health_stats', function (Blueprint $table): void{
+            $table->id();
+            $table->bigInteger('system_health_id')->unsigned();
+            $table->datetimes();
+            $table->enum('status',SystemHealthStatus::options())->nullable();
+
+            $table->foreign('system_health_id')->references('id')->on('system_health');
+
+
+
+        });
+    }
+
+    public function down()
+    {
+        $table->dropforeign('system_health_id');
+        Schema::dropIfExists('system_health');
+    }
+};
