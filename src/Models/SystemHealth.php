@@ -101,6 +101,9 @@ class SystemHealth extends Model
         $newSystem = new SystemHealth();
         $newSystem->health_check = $health_check;
         $newSystem->payload = $payload;
+        $newSystem->update_after = Carbon::now();
+
+        $newSystem->save();
 
     }
 

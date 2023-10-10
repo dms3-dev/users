@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SystemHealth;
+namespace Mediamouse\Users\SystemHealth;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
