@@ -17,10 +17,11 @@ abstract class HealthCheckAbstract
     }
 
     public static abstract function check(mixed $payload);
-    public function checkIntervalSeconds(int $seconds = 1800) : int { return  $seconds; }
-    public function checkValidUntilInterval(int $seconds = 14400) : int { return $seconds; }
+    public function nextCheck() : Carbon { return Carbon::now()->addSeconds(1800); }
+    public function validUntil() : Carbon { return Carbon::now()->addSeconds(7200); }
 
 
+    public function getCards() : array { return []; }
 
 
 

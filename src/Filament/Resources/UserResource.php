@@ -113,35 +113,35 @@ class UserResource extends Resource
                                         ))
                                     }
                                     )
-                                    ->rules([
-                                        function (CreateUser|ViewUser|EditUser $livewire) {
-                                            return function (string $attribute, $value, Closure $fail) use ($livewire) {
-                                                $role = Request::hasUpdatedValue('data.role', $livewire->record?->role->value);
-                                                $allowed_values = [];
-                                                switch ($role) {
-                                                    case UserRole::NONE->value :
-                                                        $allowed_values = UserTwoFactor::options();
-                                                        break;
-                                                    case UserRole::MEMBER->value :
-                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_MEMBER;
-                                                        break;
-                                                    case UserRole::ADMINISTRATOR->value :
-                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_ADMINISTRATOR;
-                                                        break;
-                                                    case UserRole::SA->value :
-                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_SA;
-                                                        break;
-                                                }
-
-                                                if (!in_array($value, $allowed_values)) {
-                                                    $the_values = implode(', ', $allowed_values);
-                                                    $fail("For {$role} only {$the_values} are allowed!");
-                                                }
-
-
-                                            };
-                                        },
-                                    ])
+//                                    ->rules([
+//                                        function (CreateUser|ViewUser|EditUser $livewire) {
+//                                            return function (string $attribute, $value, Closure $fail) use ($livewire) {
+//                                                $role = Request::hasUpdatedValue('data.role', $livewire->record?->role->value);
+//                                                $allowed_values = [];
+//                                                switch ($role) {
+//                                                    case UserRole::NONE->value :
+//                                                        $allowed_values = UserTwoFactor::options();
+//                                                        break;
+//                                                    case UserRole::MEMBER->value :
+//                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_MEMBER;
+//                                                        break;
+//                                                    case UserRole::ADMINISTRATOR->value :
+//                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_ADMINISTRATOR;
+//                                                        break;
+//                                                    case UserRole::SA->value :
+//                                                        $allowed_values = app(UserManagementSettings::class)->two_fa_SA;
+//                                                        break;
+//                                                }
+//
+//                                                if (!in_array($value, $allowed_values)) {
+//                                                    $the_values = implode(', ', $allowed_values);
+//                                                    $fail("For {$role} only {$the_values} are allowed!");
+//                                                }
+//
+//
+//                                            };
+//                                        },
+//                                    ])
                                     ->required(),
                                 Forms\Components\Select::make('status')
                                     ->label((__('mediamouse-users::pages/user-resource.account_status')))

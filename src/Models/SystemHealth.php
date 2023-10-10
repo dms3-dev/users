@@ -56,10 +56,9 @@ class SystemHealth extends Model
         $check = new $class();
         $result = $check->check($this->payload);
 
-        $this->checkItem($result);
-        // do some funky stuff with result;
+        $this->checkItem($result ,$check->nextCheck($this->payload),$check->validUntil($this->payload));
     }
-    protected function checkItem($result)
+    protected function checkItem($result ,Carbon $updateAfter,Carbon $validUntil)
     {
         if (Carbon::now() >= $result->update_after) {
             if ($this->status != $result) {
@@ -69,8 +68,8 @@ class SystemHealth extends Model
 
             }
             $this->checked_at = Carbon::now();
-            $this->update_after = Carbon::now()->addSeconds($this->checkIntervalSeconds());
-            $this->valid_until = Carbon::now()->addSeconds($this->checkValidUntilInterval());
+            $this->update_after = $updateAfter;
+            $this->valid_until = $validUntil;
             $this->save();
         }
     }
@@ -96,6 +95,13 @@ class SystemHealth extends Model
         $nextStat->system_health_id = $this->id;
         $nextStat->status = $result;
         $nextStat->save();
+    }
+
+    public static function addCheck(string $health_check, mixed $payload = null) {
+        $newSystem = new SystemHealth();
+        $newSystem->health_check = $health_check;
+        $newSystem->payload = $payload;
+
     }
 
 }

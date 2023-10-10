@@ -20,7 +20,7 @@ class ListUsers extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()
+           UserResource\Actions\CreateUserAction::make()
                 ->color('success')
                 ->icon('heroicon-s-plus'),
         ];
