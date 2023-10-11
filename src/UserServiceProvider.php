@@ -6,12 +6,15 @@ use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\UserMenuItem;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Mediamouse\Users\Console\Commands\CheckSystemHealth;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
+use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Filament\Pages\SystemHealth;
 use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
@@ -122,6 +125,11 @@ class UserServiceProvider extends PluginServiceProvider
             if (app()->isDownForMaintenance()) {
                 Filament::registerRenderHook('global-search.start', fn() => View::make('mediamouse-users::maintenance-badge', [
                     'secret' => (new UserManagementSettings())->maintenance_secret
+                ]));
+            }
+
+            if (\Mediamouse\Users\Models\SystemHealth::query()->whereIn('status',[SystemHealthStatus::WARNING,SystemHealthStatus::ERROR])->exists()) {
+                Filament::registerRenderHook('global-search.start', fn() => View::make('mediamouse-users::system-health-badge', [
                 ]));
             }
         });
