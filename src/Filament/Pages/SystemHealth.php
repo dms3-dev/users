@@ -62,7 +62,7 @@ class SystemHealth extends Page implements HasTable
 
     protected function getTableQuery(): Builder|Relation
     {
-        return SystemHealthModel::query();
+        return SystemHealthModel::query()->whereNotNull('status');
     }
 
     protected function getActions(): array
