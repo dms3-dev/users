@@ -11,9 +11,11 @@ use Filament\Tables\Contracts\HasTable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Filament\Pages\Actions\ToggleMaintenanceAction;
+use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\GlobalSettings as GlobalSettingsModel;
 use Filament\Forms\Components\TextInput;
@@ -58,10 +60,10 @@ class SystemHealth extends Page implements HasTable
         ];
     }
 
-protected function getTableQuery(): Builder|Relation
-{
-    return SystemHealthModel::query();
-}
+    protected function getTableQuery(): Builder|Relation
+    {
+        return SystemHealthModel::query();
+    }
 
     protected function getActions(): array
     {
@@ -70,10 +72,44 @@ protected function getTableQuery(): Builder|Relation
         ];
     }
 
+
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('health_check'),
+            TextColumn::make('health_check')
+                ->formatStateUsing(function(\Mediamouse\Users\Models\SystemHealth $record){
+                    $class = $record->health_check;
+
+                    $check = new $class($record->payload);
+                    return $check->getName();
+                }),
+            TextColumn::make('status')
+                ->sortable()
+                ->searchable()
+                ->toggleable()
+                ->color(function (\Mediamouse\Users\Models\SystemHealth $record) {
+                    if ($record->status == SystemHealthStatus::ERROR) return 'danger';
+                    if ($record->status == SystemHealthStatus::WARNING) return 'warning';
+                    return 'success';
+                }),
+            TextColumn::make('checked_at')
+                ->sortable()
+                ->searchable()
+                ->toggleable()
+                ->formatStateUsing(fn($state)=>$state? date_format($state,'d/m/y H:i') : ''),
+            TextColumn::make('valid_until')
+                ->sortable()
+                ->searchable()
+                ->toggleable()
+                ->formatStateUsing(fn($state)=>$state? date_format($state,'d/m/y H:i') : ''),
+
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            SystemHealthCards::class,
         ];
     }
 }

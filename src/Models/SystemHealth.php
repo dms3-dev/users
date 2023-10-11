@@ -53,14 +53,15 @@ class SystemHealth extends Model
     public function check() {
         $class = $this->health_check;
 
-        $check = new $class();
+        $check = new $class($this->payload);
         $result = $check->check($this->payload);
 
         $this->checkItem($result ,$check->nextCheck($this->payload),$check->validUntil($this->payload));
     }
-    protected function checkItem($result ,Carbon $updateAfter,Carbon $validUntil)
+
+    protected function checkItem($result ,Carbon $updateAfter ,Carbon $validUntil)
     {
-        if (Carbon::now() >= $result->update_after) {
+        if (Carbon::now() >= $this->update_after) {
             if ($this->status != $result) {
                 $this->createSystemHealthStats($result);
                 $this->status = $result;
@@ -73,10 +74,11 @@ class SystemHealth extends Model
             $this->save();
         }
     }
+
     protected function createSystemHealthStats(SystemHealthStatus $result)
     {
         /** @var SystemHealthStats $lastItemStat */
-        $lastItemStat = SystemHealthStats::query()->where('system_health_id', $this->id)->latest();
+        $lastItemStat = SystemHealthStats::query()->where('system_health_id', $this->id)->latest()->first();
 
         if (($lastItemStat?->created_at == $this->checked_at) || is_null($lastItemStat)) {
             $nextStat = new SystemHealthStats();
@@ -102,6 +104,7 @@ class SystemHealth extends Model
         $newSystem->health_check = $health_check;
         $newSystem->payload = $payload;
         $newSystem->update_after = Carbon::now();
+
 
         $newSystem->save();
 

@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
+use Mediamouse\Users\Console\Commands\CheckSystemHealth;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
 use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
@@ -43,7 +45,7 @@ class UserServiceProvider extends PluginServiceProvider
             ->name('mediamouse-users')
             ->hasViews()
             ->hasRoutes('web')
-            ->hasCommands([UpdatePolicies::class])
+            ->hasCommands([UpdatePolicies::class,CheckSystemHealth::class])
             ->hasTranslations()
             ->hasMigrations([
                 'create_languages_table',
@@ -75,6 +77,7 @@ class UserServiceProvider extends PluginServiceProvider
         Livewire::component(Challenge::getName(), Challenge::class);
         Livewire::component(ForgotPassword::getName(), ForgotPassword::class);
         Livewire::component(EnterNewPassword::getName(), EnterNewPassword::class);
+        Livewire::component(SystemHealthCards::getName(), SystemHealthCards::class);
 
         Filament::serving(function () {
 

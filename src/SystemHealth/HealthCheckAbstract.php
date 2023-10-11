@@ -14,17 +14,19 @@ abstract class HealthCheckAbstract
 
     public function __construct(mixed $payload = null) {
         $this->payload = $payload;
+        $this->init();
     }
 
-    public static abstract function check(mixed $payload);
+    public abstract function check();
+    public abstract function getName();
+
+
     public function nextCheck() : Carbon { return Carbon::now()->addSeconds(1800); }
     public function validUntil() : Carbon { return Carbon::now()->addSeconds(7200); }
 
 
+    protected function init() : void {}
     public function getCards() : array { return []; }
-
-
-
 
 }
 

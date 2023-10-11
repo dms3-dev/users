@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\SystemHealth;
 
 use Carbon\Carbon;
+use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Support\Facades\DB;
 use Mediamouse\Users\Enums\LoginAttemptStatus;
 use Mediamouse\Users\Enums\SystemHealthStatus;
@@ -13,30 +14,36 @@ use phpDocumentor\Reflection\Types\This;
 
 class DonorLoginCheck extends HealthCheckAbstract
 {
-    public function nextCheck($payload = null): Carbon
+    public function nextCheck(): Carbon
     {
         $lastDonorLogin =LoginAttempt::query()
             ->join('users', 'users.id', 'user_id')
             ->where('users.role', UserRole::MEMBER)
             ->where('login_attempts.status', LoginAttemptStatus::SUCCESSFUL)
             ->latest()
-            ->value('created_at');
+            ->value('login_attempts.created_at');
 
-        return Carbon::create($lastDonorLogin)->addSeconds($payload?? 172800);
+        return Carbon::create($lastDonorLogin)->addSeconds($this->payload?? 172800);
     }
 
-    public function validUntil($payload = null): Carbon
+    public function validUntil(): Carbon
     {
         return $this->nextCheck()->addSeconds(7200);
     }
 
+    public function getName()
+    {
+        return 'Recent donor login';
+    }
 
-    public static function check(mixed $payload = null): SystemHealthStatus
+
+
+    public function check(): SystemHealthStatus
     {
 
 
-        if (!self::donorExists($payload ?? 172800)) return SystemHealthStatus::WARNING;
-        if (!self::donorExists($payload ? $payload * 2.5 : 432000)) return SystemHealthStatus::ERROR;
+        if (!self::donorExists($this->payload ?? 172800)) return SystemHealthStatus::WARNING;
+        if (!self::donorExists($this->payload ? $this->payload * 2.5 : 432000)) return SystemHealthStatus::ERROR;
 
         return SystemHealthStatus::OK;
 
@@ -52,6 +59,19 @@ class DonorLoginCheck extends HealthCheckAbstract
             ->where('login_attempts.created_at', '>=', Carbon::now()->subSeconds($seconds))
             ->exists();
 
+    }
+
+    public function getCards(): array
+    {
+        return [
+            Card::make('Last Donor Login',LoginAttempt::query()
+                ->join('users', 'users.id', 'user_id')
+                ->where('users.role', UserRole::MEMBER)
+                ->where('login_attempts.status', LoginAttemptStatus::SUCCESSFUL)
+                ->latest()
+                ->value('login_attempts.created_at')
+                )
+        ];
     }
 
 

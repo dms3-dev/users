@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources\UserResource\Actions;
 
 
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Fieldset;
@@ -37,13 +38,17 @@ class CreateUserAction
                 $newUser->email = $data['email'];
                 $newUser->language_iso = $data['language_iso'];
                 $newUser->role = $data['role'];
-                $newUser->groups = $data['groups'];
+//                $newUser->groups = $data['groups'];
                 $newUser->two_factor = $data['two_factor'];
                 $newUser->status = $data['status'];
 
                 $newUser->save();
 
-
+                if(class_exists(Bugsnag::class) && env('APP_ENV') !== 'local') {
+                    Bugsnag::notifyError( 'SystemHealthChecks','An new admin was created', function (\Bugsnag\Report $report) {
+                        $report->setSeverity('info');
+                    });
+                }
 
 
             }
