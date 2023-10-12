@@ -22,6 +22,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms;
 use Mediamouse\Users\Models\SystemHealth as SystemHealthModel;
+use Mediamouse\Users\Support\Date;
 
 class SystemHealth extends Page implements HasTable
 {
@@ -96,12 +97,12 @@ class SystemHealth extends Page implements HasTable
                 ->sortable()
                 ->searchable()
                 ->toggleable()
-                ->formatStateUsing(fn($state)=>$state? date_format($state,'d/m/y H:i') : ''),
+                ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),
             TextColumn::make('valid_until')
                 ->sortable()
                 ->searchable()
                 ->toggleable()
-                ->formatStateUsing(fn($state)=>$state? date_format($state,'d/m/y H:i') : ''),
+                ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),
 
         ];
     }
