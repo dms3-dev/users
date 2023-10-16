@@ -8,12 +8,12 @@ use Mediamouse\Users\Settings\GlobalSettings;
 
 class Number {
 
-    public static function format(float $amount, int $decimals = 2): string
+    public static function format(float $amount, int $decimals = 0): string
     {
         return self::userFormat($amount, $decimals);
     }
 
-    public static function userFormat(float $amount, int $decimals = 2): string
+    public static function userFormat(float $amount, int $decimals = 0): string
     {
         /** @var User $current_user */
         $current_user = Filament::auth()->user();
@@ -26,12 +26,12 @@ class Number {
         return self::formatNumber($amount, $format, $decimals);
     }
 
-    public static function globalFormat(float $amount, int $decimals = 2): string
+    public static function globalFormat(float $amount, int $decimals = 0): string
     {
         return self::formatNumber($amount, app(GlobalSettings::class)->number_format, $decimals);
     }
 
-    protected static function formatNumber(float $amount, string $format, int $decimals = 2) : string {
+    protected static function formatNumber(float $amount, string $format, int $decimals = 0) : string {
         return match($format) {
             'COMMA' => number_format($amount, $decimals, ',', ''),
             'DOT' => number_format($amount, $decimals, '.', ''),
