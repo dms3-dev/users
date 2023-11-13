@@ -31,7 +31,7 @@ class DonorLoginCheck extends HealthCheckAbstract
         return $this->nextCheck()->addSeconds(7200);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'Recent donor login';
     }

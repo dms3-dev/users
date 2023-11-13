@@ -17,8 +17,8 @@ abstract class HealthCheckAbstract
         $this->init();
     }
 
-    public abstract function check();
-    public abstract function getName();
+    abstract public function check() : SystemHealthStatus;
+    abstract public function getName() : string;
 
 
     public function nextCheck() : Carbon { return Carbon::now()->addSeconds(1800); }
