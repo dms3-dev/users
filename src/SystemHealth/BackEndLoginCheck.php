@@ -14,7 +14,7 @@ class BackEndLoginCheck extends HealthCheckAbstract
 
     public function nextCheck() : Carbon { return Carbon::now()->addSeconds(300); }
     public function validUntil() : Carbon { return Carbon::now()->addSeconds(1800); }
-    public function getName()
+    public function getName(): string
     {
         return 'More than 10 failed backend logins';
     }
