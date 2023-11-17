@@ -128,10 +128,8 @@ class UserServiceProvider extends PluginServiceProvider
                 ]));
             }
 
-            if (\Mediamouse\Users\Models\SystemHealth::query()->whereIn('status',[SystemHealthStatus::WARNING,SystemHealthStatus::ERROR])->exists()) {
-                Filament::registerRenderHook('global-search.start', fn() => View::make('mediamouse-users::system-health-badge', [
-                ]));
-            }
+            Filament::registerRenderHook('global-search.start', fn() => View::make('mediamouse-users::system-health-badge', [
+            ]));
         });
     }
 }
