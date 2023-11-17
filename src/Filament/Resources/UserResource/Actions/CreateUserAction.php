@@ -21,6 +21,7 @@ use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
+use Carbon\Carbon;
 use Closure;
 
 class CreateUserAction
@@ -37,10 +38,11 @@ class CreateUserAction
                 $newUser->name = $data['name'];
                 $newUser->email = $data['email'];
                 $newUser->language_iso = $data['language_iso'];
-                $newUser->role = $data['role'];
+                $newUser->role = $data['role'] ?? UserRole::ADMINISTRATOR;
 //                $newUser->groups = $data['groups'];
                 $newUser->two_factor = $data['two_factor'];
                 $newUser->status = $data['status'];
+                $newUser->email_verified_at = Carbon::now();
 
                 $newUser->save();
 

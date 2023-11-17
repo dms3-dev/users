@@ -242,9 +242,9 @@ class UserResource extends Resource
                     ->visible(Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::VIEW)),
 //                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->visible(Filament::auth()->user()->hasPrivilege(LanguagePolicy::class, PolicyPrivilege::DELETE)),
+                    ->visible(fn(User $record) => Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::DELETE) && $record->id !== Filament::auth()->user()->id),
                 ViewAction::make()->color('info')
-                    ->visible(Filament::auth()->user()->hasPrivilege(LanguagePolicy::class, PolicyPrivilege::VIEW)),
+                    ->visible(Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::VIEW)),
             ]);
     }
 
