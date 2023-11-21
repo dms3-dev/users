@@ -41,11 +41,12 @@ class DonorLoginCheck extends HealthCheckAbstract
     public function check(): SystemHealthStatus
     {
 
+        $status = SystemHealthStatus::OK;
 
-        if (!self::donorExists($this->payload ?? 172800)) return SystemHealthStatus::WARNING;
-        if (!self::donorExists($this->payload ? $this->payload * 2.5 : 432000)) return SystemHealthStatus::ERROR;
+        if (!self::donorExists($this->payload ?? 172800)) $status = SystemHealthStatus::WARNING;
+        if (!self::donorExists($this->payload ? $this->payload * 2.5 : 432000)) $status = SystemHealthStatus::ERROR;
 
-        return SystemHealthStatus::OK;
+        return $status;
 
     }
 

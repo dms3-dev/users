@@ -25,7 +25,6 @@ class BackEndLoginCheck extends HealthCheckAbstract
         $logins = LoginAttempt::query()->where('status',LoginAttemptStatus::FAILED)
             ->where('created_at', '>=', Carbon::now()->subSeconds($this->payload?? 3600))
             ->count();
-
         if ($logins >= 10) return SystemHealthStatus::ERROR;
 
 
