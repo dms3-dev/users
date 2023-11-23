@@ -166,40 +166,40 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('username')
                     ->label((__('mediamouse-users::model/user-model.username')))
                     ->toggleable()
-                    ->sortable()
+                    ->sortable( ['id', 'username'])
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label((__('mediamouse-users::model/user-model.full_name')))
-                    ->sortable()
+                    ->sortable( ['id', 'name'])
                     ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label((__('mediamouse-users::model/user-model.email_address')))
                     ->toggleable()
-                    ->sortable()
+                    ->sortable( ['id', 'email'])
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->label((__('mediamouse-users::model/user-model.email_verified_at')))
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable(),
+                    ->sortable( ['id', 'email_verified_at']),
                 Tables\Columns\TextColumn::make('two_factor')
                     ->label((__('mediamouse-users::model/user-model.two_factor')))
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable(),
+                    ->sortable( ['id', 'two_factor']),
                 Tables\Columns\TextColumn::make('role')
                     ->label((__('mediamouse-users::model/user-model.role')))
                     ->toggleable()
-                    ->sortable()
+                    ->sortable( ['id', 'role'])
                     ->searchable(),
                 Tables\Columns\TextColumn::make('language.name')
                     ->label((__('mediamouse-users::model/user-model.language')))
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->sortable()
+                    ->sortable( ['id', 'language.name'])
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label((__('mediamouse-users::pages/user-resource.account_status')))
                     ->toggleable()
-                    ->sortable()
+                    ->sortable( ['id', 'status'])
                     ->searchable(),
                 Tables\Columns\TextColumn::make('groups.name')
                     ->label((__('mediamouse-users::model/user-model.groups')))
@@ -219,7 +219,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('lastLoginAttempt.created_at')
                     ->label((__('mediamouse-users::pages/user-resource.last_login_attempt')))
                     ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s'))
-                    ->sortable(),
+                    ->sortable( ['id', 'lastLoginAttempt.created_at']),
             ])
             ->actions([
                 Tables\Actions\Action::make('verify')

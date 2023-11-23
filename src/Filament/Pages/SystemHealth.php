@@ -85,7 +85,7 @@ class SystemHealth extends Page implements HasTable
                     return $check->getName();
                 }),
             TextColumn::make('status')
-                ->sortable()
+                ->sortable( ['id', 'status'])
                 ->searchable()
                 ->toggleable()
                 ->color(function (\Mediamouse\Users\Models\SystemHealth $record) {
@@ -94,12 +94,12 @@ class SystemHealth extends Page implements HasTable
                     return 'success';
                 }),
             TextColumn::make('checked_at')
-                ->sortable()
+                ->sortable( ['id', 'checked_at'])
                 ->searchable()
                 ->toggleable()
                 ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),
             TextColumn::make('valid_until')
-                ->sortable()
+                ->sortable( ['id', 'valid_until'])
                 ->searchable()
                 ->toggleable()
                 ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),

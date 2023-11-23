@@ -66,19 +66,19 @@ class UserMemberOfGroupRelationManager extends RelationManager
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable( ['id', 'username']),
                 Tables\Columns\TextColumn::make('name')
                     ->label((__('mediamouse-users::model/user-relation-model.full_name')))
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable( ['id', 'name']),
                 Tables\Columns\TextColumn::make('user_role')
                     ->label((__('mediamouse-users::model/user-relation-model.user_role')))
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable( ['id', 'user_role']),
                 Tables\Columns\TextColumn::make('groups')
                     ->label((__('mediamouse-users::model/user-relation-model.assigned_groups')))
                     ->formatStateUsing(
@@ -95,7 +95,7 @@ class UserMemberOfGroupRelationManager extends RelationManager
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable( ['id', 'groups']),
             ])
             ->filters([
                 //

@@ -75,11 +75,11 @@ class LanguageResource extends Resource
                     ->label((__('mediamouse-users::pages/language-resource.name')))
                     ->searchable()
                     ->toggleable()
-                    ->sortable(),
+                    ->sortable( ['iso', 'name']),
                 CheckColumn::make('status', LanguageStatus::ACTIVE->value, LanguageStatus::INACTIVE->value)
                     ->label('Status')
                     ->toggleable()
-                    ->sortable(),
+                    ->sortable( ['iso', 'status']),
                 Tables\Columns\TextColumn::make('users_count')
                     ->label((__('mediamouse-users::pages/language-resource.users_count')))
                     ->counts('users')

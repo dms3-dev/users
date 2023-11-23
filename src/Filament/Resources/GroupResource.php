@@ -88,7 +88,7 @@ class GroupResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label((__('mediamouse-users::model/group-model.group_name')))
-                    ->sortable()
+                    ->sortable( ['key', 'name'])
                     ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('users_count')
@@ -99,7 +99,7 @@ class GroupResource extends Resource
                     ->label((__('mediamouse-users::model/group-model.created_at')))
                     ->dateTime(Date::userDateTimeFormat())
                     ->toggleable()
-                    ->sortable(),
+                    ->sortable( ['key', 'created_at']),
             ])
             ->actions([
                 ViewAction::make()->color('info')
