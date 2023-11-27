@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Validate;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Mediamouse\Users\Settings\UserManagementSettings;
+use Mediamouse\Laravel\Support\Arr;
 
 class Password implements ValidationRule
 {
@@ -16,7 +17,20 @@ class Password implements ValidationRule
             ($settings->numbers && !preg_match('/[0-9]/', $value)) ||
             ($settings->special_characters && !preg_match('/[^a-zA-Z0-9]/', $value))
         ) {
-            $fail("Your password should contain at least 1 letter, 1 capital, 1 number and 1 special character!");
+            $errors = [];
+            if($settings->non_capital_letters) $errors[] = __('mediamouse-users::pages/login.error-password-invalid-letter');
+            if($settings->capital_letters) $errors[] = __('mediamouse-users::pages/login.error-password-invalid-capital');
+            if($settings->numbers) $errors[] = __('mediamouse-users::pages/login.error-password-invalid-number');
+            if($settings->special_characters) $errors[] = __('mediamouse-users::pages/login.error-password-invalid-special');
+
+            $fail(__('mediamouse-users::pages/login.error-password-invalid',
+                    [
+                        'conditions' => Arr::join(
+                                                $errors,
+                                                __('mediamouse-users::pages/login.error-password-invalid-glue'),
+                                                __('mediamouse-users::pages/login.error-password-invalid-final-glue')
+                                            )
+                    ]));
         }
     }
 }

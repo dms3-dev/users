@@ -3,12 +3,12 @@
         {{ $this->form }}
 
         <x-filament::button type="submit" form="authenticate" class="w-full">
-            Change password
+            {{ __('mediamouse-users::pages/login.change-password') }}
         </x-filament::button>
     </form>
     @if(!$isLoggedIn)
     <div class="mt-1 text-center">
-        <a wire:click="returnToLogin" class="text-primary-500 cursor-pointer">Return to login</a>
+        <a wire:click="returnToLogin" class="text-primary-500 cursor-pointer">{{ __('mediamouse-users::pages/login.return-to-login') }}</a>
     </div>
     @endif
 </div>

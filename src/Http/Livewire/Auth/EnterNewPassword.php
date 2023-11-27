@@ -87,7 +87,7 @@ class EnterNewPassword extends Component implements HasForms
 
         if($data['new-password'] !== $data['repeat-password']) {
             throw ValidationException::withMessages([
-                'new-password' => 'The password should be equal',
+                'new-password' => __('mediamouse-users::pages/login.error-password-not-equal'),
             ]);
         }
 
@@ -148,7 +148,7 @@ class EnterNewPassword extends Component implements HasForms
                 ])
                 ->required(),
             TextInput::make('repeat-password')
-                ->label('Repeat password')
+                ->label(__('mediamouse-users::pages/login.repeat-password'))
                 ->password()
                 ->minLength(app(UserManagementSettings::class)->password_min_length)
                 ->maxLength(app(UserManagementSettings::class)->password_max_length)
@@ -166,7 +166,7 @@ class EnterNewPassword extends Component implements HasForms
     {
         return view('mediamouse-users::enter-new-password')
             ->layout('filament::components.layouts.card', [
-                'title' => 'Reset password',
+                'title' => __('mediamouse-users::pages/login.title-reset-password'),
             ]);
     }
 }

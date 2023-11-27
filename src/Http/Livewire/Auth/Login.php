@@ -54,14 +54,14 @@ class Login extends Component implements HasForms
         switch(session()->get('login.error')) {
             case 'timeout' :
                 $this->message_class = 'text-danger-500';
-                $this->message_text = 'Your session is expired please try again';
+                $this->message_text = __('mediamouse-users::pages/login.session-expired');
                 break;
             case 'invalid-link' :
                 $this->message_class = 'text-danger-500';
-                $this->message_text = 'The link used to reset your password is not valid';
+                $this->message_text = __('mediamouse-users::pages/login.message-password-link-invalid');
                 break;
             case 'forgot-password' :
-                $this->message_text = 'If your email address is known in our system a link to reset your password has been sent';
+                $this->message_text = __('mediamouse-users::pages/login.message-reset-link-sent');
                 break;
         }
 
