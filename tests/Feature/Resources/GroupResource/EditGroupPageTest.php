@@ -30,12 +30,12 @@ class EditGroupPageTest extends TestCase
         $this->record->name = 'G1L';
         $this->record->save();
         $this->modelClass = Group::class;
-        $this->url = GroupResource::getUrl('edit', ['record' => $this->record]);
+        $this->url = GroupResource::getUrl('view', ['record' => $this->record]);
         $this->liveWireParameters = ['record' => $this->record->key];
         $this->liveWireClass = GroupResource\Pages\EditGroup::class;
         $this->formDataSet = [
-            'key' => fake()->randomLetter() . fake()->randomLetter(),
-            'name' => fake()->unique()->word(),
+            'key' => 'F2',
+            'name' => 'DDD',
         ];
     }
 
@@ -60,6 +60,7 @@ class EditGroupPageTest extends TestCase
         $liveWire = $this->submitForm();
         $url = str_replace('G1', $this->formDataSet['key'], GroupResource::getUrl('view', ['record' => $this->record]));
         GroupResource::getUrl('view', ['record' => $this->record]);
+//        $liveWire->assertNoRedirect();
             $liveWire->assertRedirect($url);
     }
 }

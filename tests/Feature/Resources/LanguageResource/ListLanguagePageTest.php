@@ -20,7 +20,7 @@ class ListLanguagePageTest extends TestCase
 
     protected function setUpPage($count = 10): void
     {
-        $this->records = Language::factory()->count($count)->create();
+        $this->records = Language::factory()->count(Language::query()->size() - $count)->create();
 
         $this->liveWireClass = ListLanguages::class;
         $this->url = LanguageResource::getUrl();
@@ -36,6 +36,8 @@ class ListLanguagePageTest extends TestCase
 
             $i++;
         }
+
+        $this->secondSortingColumn = 'iso';
 
     }
 

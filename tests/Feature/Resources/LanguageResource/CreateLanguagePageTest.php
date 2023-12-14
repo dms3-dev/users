@@ -7,6 +7,7 @@ use Mediamouse\Filament\Testing\Enums\ResourceType;
 use Mediamouse\Filament\Testing\Traits\FilamentForm;
 use Mediamouse\Filament\Testing\Traits\ResourcePage;
 use Mediamouse\Users\Enums\LanguageStatus;
+use Mediamouse\Users\Filament\Resources\LanguageResource;
 use Mediamouse\Users\Filament\Resources\LanguageResource\Pages\ListLanguages;
 use Mediamouse\Users\Models\Language;
 use Tests\TestCase;
@@ -28,6 +29,7 @@ class CreateLanguagePageTest extends TestCase
     protected function setUpPage(): void
     {
         $this->type = ResourceType::PAGE_ACTION;
+        $this->url = LanguageResource::getUrl();
         $this->submitAction = 'create';
         $this->modelClass = Language::class;
         $this->liveWireParameters = [];

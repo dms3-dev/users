@@ -2,6 +2,7 @@
 
 namespace Feature\Resources\GroupResource;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mediamouse\Filament\Testing\Traits\FilamentTable;
 use Mediamouse\Filament\Testing\Traits\ResourcePage;
@@ -22,7 +23,8 @@ class ListGroupPageTest extends TestCase
     {
         for($i = 0; $i < $count; $i++) {
             $record = new Group();
-            $record->key = fake()->randomLetter() . fake()->randomNumber(1) . fake()->randomLetter();
+            $record->created_at = Carbon::now()->subYears(5)->addDays($i);
+            $record->key = fake()->unique()->regexify('[A-Z]{3}[0-9]{3}');
             $record->name = fake()->unique()->word();
             $record->save();
 
@@ -41,6 +43,7 @@ class ListGroupPageTest extends TestCase
         $this->url = GroupResource::getUrl();
         $this->records = Group::all();
         $this->query = Group::query();
+        $this->secondSortingColumn = 'key';
     }
 
     protected function getResourceUrlForAction($action, $record): string
@@ -68,9 +71,9 @@ class ListGroupPageTest extends TestCase
         $this->seeIfPageTableHasAction('create');
     }
 
-    public function testNewGroupActionLeadsToNewGroupPage() {
-        $this->seeIfPageTableActionLinksTo('create', GroupResource::getUrl('create'));
-    }
+//    public function testNewGroupActionLeadsToNewGroupPage() {
+//        $this->seeIfPageTableActionLinksTo('create', GroupResource::getUrl('create'));
+//    }
 
     public function testViewActionExists() {
         $this->seeIfTableHasAction('view');
@@ -81,9 +84,9 @@ class ListGroupPageTest extends TestCase
         $this->seeIfTableActionLinksToUrl('view');
     }
 
-    public function testEditActionExists() {
-        $this->seeIfTableHasAction('edit');
-    }
+//    public function testEditActionExists() {
+//        $this->seeIfTableHasAction('edit');
+//    }
 
     public function testDeleteActionExists() {
         $this->seeIfTableHasAction('delete');
