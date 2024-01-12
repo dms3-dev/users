@@ -22,6 +22,16 @@ class ListLanguages extends ManageRecords
         return __('mediamouse-users::pages/language-resource.title');
     }
 
+    protected function getTableReorderColumn(): ?string
+    {
+        return 'sort';
+    }
+
+    protected function isTablePaginationEnabledWhileReordering(): bool
+    {
+        return false;
+    }
+
     /**
      * @throws Exception
      */
