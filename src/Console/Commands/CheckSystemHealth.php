@@ -17,7 +17,7 @@ class CheckSystemHealth extends Command
      *
      * @var string
      */
-    protected $signature = 'mediamouse-users:update-system-health';
+    protected $signature = 'mediamouse-users:update-system-health {--force}';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class CheckSystemHealth extends Command
     {
         $this->withProgressBar($this->getChecks(), function(SystemHealth $check) {
 
-            $check->check();
+            $check->check($this->option('force'));
         });
 
         return self::SUCCESS;

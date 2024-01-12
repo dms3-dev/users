@@ -50,29 +50,31 @@ class SystemHealth extends Model
         ];
 
 
-    public function check() {
-        $class = $this->health_check;
+    public function check($force = false) {
 
-        $check = new $class($this->payload);
-        $result = $check->check($this->payload);
+        if (Carbon::now() >= $this->update_after || $force) {
+            $class = $this->health_check;
 
-        $this->checkItem($result ,$check->nextCheck($this->payload),$check->validUntil($this->payload));
+            $check = new $class($this->payload);
+            $result = $check->check($this->payload);
+
+            $this->checkItem($result, $check->nextCheck($this->payload), $check->validUntil($this->payload));
+        }
     }
 
     protected function checkItem($result ,Carbon $updateAfter ,Carbon $validUntil)
     {
-        if (Carbon::now() >= $this->update_after) {
-            if ($this->status != $result) {
-                $this->createSystemHealthStats($result);
-                $this->status = $result;
-                $this->save();
-
-            }
-            $this->checked_at = Carbon::now();
-            $this->update_after = $updateAfter;
-            $this->valid_until = $validUntil;
+        if ($this->status != $result) {
+            $this->createSystemHealthStats($result);
+            $this->status = $result;
             $this->save();
+
         }
+        $this->checked_at = Carbon::now();
+        $this->update_after = $updateAfter;
+        $this->valid_until = $validUntil;
+        $this->save();
+
     }
 
     protected function createSystemHealthStats(SystemHealthStatus $result)
