@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Factories\GroupFactory;
-use Ramsey\Collection\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * @property string key

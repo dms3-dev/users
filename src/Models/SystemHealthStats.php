@@ -11,7 +11,7 @@ use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Factories\GroupFactory;
 use Psy\Util\Json;
-use Ramsey\Collection\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * @property int id

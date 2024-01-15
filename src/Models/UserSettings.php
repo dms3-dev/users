@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Factories\GroupFactory;
-use Ramsey\Collection\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * @property int id
@@ -18,7 +18,7 @@ use Ramsey\Collection\Collection;
  * @property string group
  * @property string name
  * @property boolean locked
- * @property json payload
+ * @property mixed payload
  *
  */
 class UserSettings extends Model
