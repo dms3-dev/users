@@ -2,8 +2,6 @@
 
 namespace Mediamouse\Users\Filament\RelationManagers;
 
-use App\Enums\NoteStatus;
-use App\Enums\NoteType;
 use App\Models\User;
 use Exception;
 use Filament\Facades\Filament;
@@ -13,6 +11,8 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Mediamouse\Users\Enums\NoteStatus;
+use Mediamouse\Users\Enums\NoteType;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;

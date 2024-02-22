@@ -2,13 +2,13 @@
 
 namespace Mediamouse\Users\Models;
 
-use App\Enums\NoteStatus;
-use App\Enums\NoteType;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mediamouse\Laravel\Models\Model;
+use Mediamouse\Users\Enums\NoteStatus;
+use Mediamouse\Users\Enums\NoteType;
 use Mediamouse\Users\Models\Contracts\WithNotes;
 
 /**

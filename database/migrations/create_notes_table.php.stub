@@ -1,10 +1,10 @@
 <?php
 
-use App\Enums\NoteStatus;
-use App\Enums\NoteType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Mediamouse\Users\Enums\NoteStatus;
+use Mediamouse\Users\Enums\NoteType;
 
 return new class extends Migration
 {

@@ -2,8 +2,6 @@
 
 namespace Mediamouse\Users\Filament\Widgets;
 
-use App\Enums\NoteStatus;
-use App\Enums\NoteType;
 use App\Filament\Resources\DonorResource;
 use App\Filament\Resources\HouseholdResource;
 use App\Models\Donor;
@@ -12,6 +10,8 @@ use Filament\Facades\Filament;
 use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Mediamouse\Users\Enums\NoteStatus;
+use Mediamouse\Users\Enums\NoteType;
 use Mediamouse\Users\Models\Note;
 use Mediamouse\Users\Support\Date;
 
