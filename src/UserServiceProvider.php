@@ -55,6 +55,7 @@ class UserServiceProvider extends PluginServiceProvider
                 'add_fields_to_users_table',
                 'create_groups_table',
                 'create_policies_table',
+                'create_notes_table',
                 'create_privileges_table',
                 'create_group_has_policies_table',
                 'create_login_attempts_table',
