@@ -14,6 +14,10 @@ use Mediamouse\Users\Console\Commands\CheckSystemHealth;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
 use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Filament\Pages\SettingsSections\CsvExportSettingsSection;
+use Mediamouse\Users\Filament\Pages\SettingsSections\DateSettingsSection;
+use Mediamouse\Users\Filament\Pages\SettingsSections\NumberSettingsSection;
+use Mediamouse\Users\Filament\Pages\SettingsSections\Sections;
 use Mediamouse\Users\Filament\Pages\SystemHealth;
 use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
@@ -76,6 +80,10 @@ class UserServiceProvider extends PluginServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Sections::add(DateSettingsSection::class);
+        Sections::add(CsvExportSettingsSection::class);
+        Sections::add(NumberSettingsSection::class);
 
         Livewire::component(Login::getName(), Login::class);
         Livewire::component(Challenge::getName(), Challenge::class);
