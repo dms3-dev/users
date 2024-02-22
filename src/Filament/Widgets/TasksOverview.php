@@ -1,0 +1,125 @@
+<?php
+
+namespace Mediamouse\Users\Filament\Widgets;
+
+use App\Enums\NoteStatus;
+use App\Enums\NoteType;
+use App\Filament\Resources\DonorResource;
+use App\Filament\Resources\HouseholdResource;
+use App\Models\Donor;
+use App\Models\Household;
+use Filament\Facades\Filament;
+use Filament\Tables;
+use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
+use Mediamouse\Users\Models\Note;
+use Mediamouse\Users\Support\Date;
+
+class TasksOverview extends BaseWidget
+{
+    protected function getTableQuery(): Builder
+    {
+        return Note::query()
+            ->where('type', NoteType::TASK->value)
+            ->whereIn('status', [NoteStatus::OPEN->value, NoteStatus::PENDING->value])
+            ->where('assigned_to', Filament::auth()->user()->id)
+            ->orderBy('milestone_at');
+    }
+
+    protected int | string | array $columnSpan = [
+
+        'sm' => 12,
+        'md' => 12,
+        'lg' => 12,
+        'xl' => 12,
+        '2xl' => 12,
+    ];
+
+    protected function getTableContentGrid(): ?array
+    {
+        return [
+            'sm' => 2,
+            'md' => 2,
+            'lg' => 2,
+            'xl' => 3,
+            '2xl' => 4,
+        ];
+    }
+
+//    protected function getTableRecordsPerPage(): int
+//    {
+//        return 12;
+//    }
+
+    protected function getTableRecordsPerPageSelectOptions(): array
+    {
+        return [12, 24, 36, 48,];
+    }
+
+
+    protected function getTableColumns(): array
+    {
+        return [
+            Tables\Columns\TextColumn::make('qualifiedName')
+                ->weight('bold')
+                ->formatStateUsing(fn(Note $record) => $record->notable->qualifiedName()),
+            Tables\Columns\TextColumn::make('milestone_at')
+                ->dateTime(Date::userDateTimeFormat())
+//                ->searchable()
+//                ->sortable()
+//                ->toggleable()
+                ->extraAttributes(['class' => 'mb-3'])
+                ->label('Due date'),
+//            Tables\Columns\TextColumn::make('assigned_to')
+//                ->formatStateUsing(fn(Note $record) => $record->user?->name),
+            Tables\Columns\TextColumn::make('content')
+//                ->sortable()
+//                ->toggleable()
+//                ->searchable()
+//                ->formatStateUsing(function (Note $record) {
+//                    if(strlen($record->content) > 45) {
+//                        return substr($record->content, 0, 42) . '...';
+//                    }
+//                    return substr($record->content, 0, 45);
+//                })
+            ,
+        ];
+    }
+
+    protected function getTableActions(): array
+    {
+        return [
+            Tables\Actions\ViewAction::make()
+                ->label(fn(Note $record) => match($record->has_notes_type) {
+                    Donor::class => 'View Donor',
+                    Household::class => 'View Household',
+                    default => ''
+                })
+                ->color(fn(Note $record) => match($record->has_notes_type) {
+                    Donor::class => 'primary',
+                    Household::class => 'warning',
+                    default => 'danger'
+                })
+                ->url(fn(Note $record) => match($record->has_notes_type) {
+                    Donor::class => DonorResource::getUrl('view', [
+                                    'record' => $record->has_notes_id,
+                                    'activeRelationManager' => array_search(\Mediamouse\Users\Filament\RelationManagers\NotesRelationManager::class, DonorResource::getRelations()),
+                            ]),
+                    Household::class => HouseholdResource::getUrl('view', [
+                                    'record' => $record->has_notes_id,
+                                    'activeRelationManager' => array_search(\Mediamouse\Users\Filament\RelationManagers\NotesRelationManager::class, HouseHoldResource::getRelations())
+                            ]),
+                    default => ''
+                }),
+            Tables\Actions\Action::make('resolve')
+                ->requiresConfirmation()
+                ->color('success')
+                ->icon('heroicon-s-check')
+                ->requiresConfirmation()
+                ->action(function(Note $record) {
+                    $record->status = NoteStatus::RESOLVED;
+                    $record->save();
+                })
+        ];
+    }
+}
