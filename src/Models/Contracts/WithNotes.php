@@ -15,6 +15,10 @@ interface WithNotes {
     public function copyNotesFrom(WithNotes $oldWithNotes): static;
     public function moveNotesFrom(WithNotes $oldWithNotes): static;
 
+    public function labelColor(): string;
+    public function labelText(): string;
+    public function noteListLink(): string;
+
     public function qualifiedName(): string;
 
 }

@@ -90,27 +90,9 @@ class TasksOverview extends BaseWidget
     {
         return [
             Tables\Actions\ViewAction::make()
-                ->label(fn(Note $record) => match($record->has_notes_type) {
-                    Donor::class => 'View Donor',
-                    Household::class => 'View Household',
-                    default => ''
-                })
-                ->color(fn(Note $record) => match($record->has_notes_type) {
-                    Donor::class => 'primary',
-                    Household::class => 'warning',
-                    default => 'danger'
-                })
-                ->url(fn(Note $record) => match($record->has_notes_type) {
-                    Donor::class => DonorResource::getUrl('view', [
-                                    'record' => $record->has_notes_id,
-                                    'activeRelationManager' => array_search(\Mediamouse\Users\Filament\RelationManagers\NotesRelationManager::class, DonorResource::getRelations()),
-                            ]),
-                    Household::class => HouseholdResource::getUrl('view', [
-                                    'record' => $record->has_notes_id,
-                                    'activeRelationManager' => array_search(\Mediamouse\Users\Filament\RelationManagers\NotesRelationManager::class, HouseHoldResource::getRelations())
-                            ]),
-                    default => ''
-                }),
+                ->label(fn(Note $record) => 'View ' . $record->notable->labelText())
+                ->color(fn(Note $record) =>  $record->notable->labelColor())
+                ->url(fn(Note $record) =>  $record->notable->noteListLink()),
             Tables\Actions\Action::make('resolve')
                 ->requiresConfirmation()
                 ->color('success')
