@@ -37,7 +37,8 @@ class NotesRelationManager extends RelationManager
                 ->default(NoteType::NOTE),
                 Forms\Components\DateTimePicker::make('milestone_at')
                     ->format(Date::userDateTimeFormat())
-                    ->label('Due date'),
+                    ->label('Due date')
+                    ->closeOnDateSelection(),
                 Forms\Components\Select::make('status')
                     ->required()
                     ->options(NoteStatus::class)
