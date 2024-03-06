@@ -51,6 +51,7 @@ class UserServiceProvider extends PluginServiceProvider
         $package
             ->name('mediamouse-users')
             ->hasViews()
+            ->hasConfigFile('mediamouse-users')
             ->hasRoutes('web')
             ->hasCommands([UpdatePolicies::class,CheckSystemHealth::class])
             ->hasTranslations()
