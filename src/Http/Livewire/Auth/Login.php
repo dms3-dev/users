@@ -91,7 +91,7 @@ class Login extends Component implements HasForms
 
         $this->validateUserLoginOrFail($user, $password, $attempt);
 
-        if($user->two_factor == UserTwoFactor::NONE) {
+        if($user->two_factor == UserTwoFactor::NONE || in_array(request()->ip(), config('mediamouse-users.ip_exceptions'))) {
             $this->loginUser($user, $attempt);
 
             $token = $user->passwordNeedsReset();
