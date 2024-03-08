@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mediamouse\Laravel\Models\Model;
 use Mediamouse\Users\Enums\NoteStatus;
 use Mediamouse\Users\Enums\NoteType;
+use Mediamouse\Users\Factories\NoteFactory;
 use Mediamouse\Users\Models\Contracts\WithNotes;
 
 /**
@@ -51,5 +52,11 @@ class Note extends Model
 
     public function user(): BelongsTo {
         return $this->belongsTo(\Mediamouse\Users\Models\User::class);
+    }
+
+
+    protected static function newFactory()
+    {
+        return NoteFactory::new();
     }
 }

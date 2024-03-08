@@ -5,9 +5,11 @@ namespace Mediamouse\Users\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Mediamouse\Users\Enums\NoteStatus;
 use Mediamouse\Users\Enums\NoteType;
+use Mediamouse\Users\Models\Note;
 
 class NoteFactory extends Factory
 {
+    protected $model = Note::class;
     /**
      * Define the model's default state.
      *
