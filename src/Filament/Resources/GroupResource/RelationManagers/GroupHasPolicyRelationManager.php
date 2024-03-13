@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers;
 
 use Awcodes\FilamentTableRepeater\Components\TableRepeater;
 use Exception;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
@@ -14,6 +15,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
+use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Models\GroupHasPolicy;
 use Mediamouse\Users\Models\Policy;
 use Mediamouse\Users\Models\User;
@@ -46,9 +48,10 @@ class GroupHasPolicyRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('policy')
-                    ->label(__('mediamouse-users::pages/policy-relation.name'))
-                    ->formatStateUsing(fn(String $state, GroupHasPolicy $record) => strlen($record->policyObject?->name) > 0 ? $record->policyObject?->name : $state)
+                    ->visible(Filament::auth()->user()->role === UserRole::SA)
                     ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('mediamouse-users::pages/policy-relation.name')),
                 Tables\Columns\CheckboxColumn::make('view_any'),
                 Tables\Columns\CheckboxColumn::make('view'),
                 Tables\Columns\CheckboxColumn::make('create'),

@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Mediamouse\Users\Models\Policy;
 use Mediamouse\Users\Models\Group;
 use Mediamouse\Users\Models\GroupHasPolicy;
@@ -30,9 +31,26 @@ class UpdatePolicies extends Command
      */
     public function handle() : int
     {
+        // Workaround for the instance that there is no policy record present.
+        $count = DB::affectingStatement("
+            INSERT INTO policies
+            SELECT group_has_policies.policy, NOW(), NOW(), group_has_policies.policy
+            FROM group_has_policies
+            LEFT JOIN policies p on group_has_policies.policy = p.policy
+            WHERE p.policy IS NULL
+            GROUP BY group_has_policies.policy
+        ");
+
+        if($count > 0 ) {
+            $this->error("$count policies where added to the database");
+        }
+        else {
+            $this->info("All policies were present");
+        }
+
         /** @var Policy $policy */
         foreach($this->getPolicies() as $policy) {
-            if(!class_exists($policy->policy)) {
+            if(!class_exists($policy->policy) || !is_subclass_of(PolicyAbstract::class, $policy->policy)) {
 //                $policy->delete();
             }
             else {

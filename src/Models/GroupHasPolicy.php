@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Mediamouse\Laravel\Models\Model;
 
 /**
@@ -35,5 +36,12 @@ class GroupHasPolicy extends Model
 
     public function policyObject() {
         return $this->belongsTo(Policy::class, 'policy', 'policy');
+    }
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => class_exists($this->policy) ? (new ($this->policy)())->name() : '*** Policy not found'
+        );
     }
 }
