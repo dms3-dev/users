@@ -275,23 +275,22 @@ class User extends Authenticatable implements FilamentUser
 
     public function hasPrivilege(string $policy_class, PolicyPrivilege $privilege): bool
     {
-        if(!is_subclass_of($policy_class, PolicyAbstract::class)) {
-            throw new Exception('Invalid Policy used to check privileges');
-        }
         if($this->role === UserRole::SA) return true;
         $value = $privilege->value;
         $policy = $this->privileges()->where('policy', $policy_class)->first();
         if($policy === null && $this->groups()->count() > 0) {
-            try {
-                $newPolicy = new Policy();
-                $newPolicy->policy = $policy_class;
-                $newPolicy->name = $policy_class;
-                $newPolicy->save();
-            } catch(\Throwable $e) { }
+            if(is_subclass_of($policy_class, PolicyAbstract::class)) {
+                try {
+                    $newPolicy = new Policy();
+                    $newPolicy->policy = $policy_class;
+                    $newPolicy->name = $policy_class;
+                    $newPolicy->save();
+                } catch(\Throwable $e) { }
 
-            /** @var Group $group */
-            foreach($this->groups as $group) {
-                $group->createPolicies();
+                /** @var Group $group */
+                foreach($this->groups as $group) {
+                    $group->createPolicies();
+                }
             }
         }
         return $policy !== null && $policy?->$value;
