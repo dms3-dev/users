@@ -50,7 +50,8 @@ class UpdatePolicies extends Command
 
         /** @var Policy $policy */
         foreach($this->getPolicies() as $policy) {
-            if(!class_exists($policy->policy) || !is_subclass_of(PolicyAbstract::class, $policy->policy)) {
+            if(!class_exists($policy->policy) || !is_subclass_of($policy->policy, PolicyAbstract::class)) {
+                $this->info('Deleting policy ' . $policy->policy);
                 $policy->delete();
             }
             else {
