@@ -12,13 +12,12 @@ return new class extends Migration
         Schema::create('system_health', function (Blueprint $table): void{
             $table->id();
             $table->datetimes();
-            $table->datetime('update_after')->nullable;
-            $table->datetime('checked_at')->nullable;
-            $table->datetime('valid_until')->nullable;
+            $table->datetime('update_after')->nullable();
+            $table->datetime('checked_at')->nullable();
+            $table->datetime('valid_until')->nullable();
             $table->string('health_check',255);
-            $table->enum('status',SystemHealthStatus::options())->nullable;
-            $table->json('payload')->nullable;
-
+            $table->enum('status',SystemHealthStatus::options())->nullable();
+            $table->json('payload')->nullable();
 
         });
     }
