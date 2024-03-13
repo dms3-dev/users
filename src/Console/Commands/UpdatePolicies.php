@@ -17,7 +17,7 @@ class UpdatePolicies extends Command
      *
      * @var string
      */
-    protected $signature = 'mediamouse-users:policies-update';
+    protected $signature = 'mm-users:policies-update';
 
     /**
      * The console command description.
@@ -51,7 +51,7 @@ class UpdatePolicies extends Command
         /** @var Policy $policy */
         foreach($this->getPolicies() as $policy) {
             if(!class_exists($policy->policy) || !is_subclass_of(PolicyAbstract::class, $policy->policy)) {
-//                $policy->delete();
+                $policy->delete();
             }
             else {
                 $policy_class = $policy->policy;
