@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Models;
 
 use Carbon\Carbon;
+use Dompdf\Exception;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,7 @@ use Mediamouse\Users\Factories\UserFactory;
 use Mediamouse\Users\MailTemplate\LoginChallengeMail;
 use Mediamouse\Users\MailTemplate\PasswordIsChangedMail;
 use Mediamouse\Users\MailTemplate\ResetPasswordLinkMail;
+use Mediamouse\Users\Policies\PolicyAbstract;
 use Mediamouse\Users\Settings\UserManagementSettings;
 
 /**
@@ -273,6 +275,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function hasPrivilege(string $policy_class, PolicyPrivilege $privilege): bool
     {
+        if(!is_subclass_of($policy_class, PolicyAbstract::class)) {
+            throw new Exception('Invalid Policy used to check privileges');
+        }
         if($this->role === UserRole::SA) return true;
         $value = $privilege->value;
         $policy = $this->privileges()->where('policy', $policy_class)->first();
