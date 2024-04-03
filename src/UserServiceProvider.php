@@ -76,6 +76,7 @@ class UserServiceProvider extends PluginServiceProvider
                 'create_system_health_table',
                 'create_system_health_stats_table',
                 'alter_policy_relations_to_cascasde',
+                'create_change_log_table',
             ]);
     }
 
