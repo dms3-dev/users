@@ -18,6 +18,8 @@ class GlobalSettings extends Settings
     public string $csv_enclosure;
     public string $csv_new_line;
 
+    public string $maintenance_text;
+
     public static function group(): string
     {
         return 'mediamouse-users-global';

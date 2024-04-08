@@ -12,6 +12,7 @@ return [
     'number-notation' => 'Number format',
     'datetime-auto-setting' => 'Automatic',
     'toggle-maintenance-button' => 'Toggle Maintenance',
+    'maintenance-settings' => 'Maintenance Settings',
 
     'csv-settings' => 'CSV Export Settings',
     'csv-delimiter' => 'Separator',

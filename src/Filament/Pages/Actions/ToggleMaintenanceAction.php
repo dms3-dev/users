@@ -57,7 +57,7 @@ class ToggleMaintenanceAction
                     $arr_cookie_options
                     );
 
-                Artisan::call('down', ['--secret' => $secret]);
+                Artisan::call('down', ['--secret' => $secret , '--render'=>'mediamouse-users::maintenance']);
 
                 refreshPage();
             })

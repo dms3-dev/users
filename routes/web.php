@@ -15,3 +15,7 @@ Route::domain(config('filament.domain'))
 
 
 Route::permanentRedirect('/my-login', '/admin')->name('login');
+
+Route::get('/maintenance', function () {
+    return view('mediamouse-users::maintenance');
+});

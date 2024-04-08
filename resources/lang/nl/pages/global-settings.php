@@ -12,6 +12,7 @@ return [
     'number-notation' => 'Nummer notatie',
     'datetime-auto-setting' => 'Automatisch',
     'toggle-maintenance-button' => 'Schakel Maintenance',
+    'maintenance-settings' => 'Maintenance instellingen',
 
     'csv-settings' => 'CSV Export Instellingen',
     'csv-delimiter' => 'Separator',
