@@ -5,6 +5,7 @@ namespace Mediamouse\Users;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\UserMenuItem;
+use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Mediamouse\Users\Console\Commands\CheckSystemHealth;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
+use Mediamouse\Users\Database\CreateViews;
 use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Filament\Pages\SettingsSections\CsvExportSettingsSection;
@@ -29,6 +31,7 @@ use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
 use Spatie\LaravelPackageTools\Package;
 use Filament\PluginServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class UserServiceProvider extends PluginServiceProvider
 {
@@ -145,6 +148,12 @@ class UserServiceProvider extends PluginServiceProvider
 
             Filament::registerRenderHook('global-search.start', fn() => View::make('mediamouse-users::system-health-badge', [
             ]));
+
+        });
+
+
+        Event::listen(function (CommandFinished $event) {
+            CreateViews::event($event);
         });
     }
 }
