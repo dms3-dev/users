@@ -8,7 +8,7 @@ return [
     'forgot-password' => 'Forgot password?',
     'send-reset-password-link' => 'Send reset password link',
     'return-to-login' => 'Return to login',
-    'change-password' => 'Wijzig wachtwoord',
+    'change-password' => 'Change Password',
     'repeat-password' => 'Repeat password',
     'error-password-not-equal' => 'The password should be equal',
     'error-password-invalid' => 'Your password should contain at least :conditions!',
