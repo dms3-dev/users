@@ -13,6 +13,7 @@ return [
     'datetime-auto-setting' => 'Automatic',
     'toggle-maintenance-button' => 'Toggle Maintenance',
     'maintenance-settings' => 'Maintenance Settings',
+    'error-codes-settings' => 'Error Codes Settings',
 
     'csv-settings' => 'CSV Export Settings',
     'csv-delimiter' => 'Separator',

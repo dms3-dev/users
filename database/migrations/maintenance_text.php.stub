@@ -7,7 +7,7 @@ return new class extends SettingsMigration
 {
     public function up(): void
     {
-        $this->migrator->add('mediamouse-users.maintenance_text', 'Our website is down for maintenance. Please come back later');
+        $this->migrator->add('mediamouse-users-global.maintenance_text', 'Our website is down for maintenance. Please come back later');
 
     }
 };

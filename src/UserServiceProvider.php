@@ -18,6 +18,7 @@ use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Filament\Pages\SettingsSections\CsvExportSettingsSection;
 use Mediamouse\Users\Filament\Pages\SettingsSections\DateSettingsSection;
+use Mediamouse\Users\Filament\Pages\SettingsSections\ErrorCodesSettingsSection;
 use Mediamouse\Users\Filament\Pages\SettingsSections\MaintenanceModeSettingsSection;
 use Mediamouse\Users\Filament\Pages\SettingsSections\NumberSettingsSection;
 use Mediamouse\Users\Filament\Pages\SettingsSections\Sections;
@@ -82,6 +83,7 @@ class UserServiceProvider extends PluginServiceProvider
                 'create_system_health_stats_table',
                 'alter_policy_relations_to_cascasde',
                 'create_change_log_table',
+                'error_codes_settings',
             ]);
     }
 
@@ -93,6 +95,7 @@ class UserServiceProvider extends PluginServiceProvider
         Sections::add(CsvExportSettingsSection::class);
         Sections::add(NumberSettingsSection::class);
         Sections::add(MaintenanceModeSettingsSection::class);
+        Sections::add(ErrorCodesSettingsSection::class);
 
         Livewire::component(Login::getName(), Login::class);
         Livewire::component(Challenge::getName(), Challenge::class);

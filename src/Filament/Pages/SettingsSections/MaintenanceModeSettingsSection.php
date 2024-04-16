@@ -17,7 +17,7 @@ class MaintenanceModeSettingsSection extends AbstractSettingsSection
             ->columns(1)
             ->schema([
                 Forms\Components\RichEditor::make('maintenance_text')
-                    ->inlineLabel()
+                    ->inlineLabel(),
             ]);
     }
 

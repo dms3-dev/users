@@ -19,6 +19,9 @@ class GlobalSettings extends Settings
     public string $csv_new_line;
 
     public string $maintenance_text;
+    public string $internal_error_text;
+    public string $forbidden_text;
+    public string $page_not_found_text;
 
     public static function group(): string
     {
