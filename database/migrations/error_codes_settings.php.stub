@@ -8,7 +8,7 @@ return new class extends SettingsMigration
     public function up(): void
     {
         $this->migrator->add('mediamouse-users-global.forbidden_text', 'Access to this resource or page has been denied. If you need access to this resource, please contact the system administrator.');
-        $this->migrator->add('mediamouse-users-global.internal_error_text', 'The server or application encountered an error en could not complete your request.');
+        $this->migrator->add('mediamouse-users-global.internal_error_text', 'The server or application encountered an error and could not complete your request.');
         $this->migrator->add('mediamouse-users-global.page_not_found_text', 'The requested page has been moved or deleted. Please inform the system administrator if this is an error.');
 
     }
