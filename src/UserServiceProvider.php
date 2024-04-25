@@ -31,12 +31,13 @@ use Mediamouse\Users\Http\Livewire\Auth\Login;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
 use Spatie\LaravelPackageTools\Package;
-use Filament\PluginServiceProvider;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Illuminate\Support\Facades\Event;
 
-class UserServiceProvider extends PluginServiceProvider
+class UserServiceProvider extends PackageServiceProvider
 {
 
+    public static string $name = 'mediamouse-users';
     protected array $resources = [
         \Mediamouse\Users\Filament\Resources\GroupResource::class,
         \Mediamouse\Users\Filament\Resources\UserResource::class,
@@ -54,7 +55,7 @@ class UserServiceProvider extends PluginServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('mediamouse-users')
+            ->name(static::$name)
             ->hasViews()
             ->hasConfigFile('mediamouse-users')
             ->hasRoutes('web')
@@ -97,11 +98,11 @@ class UserServiceProvider extends PluginServiceProvider
         Sections::add(MaintenanceModeSettingsSection::class);
         Sections::add(ErrorCodesSettingsSection::class);
 
-        Livewire::component(Login::getName(), Login::class);
-        Livewire::component(Challenge::getName(), Challenge::class);
-        Livewire::component(ForgotPassword::getName(), ForgotPassword::class);
-        Livewire::component(EnterNewPassword::getName(), EnterNewPassword::class);
-        Livewire::component(SystemHealthCards::getName(), SystemHealthCards::class);
+        Livewire::component('login', Login::class);
+        Livewire::component('challenge', Challenge::class);
+        Livewire::component('forgot-password', ForgotPassword::class);
+        Livewire::component('enter-new-password', EnterNewPassword::class);
+        Livewire::component('system-health-cards', SystemHealthCards::class);
 
         Filament::serving(function () {
 

@@ -305,7 +305,16 @@ class User extends Authenticatable implements FilamentUser
         return $this->status !== UserStatus::ACTIVE;
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function canAccessFilament(): bool
+    {
+        return $this->canAccessPanel();
+    }
+
+    public function canAccessPanel(\Filament\Panel $panel = null): bool
     {
         return in_array($this->role, [UserRole::ADMINISTRATOR, UserRole::SA]) && !$this->isBlocked();
     }
