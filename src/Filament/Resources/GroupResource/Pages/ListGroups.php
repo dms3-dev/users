@@ -14,7 +14,7 @@ class ListGroups extends ListRecords
 {
     protected static string $resource = GroupResource::class;
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('mediamouse-users::pages/group-resource.title');
     }

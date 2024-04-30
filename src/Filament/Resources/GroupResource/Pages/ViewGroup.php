@@ -19,7 +19,7 @@ class ViewGroup extends ViewRecord
     protected static string $resource = GroupResource::class;
     protected static ?string $title = 'Group';
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('mediamouse-users::pages/group-resource.record_title') . ' ' . $this->record->name . ' (' . $this->record->key . ')';
     }

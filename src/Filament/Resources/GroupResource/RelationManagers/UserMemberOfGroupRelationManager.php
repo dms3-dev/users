@@ -8,10 +8,11 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
 use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Models\User;
@@ -20,14 +21,14 @@ class UserMemberOfGroupRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
 
-    public static function getTitle(): string
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-       return __('mediamouse-users::model/user-relation-model.title');
+        return __('mediamouse-users::model/user-relation-model.title');
     }
 
     protected static ?string $recordTitleAttribute = 'Group';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->columns(1)
@@ -56,7 +57,7 @@ class UserMemberOfGroupRelationManager extends RelationManager
     /**
      * @throws Exception
      */
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         /** @noinspection DuplicatedCode */
         return $table
@@ -73,19 +74,19 @@ class UserMemberOfGroupRelationManager extends RelationManager
                     ->alignLeft()
                     ->searchable()
                     ->sortable( ['id', 'name']),
-                Tables\Columns\TextColumn::make('user_role')
+                Tables\Columns\TextColumn::make('role')
                     ->label((__('mediamouse-users::model/user-relation-model.user_role')))
                     ->toggleable()
                     ->alignLeft()
                     ->searchable()
-                    ->sortable( ['id', 'user_role']),
+                    ->sortable( ['id', 'role']),
                 Tables\Columns\TextColumn::make('groups')
                     ->label((__('mediamouse-users::model/user-relation-model.assigned_groups')))
                     ->formatStateUsing(
-                        function($state) {
+                        function(User $record) {
                             $groups = array();
 
-                            foreach($state as $group) {
+                            foreach($record->groups as $group) {
                                 $groups[] = $group->name;
                             }
                             return implode(',',  $groups);

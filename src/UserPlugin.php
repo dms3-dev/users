@@ -30,7 +30,7 @@ class UserPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->resources([
-//            \Mediamouse\Users\Filament\Resources\GroupResource::class,
+            \Mediamouse\Users\Filament\Resources\GroupResource::class,
             \Mediamouse\Users\Filament\Resources\UserResource::class,
             \Mediamouse\Users\Filament\Resources\LanguageResource::class,
         ]);

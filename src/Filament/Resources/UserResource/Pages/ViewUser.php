@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Filament\Resources\UserResource\Pages;
 use Mediamouse\Users\Filament\Resources\UserResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
+use Mediamouse\Users\Filament\Resources\UserResource\Actions\EditUserAction;
 
 /**
  * @property \Mediamouse\Users\Models\User record
@@ -25,14 +26,14 @@ class ViewUser extends ViewRecord
     protected function getActions(): array
     {
         return [
-            Actions\EditAction::make()
-                ->color('warning'),
+            EditUserAction::make(),
         ];
     }
 
     public function mountTableAction() {
 
     }
+
     public function edit() {
 
     }

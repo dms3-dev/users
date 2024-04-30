@@ -9,10 +9,10 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
-use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\UserRole;
@@ -24,14 +24,14 @@ class GroupHasPolicyRelationManager extends RelationManager
 {
     protected static string $relationship = 'policies';
 
-    public static function getTitle(): string
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return __('mediamouse-users::pages/policy-relation.title');
     }
 
     protected static ?string $recordTitleAttribute = 'Policy';
 
-    public static function form(Form $form): Form
+    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
     {
         return $form
             ->columns(1)
@@ -42,7 +42,7 @@ class GroupHasPolicyRelationManager extends RelationManager
     /**
      * @throws Exception
      */
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         /** @noinspection DuplicatedCode */
         return $table

@@ -4,9 +4,7 @@ namespace Mediamouse\Users\Filament\Resources;
 
 use Exception;
 use Filament\Facades\Filament;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
@@ -27,12 +25,12 @@ class GroupResource extends Resource
     protected static ?int $navigationSort = 5;
 
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return static::$navigationLabel ?? __('mediamouse-users::pages/group-resource.title');
     }
 
-    public static function form(Form $form): Form
+    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
     {
 
         return $form
@@ -77,7 +75,7 @@ class GroupResource extends Resource
     /**
      * @throws Exception
      */
-    public static function table(Table $table): Table
+    public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
