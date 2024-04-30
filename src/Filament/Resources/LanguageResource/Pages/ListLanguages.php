@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources\LanguageResource\Pages;
 
 use Exception;
+use Filament\Actions\CreateAction;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class ListLanguages extends ManageRecords
         return __('mediamouse-users::pages/language-resource.record_title');
     }
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('mediamouse-users::pages/language-resource.title');
     }
@@ -38,7 +39,7 @@ class ListLanguages extends ManageRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()
+            CreateAction::make('create')
                 ->label((__('mediamouse-users::pages/language-resource.create_language')))
                 ->color('success')
                 ->icon('heroicon-s-plus'),

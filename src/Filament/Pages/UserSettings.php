@@ -7,6 +7,9 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
+use Filament\Pages\Concerns\CanUseDatabaseTransactions;
+use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
+use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Contracts\HasFormActions;
 use Filament\Pages\Page;
 use Filament\Forms;
@@ -14,9 +17,15 @@ use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
 
-class UserSettings extends Page implements HasFormActions
+class UserSettings extends Page implements Forms\Contracts\HasForms
 {
-    use \Filament\Pages\Concerns\HasFormActions;
+    use CanUseDatabaseTransactions;
+    use \Filament\Resources\Pages\Concerns\HasRelationManagers;
+    use \Filament\Resources\Pages\Concerns\InteractsWithRecord {
+        configureAction as configureActionRecord;
+    }
+    use HasUnsavedDataChangesAlert;
+    use InteractsWithFormActions;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'user-settings';
@@ -25,12 +34,12 @@ class UserSettings extends Page implements HasFormActions
 
     public $data;
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return static::$navigationLabel ?? static::$title ?? __('mediamouse-users::pages/user-settings.title');
     }
 
-    protected static function shouldRegisterNavigation(): bool
+    public static function shouldRegisterNavigation(): bool
     {
         return false;
     }

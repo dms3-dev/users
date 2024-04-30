@@ -7,9 +7,10 @@ use Closure;
 use Faker\Provider\Text;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
-use Filament\Pages\Contracts\HasFormActions;
 use Filament\Pages\Page;
 use Filament\Forms;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,9 @@ use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Validate\Password;
 use Mediamouse\Users\Validate\ShouldEqual;
 
-class ChangePassword extends Page implements HasFormActions
+class ChangePassword extends Page implements HasForms
 {
-    use \Filament\Pages\Concerns\HasFormActions;
+    use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'change-password';
@@ -34,12 +35,12 @@ class ChangePassword extends Page implements HasFormActions
     public string $new_password;
     public string $repeat_password;
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return static::$navigationLabel ?? static::$title ?? __('mediamouse-users::pages/change-password.title');
     }
 
-    protected static function shouldRegisterNavigation(): bool
+    public static function shouldRegisterNavigation(): bool
     {
         return false;
     }

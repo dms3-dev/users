@@ -6,9 +6,7 @@ use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Columns\CheckColumn;
@@ -22,19 +20,19 @@ class LanguageResource extends Resource
     protected static ?string $model = Language::class;
 
     protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-translate';
+    protected static ?string $navigationIcon = 'heroicon-o-language';
     protected static ?int $navigationSort = 5;
 
     /**
      * @return string|null
      */
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return static::$navigationLabel ?? __('mediamouse-users::pages/language-resource.title');
     }
 
-    public static function form(Form $form): Form
+    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
     {
 
         return $form
@@ -62,7 +60,7 @@ class LanguageResource extends Resource
     /**
      * @throws Exception
      */
-    public static function table(Table $table): Table
+    public static function table(Tables\Table $table): Tables\Table
     {
         return $table
             ->columns([
@@ -76,8 +74,8 @@ class LanguageResource extends Resource
                     ->searchable()
                     ->toggleable()
                     ->sortable( ['iso', 'name']),
-                CheckColumn::make('status', LanguageStatus::ACTIVE->value, LanguageStatus::INACTIVE->value)
-                    ->label('Status')
+                CheckColumn::make('status', LanguageStatus::ACTIVE, LanguageStatus::INACTIVE)
+                    ->label('Active')
                     ->toggleable()
                     ->sortable( ['iso', 'status']),
                 Tables\Columns\TextColumn::make('users_count')

@@ -33,17 +33,17 @@ class SystemHealth extends Page implements HasTable
 
     protected static string $view = 'mediamouse-users::system-health';
 
-    protected static function shouldRegisterNavigation(): bool
+    public static function shouldRegisterNavigation(): bool
     {
         return false;
     }
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return __('mediamouse-users::pages/system-health.menu-label');
     }
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('mediamouse-users::pages/system-health.menu-label');
     }
