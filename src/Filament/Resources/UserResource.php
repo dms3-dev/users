@@ -7,11 +7,11 @@ use Closure;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
@@ -42,7 +42,7 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 5;
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return static::$navigationLabel ?? __('mediamouse-users::pages/user-resource.title');
     }
@@ -100,7 +100,7 @@ class UserResource extends Resource
                                 Forms\Components\Select::make('two_factor')
                                     ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                                     ->enum(UserTwoFactor::class)
-                                    ->options(fn(Closure $get) => match ($get('role')) {
+                                    ->options(fn(\Filament\Forms\Get $get) => match ($get('role')) {
                                         UserRole::ADMINISTRATOR->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_ADMINISTRATOR),
 
                                         UserRole::SA->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_SA),
@@ -238,13 +238,10 @@ class UserResource extends Resource
                             ->icon('heroicon-o-check')
                             ->send();
                     }),
-                Tables\Actions\ViewAction::make()
-                    ->visible(Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::VIEW)),
-//                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->visible(fn(User $record) => Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::DELETE) && $record->id !== Filament::auth()->user()->id),
                 ViewAction::make()->color('info')
                     ->visible(Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::VIEW)),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn(User $record) => Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::DELETE) && $record->id !== Filament::auth()->user()->id),
             ]);
     }
 

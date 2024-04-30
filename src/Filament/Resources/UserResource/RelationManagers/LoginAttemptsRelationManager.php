@@ -4,10 +4,10 @@ namespace Mediamouse\Users\Filament\Resources\UserResource\RelationManagers;
 
 use Carbon\Carbon;
 use Exception;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 
 class LoginAttemptsRelationManager extends RelationManager
 {
@@ -27,7 +27,7 @@ class LoginAttemptsRelationManager extends RelationManager
         return 'desc';
     }
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->columns(1)
@@ -38,7 +38,7 @@ class LoginAttemptsRelationManager extends RelationManager
     /**
      * @throws Exception
      */
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         /** @noinspection DuplicatedCode */
         return $table

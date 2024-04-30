@@ -111,7 +111,7 @@ class CreateUserAction
                                 Forms\Components\Select::make('two_factor')
                                     ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                                     ->enum(UserTwoFactor::class)
-                                    ->options(fn(Closure $get) => match ($get('role')) {
+                                    ->options(fn(\Filament\Forms\Get $get) => match ($get('role')) {
                                         UserRole::ADMINISTRATOR->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_ADMINISTRATOR),
 
                                         UserRole::SA->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_SA),

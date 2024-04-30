@@ -5,6 +5,7 @@ namespace Mediamouse\Users;
 use Filament\Facades\Filament;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\UserMenuItem;
+use Filament\Panel;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ use Mediamouse\Users\Filament\Pages\SettingsSections\NumberSettingsSection;
 use Mediamouse\Users\Filament\Pages\SettingsSections\Sections;
 use Mediamouse\Users\Filament\Pages\SystemHealth;
 use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
+use Mediamouse\Users\Filament\Resources\GroupResource;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
@@ -104,20 +106,22 @@ class UserServiceProvider extends PackageServiceProvider
         Livewire::component('enter-new-password', EnterNewPassword::class);
         Livewire::component('system-health-cards', SystemHealthCards::class);
 
-        Filament::serving(function () {
+
+        Filament::serving(function (): void {
+
 
             Filament::registerUserMenuItems([
                 // ...
             ]);
 
-            Filament::registerUserMenuItems([
-                'account' => UserMenuItem::make()->url(route('filament.pages.user-settings')),
-                UserMenuItem::make()
-                    ->label(__('mediamouse-users::pages/change-password.title'))
-                    ->url(route('filament.pages.change-password'))
-                    ->sort(1)
-                    ->icon('heroicon-s-cog'),
-            ]);
+//            Filament::registerUserMenuItems([
+//                'account' => UserMenuItem::make()->url(route('filament.pages.user-settings')),
+//                UserMenuItem::make()
+//                    ->label(__('mediamouse-users::pages/change-password.title'))
+//                    ->url(route('filament.pages.change-password'))
+//                    ->sort(1)
+//                    ->icon('heroicon-s-cog'),
+//            ]);
 
             if (Filament::auth()->user() !== null) {
                 /** @var User $current_user */
@@ -125,20 +129,20 @@ class UserServiceProvider extends PackageServiceProvider
                 App::setLocale($current_user->language_iso);
 
                 if ($current_user->role == UserRole::SA) {
-                    Filament::registerUserMenuItems([
-                        UserMenuItem::make()
-                            ->label(__('mediamouse-users::pages/global-settings.menu-label'))
-                            ->url(route('filament.pages.global-settings'))
-                            ->sort(2)
-                            ->icon('heroicon-s-cog'),
-
-                        UserMenuItem::make()
-                            ->label(__('mediamouse-users::pages/system-health.menu-label'))
-                            ->url(route('filament.pages.system-health'))
-                            ->sort(2)
-                            ->icon('heroicon-s-heart'),
-
-                    ]);
+//                    Filament::registerUserMenuItems([
+//                        UserMenuItem::make()
+//                            ->label(__('mediamouse-users::pages/global-settings.menu-label'))
+//                            ->url(route('filament.pages.global-settings'))
+//                            ->sort(2)
+//                            ->icon('heroicon-s-cog'),
+//
+//                        UserMenuItem::make()
+//                            ->label(__('mediamouse-users::pages/system-health.menu-label'))
+//                            ->url(route('filament.pages.system-health'))
+//                            ->sort(2)
+//                            ->icon('heroicon-s-heart'),
+//
+//                    ]);
                 }
 
 

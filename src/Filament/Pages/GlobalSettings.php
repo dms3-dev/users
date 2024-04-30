@@ -3,10 +3,13 @@
 namespace Mediamouse\Users\Filament\Pages;
 
 use Carbon\Carbon;
+use Filament\Actions\Concerns\HasForm;
 use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
-use Filament\Pages\Contracts\HasFormActions;
+use Filament\Pages\Concerns\CanUseDatabaseTransactions;
+use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
+use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Str;
@@ -25,9 +28,15 @@ use Filament\Pages\SettingsPage;
 use Filament\Forms;
 use Filament\Forms\ComponentContainer;
 
-class GlobalSettings extends Page implements HasFormActions
+class GlobalSettings extends Page implements Forms\Contracts\HasForms
 {
-    use \Filament\Pages\Concerns\HasFormActions;
+    use CanUseDatabaseTransactions;
+    use \Filament\Resources\Pages\Concerns\HasRelationManagers;
+    use \Filament\Resources\Pages\Concerns\InteractsWithRecord {
+        configureAction as configureActionRecord;
+    }
+    use HasUnsavedDataChangesAlert;
+    use InteractsWithFormActions;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'global-settings';
@@ -113,17 +122,17 @@ class GlobalSettings extends Page implements HasFormActions
         ];
     }
 
-    protected static function shouldRegisterNavigation(): bool
+    public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return true;
     }
 
-    protected static function getNavigationLabel(): string
+    public static function getNavigationLabel(): string
     {
         return __('mediamouse-users::pages/global-settings.menu-label');
     }
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         return __('mediamouse-users::pages/global-settings.title');
     }
