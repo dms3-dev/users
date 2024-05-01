@@ -5,34 +5,33 @@ namespace Mediamouse\Users\Filament\Pages;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
-use Filament\Pages\Concerns\CanUseDatabaseTransactions;
+use Filament\Actions\Action;
 use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
 use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Pages\Contracts\HasFormActions;
 use Filament\Pages\Page;
 use Filament\Forms;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
 
+/**
+ * @property Form form
+ */
 class UserSettings extends Page implements Forms\Contracts\HasForms
 {
-    use CanUseDatabaseTransactions;
-    use \Filament\Resources\Pages\Concerns\HasRelationManagers;
-    use \Filament\Resources\Pages\Concerns\InteractsWithRecord {
-        configureAction as configureActionRecord;
-    }
-    use HasUnsavedDataChangesAlert;
+    use InteractsWithForms;
     use InteractsWithFormActions;
+    use HasUnsavedDataChangesAlert;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'user-settings';
 
     protected static string $view = 'filament-spatie-laravel-settings-plugin::pages.settings-page';
 
-    public $data;
+    public array $data;
 
     public static function getNavigationLabel(): string
     {
@@ -50,10 +49,14 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
     }
 
 
-    public function mount(): void
+    public function mount(): void {
+        $this->fillForm();
+    }
+
+    public function fillForm(): void
     {
         /** @var User $current_user */
-        $current_user = Filament::auth()->user();
+        $current_user = auth()->user();
 
         $data = [
             'name' => $current_user->name,
@@ -64,7 +67,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
             'time_format' => $current_user->getUserSetting('mediamouse-users.time_format'),
             'dateTime_format' => $current_user->getUserSetting('mediamouse-users.dateTime_format'),
             'number_format' => $current_user->getUserSetting('mediamouse-users.number_format'),
-            'csv_delimeter' => $current_user->getUserSetting('mediamouse-users.csv_delimiter'),
+            'csv_delimiter' => $current_user->getUserSetting('mediamouse-users.csv_delimiter'),
             'csv_enclosure' => $current_user->getUserSetting('mediamouse-users.csv_enclosure'),
             'csv_new_line' => $current_user->getUserSetting('mediamouse-users.csv_new_line'),
         ];
@@ -112,7 +115,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                     Forms\Components\Select::make('number_format')
                         ->inlineLabel()
                         ->label(__('mediamouse-users::pages/user-settings.number-notation'))
-                        ->disablePlaceholderSelection()
+                        ->selectablePlaceholder(false)
                         ->options([
                             'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
                             'COMMA' => number_format(1234.56, 2, ',', ''),
@@ -133,7 +136,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                     Forms\Components\Select::make('csv_delimiter')
                         ->inlineLabel()
                         ->label(__('mediamouse-users::pages/user-settings.csv-delimiter'))
-                        ->disablePlaceholderSelection()
+                        ->selectablePlaceholder(false)
                         ->options([
                             'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
                             'COMMA' => __('mediamouse-users::pages/user-settings.csv-delimiter-comma'),
@@ -143,7 +146,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                     Forms\Components\Select::make('csv_enclosure')
                         ->inlineLabel()
                         ->label(__('mediamouse-users::pages/user-settings.csv-enclosure'))
-                        ->disablePlaceholderSelection()
+                        ->selectablePlaceholder(false)
                         ->options([
                             'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
                             'single' => __('mediamouse-users::pages/user-settings.csv-enclosure-single'),
@@ -152,7 +155,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                     Forms\Components\Select::make('csv_new_line')
                         ->inlineLabel()
                         ->label(__('mediamouse-users::pages/user-settings.csv-new-line'))
-                        ->disablePlaceholderSelection()
+                        ->selectablePlaceholder(false)
                         ->options([
                             'global' => __('mediamouse-users::pages/user-settings.datetime-global-setting'),
                             'R' => __('mediamouse-users::pages/user-settings.csv-new-line-r'),
@@ -211,17 +214,17 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                     ->schema([
                         Forms\Components\Select::make('date_format')
                             ->inlineLabel()
-                            ->disablePlaceholderSelection()
+                            ->selectablePlaceholder(false)
                             ->label(__('mediamouse-users::pages/user-settings.date-notation'))
                             ->options($date_options),
                         Forms\Components\Select::make('time_format')
                             ->inlineLabel()
-                            ->disablePlaceholderSelection()
+                            ->selectablePlaceholder(false)
                             ->label(__('mediamouse-users::pages/user-settings.time-notation'))
                             ->options($time_options),
                         Forms\Components\Select::make('dateTime_format')
                             ->inlineLabel()
-                            ->disablePlaceholderSelection()
+                            ->selectablePlaceholder(false)
                             ->label(__('mediamouse-users::pages/user-settings.datetime-notation'))
                             ->options($datetime_options),
                 ]);
@@ -241,6 +244,18 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                         $this->fieldsetCsvSettings(),
                     ]),
                 ])
+        ];
+    }
+
+
+    protected function getForms(): array
+    {
+        return [
+            'form' => $this->makeForm()
+                ->schema($this->getFormSchema())
+                ->statePath('data')
+                ->columns(2)
+                ->inlineLabel(config('filament.layout.forms.have_inline_labels')),
         ];
     }
 
@@ -280,10 +295,9 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
             ->send();
 
         if($refreshPage) {
-            response()->redirectTo(route('filament.pages.user-settings'));
+            response()->redirectTo(UserSettings::getUrl());
         }
     }
-
 
     protected function getSaveFormAction(): Action
     {

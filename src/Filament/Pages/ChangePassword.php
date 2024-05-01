@@ -11,6 +11,9 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
+use Filament\Pages\Concerns\CanUseDatabaseTransactions;
+use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
+use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Filament\Forms;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +22,13 @@ use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Validate\Password;
 use Mediamouse\Users\Validate\ShouldEqual;
+use Filament\Resources\Pages\Concerns;
 
 class ChangePassword extends Page implements HasForms
 {
     use InteractsWithForms;
+    use InteractsWithFormActions;
+    use HasUnsavedDataChangesAlert;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'change-password';
@@ -118,7 +124,7 @@ class ChangePassword extends Page implements HasForms
                     ->title(__('mediamouse-users::pages/change-password.password-updated'))
                     ->send();
 
-                response()->redirectTo(route('filament.pages.change-password'));
+                response()->redirectTo(route(static::getUrl()));
             }
         }
     }

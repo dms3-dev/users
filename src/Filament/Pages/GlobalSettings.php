@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Filament\Pages;
 use Carbon\Carbon;
 use Filament\Actions\Concerns\HasForm;
 use Filament\Facades\Filament;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Concerns\CanUseDatabaseTransactions;
@@ -30,13 +31,9 @@ use Filament\Forms\ComponentContainer;
 
 class GlobalSettings extends Page implements Forms\Contracts\HasForms
 {
-    use CanUseDatabaseTransactions;
-    use \Filament\Resources\Pages\Concerns\HasRelationManagers;
-    use \Filament\Resources\Pages\Concerns\InteractsWithRecord {
-        configureAction as configureActionRecord;
-    }
-    use HasUnsavedDataChangesAlert;
+    use InteractsWithForms;
     use InteractsWithFormActions;
+    use HasUnsavedDataChangesAlert;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'global-settings';
@@ -48,8 +45,7 @@ class GlobalSettings extends Page implements Forms\Contracts\HasForms
 
     public function __construct($id = null)
     {
-        if(Filament::auth()->user()->role !== UserRole::SA) abort(403);
-        parent::__construct($id);
+        if(auth()->user()->role !== UserRole::SA) abort(403);
     }
 
     public function mount(): void
