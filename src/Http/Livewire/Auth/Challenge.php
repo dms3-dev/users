@@ -10,6 +10,7 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Pages\SimplePage;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * @property ComponentContainer $form
  */
-class Challenge extends Component implements HasForms
+class Challenge extends SimplePage implements HasForms
 {
     use InteractsWithForms;
     use WithRateLimiting;
@@ -34,6 +35,8 @@ class Challenge extends Component implements HasForms
     public ?string $challenge = '';
 
     public ?string $message = '';
+
+    protected static string $view = 'mediamouse-users::challenge';
 
     /**
      * @throws ContainerExceptionInterface
@@ -55,7 +58,7 @@ class Challenge extends Component implements HasForms
      * @throws NotFoundExceptionInterface
      * @throws ValidationException
      */
-    public function challenge(): Responsable
+    public function submit()
     {
         try {
             $this->rateLimit(522);
@@ -156,17 +159,8 @@ class Challenge extends Component implements HasForms
                 ->label('Challenge Code')
                 ->default(env('APP_ENV') === 'local' ? session()->get('login.challenge') : '')
                 ->required()
-                ->autocomplete(),
+                ->autocomplete(false),
         ];
-    }
-
-    /** @noinspection PhpUndefinedMethodInspection */
-    public function render(): View
-    {
-        return view('mediamouse-users::challenge')
-            ->layout('filament::components.layouts.card', [
-                'title' => __('filament::login.title'),
-            ]);
     }
 
 }

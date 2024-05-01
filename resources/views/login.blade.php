@@ -14,5 +14,5 @@
     <div class="mt-1 text-center">
         <a wire:click="forgotPassword" class="text-primary-500 cursor-pointer">{{ __('mediamouse-users::pages/login.forgot-password') }}</a>
     </div>
-        <div><p class="text-right text-gray-400">{{\Illuminate\Support\Facades\Config::get('app.version')}}</p> </div>
+    <div><p class="text-right text-gray-400">{{\Illuminate\Support\Facades\Config::get('app.version')}}</p> </div>
 </div>

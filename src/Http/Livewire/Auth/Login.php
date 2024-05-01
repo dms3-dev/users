@@ -12,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+use Filament\Pages\SimplePage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -29,7 +30,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * @property ComponentContainer $form
  */
-class Login extends Component implements HasForms
+class Login extends SimplePage implements HasForms
 {
     use InteractsWithForms;
     use WithRateLimiting;
@@ -41,6 +42,8 @@ class Login extends Component implements HasForms
     public string $message_class = '';
 
     private ?User $user = null;
+
+    protected static string $view = 'mediamouse-users::login';
 
     public function mount(): void
     {
@@ -172,7 +175,7 @@ class Login extends Component implements HasForms
                 ->label(__('filament::login.fields.email.label'))
                 ->email()
                 ->required()
-                ->autocomplete(),
+                ->autocomplete(false),
             TextInput::make('password')
                 ->label(__('filament::login.fields.password.label'))
                 ->password()
@@ -180,14 +183,14 @@ class Login extends Component implements HasForms
         ];
     }
 
-    /** @noinspection PhpUndefinedMethodInspection */
-    public function render(): View
-    {
-        return view('mediamouse-users::login')
-            ->layout('filament::components.layouts.card', [
-                'title' => __('filament::login.title'),
-            ]);
-    }
+//    /** @noinspection PhpUndefinedMethodInspection */
+//    public function render(): View
+//    {
+//        return view('mediamouse-users::login')
+//            ->layout('filament-panels::components.layout.simple', [
+//                'title' => __('filament::login.title'),
+//            ]);
+//    }
 
     private function writeToSession(User $user, LoginAttempt $attempt)
     {
