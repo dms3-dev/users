@@ -4,7 +4,7 @@ namespace Mediamouse\Users\Http\Responses\Auth\Login;
 
 use Filament\Http\Responses\Auth\Contracts\LoginResponse as Responsable;
 use Illuminate\Http\RedirectResponse;
-use Livewire\Redirector;
+use Livewire\Features\SupportRedirects\Redirector;
 
 class ForgotPasswordResponse implements Responsable
 {

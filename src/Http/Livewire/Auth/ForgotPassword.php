@@ -11,6 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Pages\SimplePage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -22,7 +23,7 @@ use Mediamouse\Users\Http\Responses\Auth\TwoFactorLoginResponse;
 /**
  * @property ComponentContainer $form
  */
-class ForgotPassword extends Component implements HasForms
+class ForgotPassword extends SimplePage implements HasForms
 {
     use InteractsWithForms;
     use WithRateLimiting;
@@ -31,6 +32,8 @@ class ForgotPassword extends Component implements HasForms
     public ?string $password = '';
 
     private ?User $user = null;
+
+    protected static string $view = 'mediamouse-users::forgot-password';
 
     public function mount(): void
     {
@@ -88,18 +91,10 @@ class ForgotPassword extends Component implements HasForms
     {
         return [
             TextInput::make('email')
-                ->label(__('filament::login.fields.email.label'))
+                ->label(__('filament-panels::pages/auth/login.form.email.label'))
+                ->default(env('APP_ENV') === 'local' ? 'support@mediamouse.nl' : '')
                 ->email()
                 ->required(),
         ];
-    }
-
-    /** @noinspection PhpUndefinedMethodInspection */
-    public function render(): View
-    {
-        return view('mediamouse-users::forgot-password')
-            ->layout('filament::components.layouts.card', [
-                'title' => __('filament::login.title'),
-            ]);
     }
 }

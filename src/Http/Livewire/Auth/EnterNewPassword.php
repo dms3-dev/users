@@ -12,6 +12,7 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Pages\SimplePage;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +29,7 @@ use Mediamouse\Users\Settings\UserManagementSettings;
 /**
  * @property ComponentContainer $form
  */
-class EnterNewPassword extends Component implements HasForms
+class EnterNewPassword extends SimplePage implements HasForms
 {
     use InteractsWithForms;
     use WithRateLimiting;
@@ -40,6 +41,10 @@ class EnterNewPassword extends Component implements HasForms
     public bool $isLoggedIn = false;
 
     private ?User $user = null;
+
+    protected static string $view = 'mediamouse-users::enter-new-password';
+
+    public array $data = [];
 
     public function mount(): void
     {
@@ -79,7 +84,7 @@ class EnterNewPassword extends Component implements HasForms
     /**
      * @throws ValidationException
      */
-    public function resetPassword()
+    public function submit()
     {
         $this->loginRateLimit();
 
@@ -152,21 +157,20 @@ class EnterNewPassword extends Component implements HasForms
                 ->password()
                 ->minLength(app(UserManagementSettings::class)->password_min_length)
                 ->maxLength(app(UserManagementSettings::class)->password_max_length)
-                ->required()
-                ,
+                ->required(),
+        ];
+    }
+
+    protected function getForms(): array
+    {
+        return [
+            'form' => $this->makeForm()
+                ->schema($this->getFormSchema())
+                ->statePath('data'),
         ];
     }
 
     public function returnToLogin() {
         return app(LoginResponse::class);
-    }
-
-    /** @noinspection PhpUndefinedMethodInspection */
-    public function render(): View
-    {
-        return view('mediamouse-users::enter-new-password')
-            ->layout('filament::components.layouts.card', [
-                'title' => __('mediamouse-users::pages/login.title-reset-password'),
-            ]);
     }
 }

@@ -183,15 +183,6 @@ class Login extends SimplePage implements HasForms
         ];
     }
 
-//    /** @noinspection PhpUndefinedMethodInspection */
-//    public function render(): View
-//    {
-//        return view('mediamouse-users::login')
-//            ->layout('filament-panels::components.layout.simple', [
-//                'title' => __('filament::login.title'),
-//            ]);
-//    }
-
     private function writeToSession(User $user, LoginAttempt $attempt)
     {
         request()->session()->put([
@@ -208,5 +199,9 @@ class Login extends SimplePage implements HasForms
 
         $attempt->status = LoginAttemptStatus::SUCCESSFUL;
         $attempt->save();
+    }
+
+    public static function getUrl() {
+        return '/admin/login';
     }
 }

@@ -26,8 +26,8 @@ Route::name('mediamouse-users.')
     ->prefix('/admin')
     ->group(function () {
         Route::get('/2fa', \Mediamouse\Users\Http\Livewire\Auth\Challenge::class)->name('auth.2fa');
-        Route::any('/forgot-password', \Mediamouse\Users\Http\Livewire\Auth\ForgotPassword::class)->name('auth.forgot-password');
-        Route::any('/reset-password/{token}', \Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword::class)->name('auth.reset-password');
-        Route::any('/reset-password', \Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword::class)->name('auth.reset-password');
+        Route::get('/forgot-password', \Mediamouse\Users\Http\Livewire\Auth\ForgotPassword::class)->name('auth.forgot-password');
+        Route::get('/reset-password/{token}', \Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword::class)->name('auth.reset-password');
+        Route::get('/reset-password', \Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword::class)->name('auth.change-password');
     });
 

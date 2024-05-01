@@ -159,6 +159,8 @@ class User extends Authenticatable implements FilamentUser
     private function createPasswordLink() : string {
         $token = $this->createPasswordResetToken();
 
+        return route('mediamouse-users.auth.reset-password', ['token' => $token->token]);
+
         return env('APP_URL', request()->schemeAndHttpHost()) . '/' . config('filament.path') . '/reset-password/' . $token->token;
     }
 

@@ -1,8 +1,8 @@
 <div>
-    <form wire:submit.prevent="resetPassword" class="space-y-8">
+    <form wire:submit.prevent="submit" class="space-y-8">
         {{ $this->form }}
 
-        <x-filament::button type="submit" form="authenticate" class="w-full">
+        <x-filament::button type="submit" form="submit" class="w-full">
             {{ __('mediamouse-users::pages/login.change-password') }}
         </x-filament::button>
     </form>
