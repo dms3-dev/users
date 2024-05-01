@@ -91,7 +91,7 @@ class ForgotPassword extends SimplePage implements HasForms
     {
         return [
             TextInput::make('email')
-                ->label(__('filament-panels::pages/auth/login.form.email.label'))
+                ->label(__('mediamouse-users::login.fields.email.label'))
                 ->default(env('APP_ENV') === 'local' ? 'support@mediamouse.nl' : '')
                 ->email()
                 ->required(),
