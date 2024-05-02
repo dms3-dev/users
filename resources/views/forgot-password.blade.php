@@ -1,4 +1,5 @@
 <div>
+    <h2 class="text-center mb-5 text-xl"> {{ __('mediamouse-users::login.forgot-password.title') }}</h2>
     <form wire:submit.prevent="forgotPassword" class="space-y-8">
         {{ $this->form }}
 

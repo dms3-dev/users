@@ -64,7 +64,7 @@ class Challenge extends SimplePage implements HasForms
             $this->rateLimit(522);
         } catch (TooManyRequestsException $exception) {
             throw ValidationException::withMessages([
-                'challenge' => __('filament::login.messages.throttled', [
+                'challenge' => __('mediamouse-users::login.messages.throttled', [
                     'seconds' => $exception->secondsUntilAvailable,
                     'minutes' => ceil($exception->secondsUntilAvailable / 60),
                 ]),

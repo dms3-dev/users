@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Http\Livewire\Auth;
 
+use App\Forms\Components\TextDisplay;
 use App\Models\User;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
@@ -30,6 +31,7 @@ class ForgotPassword extends SimplePage implements HasForms
 
     public ?string $email = '';
     public ?string $password = '';
+    public ?string $pageTitle = '';
 
     private ?User $user = null;
 
@@ -78,7 +80,7 @@ class ForgotPassword extends SimplePage implements HasForms
             $this->rateLimit(5);
         } catch (TooManyRequestsException $exception) {
             throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.throttled', [
+                'email' => __('mediamouse-users::login.messages.throttled', [
                     'seconds' => $exception->secondsUntilAvailable,
                     'minutes' => ceil($exception->secondsUntilAvailable / 60),
                 ]),

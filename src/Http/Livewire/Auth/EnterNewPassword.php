@@ -131,7 +131,7 @@ class EnterNewPassword extends SimplePage implements HasForms
             $this->rateLimit(5);
         } catch (TooManyRequestsException $exception) {
             throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.throttled', [
+                'email' => __('mediamouse-users::login.messages.throttled', [
                     'seconds' => $exception->secondsUntilAvailable,
                     'minutes' => ceil($exception->secondsUntilAvailable / 60),
                 ]),
@@ -144,7 +144,7 @@ class EnterNewPassword extends SimplePage implements HasForms
     {
         return [
             TextInput::make('new-password')
-                ->label(__('filament::login.fields.password.label'))
+                ->label(__('mediamouse-users::login.fields.password.label'))
                 ->password()
                 ->minLength(8)
                 ->maxLength(20)

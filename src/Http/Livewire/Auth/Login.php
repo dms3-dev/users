@@ -88,7 +88,7 @@ class Login extends SimplePage implements HasForms
 
         if($user === null) {
             throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.failed'),
+                'email' => __('mediamouse-users::login.messages.failed'),
             ]);
         }
 
@@ -130,7 +130,7 @@ class Login extends SimplePage implements HasForms
             $attempt->save();
 
             throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.failed'),
+                'email' => __('mediamouse-users::login.messages.failed'),
             ]);
 
         }
@@ -144,7 +144,7 @@ class Login extends SimplePage implements HasForms
             $user->sendFailedLoginAttempt();
 
             throw ValidationException::withMessages([
-                'email' => __('filament::login.messages.failed'),
+                'email' => __('mediamouse-users::login.messages.failed'),
             ]);
         }
 
@@ -172,12 +172,12 @@ class Login extends SimplePage implements HasForms
     {
         return [
             TextInput::make('email')
-                ->label(__('filament::login.fields.email.label'))
+                ->label(__('mediamouse-users::login.fields.email.label'))
                 ->email()
                 ->required()
                 ->autocomplete(false),
             TextInput::make('password')
-                ->label(__('filament::login.fields.password.label'))
+                ->label(__('mediamouse-users::login.fields.password.label'))
                 ->password()
                 ->required(),
         ];
