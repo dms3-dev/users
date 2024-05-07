@@ -2,7 +2,7 @@
 
 namespace Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers;
 
-use Awcodes\FilamentTableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Components\TableRepeater;
 use Exception;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
