@@ -120,7 +120,7 @@ class GlobalSettings extends Page implements Forms\Contracts\HasForms
 
     public static function shouldRegisterNavigation(): bool
     {
-        return true;
+        return false;
     }
 
     public static function getNavigationLabel(): string
