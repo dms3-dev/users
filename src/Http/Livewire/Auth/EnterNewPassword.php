@@ -110,7 +110,7 @@ class EnterNewPassword extends SimplePage implements HasForms
         $passReset->save();
 
         if($this->isLoggedIn) {
-            Filament::auth()->login($user);
+            \Mediamouse\Users\Helper\Login::login($user);
         }
 
         return app(LoginResponse::class);
