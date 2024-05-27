@@ -84,7 +84,7 @@ class Challenge extends SimplePage implements HasForms
             ]);
         }
 
-        Filament::auth()->login($this->getUser());
+        \Mediamouse\Users\Helper\Login::login($this->getUser());
 
         $attempt = $this->getLoginAttempt();
         $attempt->status = LoginAttemptStatus::SUCCESSFUL;

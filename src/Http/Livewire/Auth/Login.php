@@ -14,6 +14,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Pages\SimplePage;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -195,7 +196,7 @@ class Login extends SimplePage implements HasForms
 
     private function loginUser(User $user, LoginAttempt $attempt)
     {
-        Filament::auth()->login($user);
+        \Mediamouse\Users\Helper\Login::login($user);
 
         $attempt->status = LoginAttemptStatus::SUCCESSFUL;
         $attempt->save();
