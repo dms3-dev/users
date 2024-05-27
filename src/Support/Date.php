@@ -8,6 +8,14 @@ use Mediamouse\Users\Settings\GlobalSettings;
 
 class Date {
 
+    public static function dateTime() {
+        return fn($state) => $state->format(Date::userDateTimeFormat());
+    }
+
+    public static function date() {
+        return fn($state) => $state->format(Date::userDateFormat());
+    }
+
     public static function format(): string
     {
         return self::dateTimeFormat();

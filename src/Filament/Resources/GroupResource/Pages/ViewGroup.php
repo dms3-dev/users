@@ -3,7 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources\GroupResource\Pages;
 
 use Filament\Facades\Filament;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Filament\Resources\GroupResource;

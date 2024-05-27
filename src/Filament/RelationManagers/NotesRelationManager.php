@@ -7,9 +7,9 @@ use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Notifications\Notification;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Mediamouse\Users\Enums\NoteStatus;
 use Mediamouse\Users\Enums\NoteType;
@@ -26,7 +26,7 @@ class NotesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Note';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->columns(2)
@@ -59,7 +59,7 @@ class NotesRelationManager extends RelationManager
     /**
      * @throws Exception
      */
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->defaultSort('created_at', 'DESC')

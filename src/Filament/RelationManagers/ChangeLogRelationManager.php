@@ -2,9 +2,9 @@
 
 namespace Mediamouse\Users\Filament\RelationManagers;
 
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Mediamouse\Users\Support\Date;
 
@@ -14,7 +14,7 @@ class ChangeLogRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'description';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -24,10 +24,10 @@ class ChangeLogRelationManager extends RelationManager
             ]);
     }
 
-    public $tableSortDirection = 'desc';
-    public $tableSortColumn = 'created_at';
+    public ?string $tableSortDirection = 'desc';
+    public ?string $tableSortColumn = 'created_at';
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->defaultSort('created_at', 'desc')

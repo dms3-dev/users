@@ -5,7 +5,7 @@ namespace Mediamouse\Users\Filament\Resources\UserResource\Actions;
 
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Mediamouse\Filament\Pages\Actions\Action;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Models\User;
 use Carbon\Carbon;
