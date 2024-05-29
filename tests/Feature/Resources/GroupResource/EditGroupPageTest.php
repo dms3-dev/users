@@ -42,8 +42,8 @@ class EditGroupPageTest extends TestCase
     public function testFieldKeyIsRequired() {      $this->seeIfFieldIsRequired('key'); }
     public function testFieldNameIsRequired() {            $this->seeIfFieldIsRequired('name'); }
 
-    public function testFieldKeyIsNotTooLong() {    $this->seeIfFieldIsNotToLong('key', 11); }
-    public function testFieldNameIsNotTooLong() {          $this->seeIfFieldIsNotToLong('name', 101); }
+    public function testFieldKeyIsNotTooLong() {    $this->seeIfFieldIsNotTooLong('key', 11); }
+    public function testFieldNameIsNotTooLong() {          $this->seeIfFieldIsNotTooLong('name', 101); }
 
     public function testFieldKeyMustBeAValidKey() {          $this->seeIfFieldIsValidatedBy('key', 'alphaNum', '@$%'); }
     public function testFieldNameMustBeAValidName() {     $this->seeIfFieldIsValidatedBy('name', 'alphaNum', '@$%'); }
