@@ -2,12 +2,14 @@
 
 namespace Mediamouse\Users\Models\Contracts;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 use Mediamouse\Users\Models\Note;
 
 /**
  * @property Collection<Note> notes
+ * @property-read bool has_notes
  */
 interface WithNotes {
 
@@ -20,5 +22,7 @@ interface WithNotes {
     public function noteListLink(): string;
 
     public function qualifiedName(): string;
+
+    public function hasNotes(): Attribute;
 
 }

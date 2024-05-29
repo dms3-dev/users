@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Models\Traits;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Mediamouse\Users\Filament\RelationManagers\NotesRelationManager;
 use Mediamouse\Users\Models\Contracts\WithNotes;
@@ -54,5 +55,9 @@ trait HasNotesTrait {
             'record' => $this,
             'activeRelationManager' => array_search(NotesRelationManager::class, $class::getRelations())
         ]);
+    }
+
+    public function hasNotes() : Attribute {
+        return Attribute::make(fn() => $this->notes()->exists());
     }
 }
