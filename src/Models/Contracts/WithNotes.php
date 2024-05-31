@@ -10,6 +10,7 @@ use Mediamouse\Users\Models\Note;
 /**
  * @property Collection<Note> notes
  * @property-read bool has_notes
+ * @property-read string qualified_name
  */
 interface WithNotes {
 
@@ -21,7 +22,8 @@ interface WithNotes {
     public function labelText(): string;
     public function noteListLink(): string;
 
-    public function qualifiedName(): string;
+    public function getQualifiedName(): string;
+    public function qualifiedName(): Attribute;
 
     public function hasNotes(): Attribute;
 

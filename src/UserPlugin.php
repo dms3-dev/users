@@ -8,6 +8,7 @@ use Filament\Panel;
 use Mediamouse\Users\Filament\Pages\ChangePassword;
 use Mediamouse\Users\Filament\Pages\GlobalSettings;
 use Mediamouse\Users\Filament\Pages\UserSettings;
+use Mediamouse\Users\Filament\Widgets\TasksOverview;
 
 class UserPlugin implements Plugin
 {
@@ -42,6 +43,10 @@ class UserPlugin implements Plugin
             \Mediamouse\Users\Filament\Pages\UserSettings::class,
             \Mediamouse\Users\Filament\Pages\ChangePassword::class,
             \Mediamouse\Users\Filament\Pages\SystemHealth::class,
+        ]);
+
+        $panel->widgets([
+            TasksOverview::class,
         ]);
 
 

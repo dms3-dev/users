@@ -60,4 +60,8 @@ trait HasNotesTrait {
     public function hasNotes() : Attribute {
         return Attribute::make(fn() => $this->notes()->exists());
     }
+
+    public function qualifiedName() : Attribute {
+        return Attribute::make(fn() => $this->getQualifiedName());
+    }
 }

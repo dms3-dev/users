@@ -8,6 +8,7 @@ use App\Models\Donor;
 use App\Models\Household;
 use Filament\Facades\Filament;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Mediamouse\Users\Enums\NoteStatus;
@@ -35,6 +36,12 @@ class TasksOverview extends BaseWidget
         '2xl' => 12,
     ];
 
+    public function table(Table $table): Table
+    {
+        return parent::table($table)
+            ->contentGrid($this->getTableContentGrid());
+    }
+
     protected function getTableContentGrid(): ?array
     {
         return [
@@ -60,29 +67,25 @@ class TasksOverview extends BaseWidget
     protected function getTableColumns(): array
     {
         return [
-            Tables\Columns\TextColumn::make('qualifiedName')
-                ->weight('bold')
-                ->formatStateUsing(fn(Note $record) => $record->notable->qualifiedName()),
-            Tables\Columns\TextColumn::make('milestone_at')
-                ->dateTime(Date::userDateTimeFormat())
-//                ->searchable()
-//                ->sortable()
-//                ->toggleable()
-                ->extraAttributes(['class' => 'mb-3'])
-                ->label('Due date'),
-//            Tables\Columns\TextColumn::make('assigned_to')
-//                ->formatStateUsing(fn(Note $record) => $record->user?->name),
-            Tables\Columns\TextColumn::make('content')
-//                ->sortable()
-//                ->toggleable()
-//                ->searchable()
-//                ->formatStateUsing(function (Note $record) {
-//                    if(strlen($record->content) > 45) {
-//                        return substr($record->content, 0, 42) . '...';
-//                    }
-//                    return substr($record->content, 0, 45);
-//                })
-            ,
+            Tables\Columns\Layout\Stack::make([
+                Tables\Columns\TextColumn::make('qualified_name')
+                    ->weight('bold'),
+                Tables\Columns\TextColumn::make('milestone_at')
+                    ->dateTime(Date::userDateTimeFormat())
+                    ->searchable()
+                    ->extraAttributes(['class' => 'mb-3'])
+                    ->label('Due date'),
+                Tables\Columns\TextColumn::make('content')
+                    ->searchable()
+                    ->limit(200)
+                    ->formatStateUsing(function (Tables\Columns\TextColumn $column, Note $record) {
+                        if(strlen($record->content) > $column->getCharacterLimit()) {
+                            return substr($record->content, 0, $column->getCharacterLimit()) . '...';
+                        }
+                        return substr($record->content, 0, $column->getCharacterLimit());
+                    }),
+
+            ]),
         ];
     }
 
