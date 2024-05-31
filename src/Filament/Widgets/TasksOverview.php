@@ -36,11 +36,11 @@ class TasksOverview extends BaseWidget
         '2xl' => 12,
     ];
 
-    public function table(Table $table): Table
-    {
-        return parent::table($table)
-            ->contentGrid($this->getTableContentGrid());
-    }
+//    public function table(Table $table): Table
+//    {
+//        return parent::table($table)
+//            ->contentGrid($this->getTableContentGrid());
+//    }
 
     protected function getTableContentGrid(): ?array
     {
@@ -49,7 +49,7 @@ class TasksOverview extends BaseWidget
             'md' => 2,
             'lg' => 2,
             'xl' => 3,
-            '2xl' => 4,
+            '2xl' => 3,
         ];
     }
 
@@ -68,13 +68,17 @@ class TasksOverview extends BaseWidget
     {
         return [
             Tables\Columns\Layout\Stack::make([
-                Tables\Columns\TextColumn::make('qualified_name')
-                    ->weight('bold'),
                 Tables\Columns\TextColumn::make('milestone_at')
-                    ->dateTime(Date::userDateTimeFormat())
+                    ->dateTime(Date::userDateFormat())
+                    ->badge()
+                    ->color('info')
+                    ->icon('heroicon-s-clock')
+                    ->visible(fn($state) => $state !== null)
                     ->searchable()
                     ->extraAttributes(['class' => 'mb-3'])
                     ->label('Due date'),
+                Tables\Columns\TextColumn::make('related_name')
+                    ->weight('bold'),
                 Tables\Columns\TextColumn::make('content')
                     ->searchable()
                     ->limit(200)

@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Models;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Mediamouse\Laravel\Models\Model;
@@ -24,10 +25,11 @@ use Mediamouse\Users\Models\Contracts\WithNotes;
  * @property NoteStatus status
  * @property string content
  *
+ * @property-read string related_name
+ *
  * @property User user
  * @property WithNotes notable
  */
-
 class Note extends Model
 {
     use HasFactory;
@@ -52,6 +54,10 @@ class Note extends Model
 
     public function user(): BelongsTo {
         return $this->belongsTo(\Mediamouse\Users\Models\User::class);
+    }
+
+    public function relatedName(): Attribute {
+        return Attribute::make(fn() => $this->notable->getQualifiedName());
     }
 
 
