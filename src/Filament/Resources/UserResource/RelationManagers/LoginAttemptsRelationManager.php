@@ -15,18 +15,6 @@ class LoginAttemptsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'loginAttempt';
 
-//    protected static ?string $title = (__('mediamouse-users::pages/user-resource.login_attempts'));
-
-    protected function getDefaultTableSortColumn(): ?string
-    {
-        return 'created_at';
-    }
-
-    protected function getDefaultTableSortDirection(): ?string
-    {
-        return 'desc';
-    }
-
     public function form(Form $form): Form
     {
         return $form
@@ -42,6 +30,7 @@ class LoginAttemptsRelationManager extends RelationManager
     {
         /** @noinspection DuplicatedCode */
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
                     ->label((__('mediamouse-users::pages/user-resource.attempt_date')))
