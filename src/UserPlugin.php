@@ -14,7 +14,7 @@ class UserPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'filament-apex-charts';
+        return 'mediamouse-users';
     }
 
     public static function make(): static
