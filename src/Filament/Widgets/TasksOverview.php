@@ -6,6 +6,7 @@ use App\Filament\Resources\DonorResource;
 use App\Filament\Resources\HouseholdResource;
 use App\Models\Donor;
 use App\Models\Household;
+use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -72,6 +73,7 @@ class TasksOverview extends BaseWidget
                     ->dateTime(Date::userDateFormat())
                     ->badge()
                     ->color('info')
+                    ->color(fn($state) => $state > Carbon::now() ? 'info' : 'danger')
                     ->icon('heroicon-s-clock')
                     ->visible(fn($state) => $state !== null)
                     ->searchable()
