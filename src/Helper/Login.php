@@ -11,7 +11,8 @@ class Login
 
     public static function login(User $user): bool {
         Filament::auth()->login($user);
-        Auth::login($user);
+//        Auth::login($user);
+        auth()->guard('web')->login($user);
 
         request()->session()->regenerate();
 

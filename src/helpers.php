@@ -5,7 +5,7 @@ if(!function_exists('hasPrivilege')) {
         /** @var \Mediamouse\Users\Models\User $user */
         $user = \Filament\Facades\Filament::auth()->user();
 
-        return $user->hasPrivilege($policy, $privilege);
+        return $user?->hasPrivilege($policy, $privilege) ?? false;
     }
 
 }
