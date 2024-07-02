@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Filament\RelationManagers;
 
+use App\Models\Member;
 use App\Models\User;
 use Exception;
 use Filament\Facades\Filament;
@@ -23,6 +24,14 @@ use Mediamouse\Users\Support\Date;
 class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
+
+    public static function getBadge(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): string
+    {
+        $count = $ownerRecord->notes()->count();
+
+        return   $count != 0 ? $count : '';
+    }
+
 
     protected static ?string $recordTitleAttribute = 'Note';
 
