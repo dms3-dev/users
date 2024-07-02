@@ -16,6 +16,10 @@ use Illuminate\Database\Eloquent\Model;
 use Mediamouse\Filament\Forms\Components\TextDisplay;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Enums\UserRole;
+use Mediamouse\Users\Filament\Resources\GroupResource\Actions\BulkGiveAllPermissionsAction;
+use Mediamouse\Users\Filament\Resources\GroupResource\Actions\BulkRemoveAllPermissionsAction;
+use Mediamouse\Users\Filament\Resources\GroupResource\Actions\GiveAllPermissionsAction;
+use Mediamouse\Users\Filament\Resources\GroupResource\Actions\RemoveAllPermissionsAction;
 use Mediamouse\Users\Models\GroupHasPolicy;
 use Mediamouse\Users\Models\Policy;
 use Mediamouse\Users\Models\User;
@@ -68,10 +72,13 @@ class GroupHasPolicyRelationManager extends RelationManager
                 //
             ])
             ->actions([
-//                Tables\Actions\EditAction::make(),
+               GiveAllPermissionsAction::make(),
+               RemoveAllPermissionsAction::make(),
+
             ])
             ->bulkActions([
-                //
+                BulkGiveAllPermissionsAction::make(),
+                BulkRemoveAllPermissionsAction::make(),
             ]);
     }
 }

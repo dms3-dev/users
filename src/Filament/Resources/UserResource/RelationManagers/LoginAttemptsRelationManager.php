@@ -13,6 +13,12 @@ class LoginAttemptsRelationManager extends RelationManager
 {
     protected static string $relationship = 'loginAttempts';
 
+    public static function getBadge(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): string
+    {
+        $count = $ownerRecord->loginAttempts()->count();
+        return   $count != 0 ? $count : '';
+    }
+
     protected static ?string $recordTitleAttribute = 'loginAttempt';
 
     public function form(Form $form): Form
