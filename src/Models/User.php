@@ -30,6 +30,7 @@ use Mediamouse\Users\Factories\UserFactory;
 use Mediamouse\Users\MailTemplate\LoginChallengeMail;
 use Mediamouse\Users\MailTemplate\PasswordIsChangedMail;
 use Mediamouse\Users\MailTemplate\ResetPasswordLinkMail;
+use Mediamouse\Users\MailTemplate\WelcomeMail;
 use Mediamouse\Users\Policies\PolicyAbstract;
 use Mediamouse\Users\Settings\UserManagementSettings;
 
@@ -202,6 +203,7 @@ class User extends Authenticatable implements FilamentUser
         return $this;
     }
 
+
     public function sendForgotPasswordLink(): void {
         $link = $this->createPasswordLink();
 
@@ -217,6 +219,25 @@ class User extends Authenticatable implements FilamentUser
                 'link' => $link,
             ],
             MailPriority::URGENT);
+    }
+
+    public function sendWelcomeEmail(): void {
+        $link = $this->createPasswordLink();
+
+        $template = WelcomeMail::template();
+
+        $template->translation($this->language_iso)->send(
+            $this->mailableAddress(),
+            [
+                'name' => $this->name,
+                'username' => $this->email,
+                'email' => $this->email,
+                'link' => $link,
+            ],
+            MailPriority::URGENT);
+
+        $this->email_verified_at = Carbon::now();
+        $this->save();
     }
 
     public function sendFailedLoginAttempt(): void {

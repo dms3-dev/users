@@ -61,7 +61,11 @@ class EnterNewPassword extends Component implements HasForms
             (!$this->isLoggedIn && Filament::auth()->check()) ||
             $passReset === null ||
             $passReset->status !== PasswordResetStatus::CREATED ||
-            $passReset->created_at < Carbon::now()->addMinutes(-30)
+
+            ($passReset->user->password === null ?
+                $passReset->created_at < Carbon::now()->subDay() :
+                $passReset->created_at < Carbon::now()->subMinutes(30)
+                )
             ) {
             session()->put('login.error', 'invalid-link');
             redirect()
