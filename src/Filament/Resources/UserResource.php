@@ -222,20 +222,39 @@ class UserResource extends Resource
                     ->sortable( ['id', 'lastLoginAttempt.created_at']),
             ])
             ->actions([
-                Tables\Actions\Action::make('verify')
-                    ->label((__('mediamouse-users::pages/user-resource.verify')))
-                    ->color('success')
-                    ->icon('heroicon-o-check')
-                    ->visible(fn(User $record) => $record->email_verified_at === null && Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::UPDATE))
+//                Tables\Actions\Action::make('verify')
+//                    ->label((__('mediamouse-users::pages/user-resource.verify')))
+//                    ->color('success')
+//                    ->icon('heroicon-o-check')
+//                    ->visible(fn(User $record) => $record->email_verified_at === null && Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::UPDATE))
+//                    ->requiresConfirmation()
+//                    ->action(function (User $record) {
+//                        $record->email_verified_at = Carbon::now();
+//                        $record->save();
+//
+//                        Notification::make('verified')
+//                            ->iconColor('success')
+//                            ->title((__('mediamouse-users::pages/user-resource.user_is_verified')))
+//                            ->icon('heroicon-o-check')
+//                            ->send();
+//                    }),
+                Tables\Actions\Action::make('welcome-email')
+                    ->label(fn(User $record) => (
+                        $record->email_verified_at === null ?
+                            __('mediamouse-users::pages/user-resource.send_welcome_email') :
+                            __('mediamouse-users::pages/user-resource.resend_welcome_email')
+                    ))
+                    ->visible(fn(User $record) =>
+                                        $record->password === null)
+                    ->icon('heroicon-o-mail')
                     ->requiresConfirmation()
                     ->action(function (User $record) {
-                        $record->email_verified_at = Carbon::now();
-                        $record->save();
+                        $record->sendWelcomeEmail();
 
-                        Notification::make('verified')
-                            ->iconColor('success')
-                            ->title((__('mediamouse-users::pages/user-resource.user_is_verified')))
+                        Notification::make('welcome')
                             ->icon('heroicon-o-check')
+                            ->iconColor('success')
+                            ->title(__('mediamouse-users::pages/user-resource.welcome_email_send'))
                             ->send();
                     }),
                 ViewAction::make()->color('info')

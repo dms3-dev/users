@@ -31,7 +31,7 @@ class CreateUserAction extends EditUserAction
 //                $newUser->groups = $data['groups'];
                 $newUser->two_factor = $data['two_factor'];
                 $newUser->status = $data['status'];
-                $newUser->email_verified_at = Carbon::now();
+//                $newUser->email_verified_at = Carbon::now();
 
                 $newUser->save();
 

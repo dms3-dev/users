@@ -16,4 +16,7 @@ return [
     'ip_address' => 'IP Adres',
     'title' => 'Gebruikers',
     'record_title' => 'Gebruiker',
+    'send_welcome_email' => 'Verstuur welkom e-mail',
+    'resend_welcome_email' => 'Verstuur welkom e-mail opnieuw',
+    'welcome_email_send' => 'Welkomst e-mail is verzonden',
 ];
