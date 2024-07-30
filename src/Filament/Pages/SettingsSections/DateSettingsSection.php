@@ -40,7 +40,10 @@ class DateSettingsSection extends AbstractSettingsSection
         ];
 
         $date_options = [];
-        $datetime_options = ['auto' => __('mediamouse-users::pages/global-settings.datetime-auto-setting')];
+        $datetime_options = [
+                'auto' => __('mediamouse-users::pages/global-settings.datetime-auto-setting'),
+                'split' => __('mediamouse-users::pages/global-settings.datetime-split-setting'),
+            ];
         $time_options = [];
         foreach ($date_formats as $date_format) {
             $date_options[$date_format] = $date->format($date_format);

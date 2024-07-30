@@ -2,6 +2,7 @@
 
 namespace Mediamouse\Users\Support;
 
+use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use Filament\Facades\Filament;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\GlobalSettings;
@@ -75,7 +76,7 @@ class Date {
         return substr(self::userDateTimeFormat(), 0, -2);
     }
 
-    public static function userDateTimeFormat(): string
+    public static function userDateTimeFormat($bugsnag = true): string
     {
         if(Filament::auth()->user()) {
             /** @var User $current_user */
@@ -83,14 +84,18 @@ class Date {
 
             $format = $current_user->getUserSetting('mediamouse-users.dateTime_format');
 
-            if($format !== null && $format !== 'global' && $format !== 'auto') {
+            if($format !== null && $format !== 'global' && $format !== 'auto' && $format !== 'split') {
                 return $format;
+            }
+            if($format === 'split') {
+                if($bugsnag) Bugsnag::notifyError('DateTimeSplitError', 'Date Time (user) not properly splitted');
+                return self::userDateFormat() . ' ' . self::userTimeFormat();
             }
             if($format === 'auto' || $format === 'global') {
                 return self::userDateFormat() . ' ' . self::userTimeFormat();
             }
         }
-        return self::globalDateTimeFormat();
+        return self::globalDateTimeFormat($bugsnag);
     }
 
     public static function globalFormat(): string
@@ -108,11 +113,15 @@ class Date {
         return app(GlobalSettings::class)->date_format;
     }
 
-    public static function globalDateTimeFormat(): string
+    public static function globalDateTimeFormat($bugsnag = true): string
     {
         $format = app(GlobalSettings::class)->dateTime_format;
 
-        if($format == 'auto') {
+        if($format === 'split' && $bugsnag) {
+            if($bugsnag) Bugsnag::notifyError('DateTimeSplitError', 'Date Time (global) not properly splitted');
+            $format = self::globalDateFormat() . ' ' . self::globalTimeFormat();
+        }
+        else if($format == 'auto' || $format === 'split') {
             $format = self::globalDateFormat() . ' ' . self::globalTimeFormat();
         }
 
