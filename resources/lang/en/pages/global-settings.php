@@ -11,6 +11,7 @@ return [
     'number-settings' => 'Number Settings',
     'number-notation' => 'Number format',
     'datetime-auto-setting' => 'Automatic',
+    'datetime-split-setting' => 'Split date and time',
     'toggle-maintenance-button' => 'Toggle Maintenance',
     'maintenance-settings' => 'Maintenance Settings',
     'error-codes-settings' => 'Error Codes Settings',

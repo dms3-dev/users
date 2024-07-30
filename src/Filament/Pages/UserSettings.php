@@ -181,7 +181,11 @@ class UserSettings extends Page implements HasFormActions
         ];
 
         $date_options = ['global' => __('mediamouse-users::pages/user-settings.datetime-global-setting')];
-        $datetime_options = ['auto' => __('mediamouse-users::pages/user-settings.datetime-auto-setting')];
+
+        $datetime_options = [
+            'auto' => __('mediamouse-users::pages/global-settings.datetime-auto-setting'),
+            'split' => __('mediamouse-users::pages/global-settings.datetime-split-setting'),
+        ];
         $time_options = ['global' => __('mediamouse-users::pages/user-settings.datetime-global-setting')];
         foreach($date_formats as $date_format) {
             $date_options[$date_format] = $date->translatedFormat($date_format);

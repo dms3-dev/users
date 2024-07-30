@@ -11,6 +11,7 @@ return [
     'number-settings' => 'Nummer instellingen',
     'number-notation' => 'Nummer notatie',
     'datetime-auto-setting' => 'Automatisch',
+    'datetime-split-setting' => 'Splits datum en tijd',
     'toggle-maintenance-button' => 'Schakel Maintenance',
     'maintenance-settings' => 'Maintenance instellingen',
     'error-codes-settings' => 'Foutcodes instellingen',
