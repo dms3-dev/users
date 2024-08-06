@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Models\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Mediamouse\Users\Enums\NoteType;
 use Mediamouse\Users\Filament\RelationManagers\NotesRelationManager;
 use Mediamouse\Users\Models\Contracts\WithNotes;
 use Mediamouse\Users\Models\Note;
@@ -20,7 +21,7 @@ trait HasNotesTrait {
         /** @var Note $note */
         foreach ($oldWithNotes->notes as $note) {
             $newNote = $note->replicate();
-            $newNote->has_notes_id = $this->id;
+            $newNote->has_notes_id = $this->{$this->primaryKey()};
             $newNote->has_notes_type = get_class($this);
             $newNote->save();
         }
@@ -33,13 +34,28 @@ trait HasNotesTrait {
         /** @var Note $note */
         foreach ($oldDonor->notes as $note) {
             $newNote = $note->replicate();
-            $newNote->has_notes_id = $this->id;
+            $newNote->has_notes_id = $this->{$this->primaryKey()};
             $newNote->has_notes_type = get_class($this);
             $newNote->save();
         }
 
         return $this;
     }
+
+    public function addNote($description) {
+        $note = new Note();
+
+        $note->has_notes_id = $this->{$this->primaryKey()};
+        $note->has_notes_type = get_class($this);
+
+        $note->type = NoteType::NOTE;
+        $note->content = $description;
+
+        $note->save();
+
+        return $note;
+    }
+
     public function labelColor(): string{
         return 'primary';
     }

@@ -156,10 +156,10 @@ class User extends Authenticatable implements FilamentUser
         return $token;
     }
 
-    private function createPasswordLink() : string {
+    private function createPasswordLink(string $route = 'mediamouse-users.auth.reset-password') : string {
         $token = $this->createPasswordResetToken();
 
-        return route('mediamouse-users.auth.reset-password', ['token' => $token->token]);
+        return route($route, ['token' => $token->token]);
 
         return env('APP_URL', request()->schemeAndHttpHost()) . '/' . config('filament.path') . '/reset-password/' . $token->token;
     }
@@ -204,8 +204,8 @@ class User extends Authenticatable implements FilamentUser
         return $this;
     }
 
-    public function sendForgotPasswordLink(): void {
-        $link = $this->createPasswordLink();
+    public function sendForgotPasswordLink($route = 'mediamouse-users.auth.reset-password'): void {
+        $link = $this->createPasswordLink($route);
 
         $template = ResetPasswordLinkMail::template();
 

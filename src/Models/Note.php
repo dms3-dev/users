@@ -17,6 +17,7 @@ use Mediamouse\Users\Models\Contracts\WithNotes;
  * @property int id
  * @property int has_notes_id
  * @property string has_notes_type
+ * @property int assigned_to
  *
  * @property Carbon created_at
  * @property Carbon updated_at
@@ -27,7 +28,7 @@ use Mediamouse\Users\Models\Contracts\WithNotes;
  *
  * @property-read string related_name
  *
- * @property User user
+ * @property User assigned
  * @property WithNotes notable
  */
 class Note extends Model
@@ -52,8 +53,8 @@ class Note extends Model
         return $this->belongsTo($this->has_notes_type, 'has_notes_id');
     }
 
-    public function user(): BelongsTo {
-        return $this->belongsTo(\Mediamouse\Users\Models\User::class);
+    public function assigned(): BelongsTo {
+        return $this->belongsTo(\Mediamouse\Users\Models\User::class, 'assigned_to','id');
     }
 
     public function relatedName(): Attribute {
