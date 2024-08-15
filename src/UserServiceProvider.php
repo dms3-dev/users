@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Mediamouse\Users\Console\Commands\CheckSystemHealth;
+use Mediamouse\Users\Console\Commands\UpdateIpDatabase;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
 use Mediamouse\Users\Database\CreateViews;
 use Mediamouse\Users\Enums\SystemHealthStatus;
@@ -61,7 +62,11 @@ class UserServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasConfigFile('mediamouse-users')
             ->hasRoutes('web')
-            ->hasCommands([UpdatePolicies::class,CheckSystemHealth::class])
+            ->hasCommands([
+                    UpdatePolicies::class,
+                    CheckSystemHealth::class,
+                    UpdateIpDatabase::class
+                ])
             ->hasTranslations()
             ->hasMigrations([
                 'create_languages_table',
@@ -87,6 +92,7 @@ class UserServiceProvider extends PackageServiceProvider
                 'alter_policy_relations_to_cascasde',
                 'create_change_log_table',
                 'error_codes_settings',
+                'create_ip_locator_table',
             ]);
     }
 
