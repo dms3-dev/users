@@ -71,6 +71,10 @@ class Date {
         return self::globalTimeFormat();
     }
 
+    public static function userDateTimeFormatWithoutSeconds(): string {
+        return substr(self::userDateTimeFormat(), 0, -2);
+    }
+
     public static function userDateTimeFormat(): string
     {
         if(Filament::auth()->user()) {
