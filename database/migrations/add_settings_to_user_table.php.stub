@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table): void {
 
-            $table->text('table_settings');
+            $table->text('table_settings')->nullable();
         });
     }
 
