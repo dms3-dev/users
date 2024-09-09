@@ -24,7 +24,7 @@ class DateTimeColumn extends TextColumn
         if($format === 'split' || ($format === 'auto' && $global_format === 'split')) {
             return parent::make($name)
                 ->dateTime(Date::userDateFormat())
-                ->tooltip(fn($record) => Carbon::make($record?->$name)->format(Date::userDateTimeFormat(false)));
+                ->tooltip(fn($record) => Carbon::make($record?->$name)?->format(Date::userDateTimeFormat(false)));
 
         }
         return parent::make($name)
