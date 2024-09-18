@@ -7,6 +7,7 @@ use Filament\Tables\Columns\TextColumn;
 use Mediamouse\Users\Settings\GlobalSettings;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Support\Date;
+use Carbon\Carbon;
 
 class DateTimeColumn extends TextColumn
 {
@@ -23,7 +24,7 @@ class DateTimeColumn extends TextColumn
         if($format === 'split' || ($format === 'auto' && $global_format === 'split')) {
             return parent::make($name)
                 ->dateTime(Date::userDateFormat())
-                ->tooltip(fn($record) => $record->$name?->format(Date::userDateTimeFormat(false)));
+                ->tooltip(fn($record) => Carbon::make($record?->$name)?->format(Date::userDateTimeFormat(false)));
 
         }
         return parent::make($name)

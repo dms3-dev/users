@@ -87,6 +87,12 @@ class Challenge extends Component implements HasForms
         $attempt->status = LoginAttemptStatus::SUCCESSFUL;
         $attempt->save();
 
+        if(strlen($user->table_settings) > 0) {
+            request()->session()->put([
+                'tables' => json_decode($user->table_settings, true),
+            ]);
+        }
+
         $token = $user->passwordNeedsReset();
         if($token !== null) {
             session()->put('login.reset-token', $token->token);
