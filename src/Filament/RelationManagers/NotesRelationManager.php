@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -31,28 +32,41 @@ class NotesRelationManager extends RelationManager
         return $form
             ->columns(2)
             ->schema([
-                Forms\Components\Select::make('type')
-                    ->required()
-                    ->options(NoteType::class)
-                ->default(NoteType::NOTE),
-                Forms\Components\DateTimePicker::make('milestone_at')
-                    ->format(Date::userDateTimeFormat())
-                    ->label('Due date')
-                    ->closeOnDateSelection(),
-                Forms\Components\Select::make('status')
-                    ->required()
-                    ->options(NoteStatus::class)
-                    ->default(NoteStatus::OPEN),
-                Forms\Components\Select::make('assigned_to')
-                    ->label('Assign task to')
-                    ->options(User::query()
-                                        ->whereIn('role', [UserRole::ADMINISTRATOR, UserRole::SA])
-                                        ->where('status', UserStatus::ACTIVE)
-                                        ->pluck('name', 'id')
-                                    ),
-                Forms\Components\Textarea::make('content')
-                    ->required()
-                    ->columnSpanFull(),
+                Grid::make(4)->schema([
+                    Forms\Components\Textarea::make('content')
+                        ->required()
+                        ->rows(15)
+                        ->columnSpan(3),
+                    Grid::make(1)->columnSpan(1)->schema([
+                        Forms\Components\Select::make('type')
+                            ->required()
+                            ->options(NoteType::class)
+                            ->reactive()
+                            ->default(NoteType::NOTE),
+                        Forms\Components\DatePicker::make('milestone_at')
+                            ->format(Date::userDateFormat())
+                            ->reactive()
+                            ->visible(fn(\Closure $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
+                            ->label('Due date')
+                            ->closeOnDateSelection(),
+                        Forms\Components\Select::make('status')
+                            ->required()
+                            ->options(NoteStatus::class)
+                            ->reactive()
+                            ->visible(fn(\Closure $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
+                            ->default(NoteStatus::OPEN),
+                        Forms\Components\Select::make('assigned_to')
+                            ->label('Assign task to')
+                            ->reactive()
+                            ->visible(fn(\Closure $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
+                            ->options(User::query()
+                                ->whereIn('role', [UserRole::ADMINISTRATOR, UserRole::SA])
+                                ->where('status', UserStatus::ACTIVE)
+                                ->pluck('name', 'id')
+                            ),
+
+                    ]),
+                ]),
             ]);
     }
 
@@ -64,22 +78,11 @@ class NotesRelationManager extends RelationManager
         return $table
             ->defaultSort('created_at', 'DESC')
             ->columns([
-                Tables\Columns\TextColumn::make('milestone_at')
-                    ->dateTime(Date::userDateTimeFormat())
-                    ->searchable()
-                    ->sortable( ['id', 'milestone_at'])
-                    ->toggleable()
-                    ->label('Due date'),
                 Tables\Columns\TextColumn::make('type')
                     ->sortable( ['id', 'type'])
                     ->toggleable()
                     ->searchable()
                     ->label('Type'),
-                Tables\Columns\TextColumn::make('status')
-                    ->sortable( ['id', 'status'])
-                    ->toggleable()
-                    ->searchable()
-                    ->label('Status'),
                 Tables\Columns\TextColumn::make('content')
                     ->sortable( ['id', 'content'])
                     ->toggleable()
@@ -90,6 +93,19 @@ class NotesRelationManager extends RelationManager
                         }
                         return substr($record->content, 0, 50);
                     }),
+                Tables\Columns\TextColumn::make('milestone_at')
+                    ->dateTime(Date::userDateTimeFormat())
+                    ->searchable()
+                    ->sortable( ['id', 'milestone_at'])
+                    ->formatStateUsing(fn(Note $record, mixed $state) => $record->type === NoteType::TASK ? $state : '')
+                    ->toggleable()
+                    ->label('Due date'),
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable( ['id', 'status'])
+                    ->toggleable()
+                    ->formatStateUsing(fn(Note $record, mixed $state) => $record->type === NoteType::TASK ? $state : '')
+                    ->searchable()
+                    ->label('Status'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
