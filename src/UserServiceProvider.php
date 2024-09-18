@@ -31,6 +31,7 @@ use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
 use Mediamouse\Users\Http\Livewire\Auth\Login;
+use Mediamouse\Users\Http\Middleware\StoreFilamentSettings;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
 use Spatie\LaravelPackageTools\Package;
@@ -93,12 +94,17 @@ class UserServiceProvider extends PackageServiceProvider
                 'create_change_log_table',
                 'error_codes_settings',
                 'create_ip_locator_table',
+                'add_settings_to_user_table',
             ]);
     }
 
     public function boot()
     {
         parent::boot();
+
+        $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
+
+        $kernel->pushMiddleWare(StoreFilamentSettings::class);
 
         Sections::add(DateSettingsSection::class);
         Sections::add(CsvExportSettingsSection::class);
