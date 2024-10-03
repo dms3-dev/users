@@ -31,9 +31,16 @@ class DonorLoginCheck extends HealthCheckAbstract
         return $this->nextCheck()->addSeconds(7200);
     }
 
-    public function getName(): string
+    public function getName(SystemHealthStatus|null $healthStatus): string
     {
-        return 'Recent donor login';
+        switch ($healthStatus) {
+            case SystemHealthStatus::OK:
+                return "There was a recent donor login";
+            case SystemHealthStatus::WARNING:
+                return "There was not a recent donor login";
+            case SystemHealthStatus::ERROR:
+                return "There hasn't been a donor login a quite a while";
+        }
     }
 
 

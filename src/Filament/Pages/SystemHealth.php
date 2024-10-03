@@ -82,7 +82,7 @@ class SystemHealth extends Page implements HasTable
                     $class = $record->health_check;
 
                     $check = new $class($record->payload);
-                    return $check->getName();
+                    return $check->getName($record->status);
                 }),
             TextColumn::make('status')
                 ->sortable( ['id', 'status'])
