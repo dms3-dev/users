@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
-use Mediamouse\Users\Filament\Pages\Actions\ToggleMaintenanceAction;
 use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\GlobalSettings as GlobalSettingsModel;
@@ -104,6 +103,13 @@ class SystemHealth extends Page implements HasTable
                 ->toggleable()
                 ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),
 
+        ];
+    }
+
+    protected function getTableActions(): array
+    {
+        return [
+            \Mediamouse\Users\Filament\Pages\Actions\RecheckAction::make(),
         ];
     }
 
