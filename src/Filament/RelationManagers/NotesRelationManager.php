@@ -17,6 +17,7 @@ use Mediamouse\Users\Enums\NoteType;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
+use Mediamouse\Users\Filament\Tables\Columns\DateTimeColumn;
 use Mediamouse\Users\Models\Note;
 use Mediamouse\Users\Policies\NotePolicy;
 use Mediamouse\Users\Support\Date;
@@ -83,6 +84,12 @@ class NotesRelationManager extends RelationManager
                     ->toggleable()
                     ->searchable()
                     ->label('Type'),
+                DateTimeColumn::make('created_at')
+                    ->toggleable()
+                    ->searchable(['id', 'created_at']),
+                DateTimeColumn::make('updated_at')
+                    ->toggleable()
+                    ->searchable(['id', 'updated_at']),
                 Tables\Columns\TextColumn::make('content')
                     ->sortable( ['id', 'content'])
                     ->toggleable()
