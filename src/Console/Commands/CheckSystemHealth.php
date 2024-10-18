@@ -76,7 +76,7 @@ class CheckSystemHealth extends Command
     {
         Mail::send([
 //            'html' => "Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME'),
-            'raw'  => implode("\r\n", $payload),
+            'raw'  => implode("\r\n\r\n", $payload),
         ],[], function (\Illuminate\Mail\Message $message) use ($name, $email) {
 
             $message
