@@ -17,6 +17,7 @@ use Mediamouse\Users\Enums\NoteType;
 use Mediamouse\Users\Enums\PolicyPrivilege;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserStatus;
+use Mediamouse\Users\Filament\Tables\Columns\DateTimeColumn;
 use Mediamouse\Users\Models\Note;
 use Mediamouse\Users\Policies\NotePolicy;
 use Mediamouse\Users\Support\Date;
@@ -87,6 +88,10 @@ class NotesRelationManager extends RelationManager
         return $table
             ->defaultSort('created_at', 'DESC')
             ->columns([
+                DateTimeColumn::make('created_at')
+                        ->toggleable(),
+                DateTimeColumn::make('updated_at')
+                        ->toggleable(),
                 Tables\Columns\TextColumn::make('type')
                     ->sortable( ['id', 'type'])
                     ->toggleable()
