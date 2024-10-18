@@ -64,7 +64,7 @@ class CheckSystemHealth extends Command
     }
 
     private function mark($status, $text) {
-        $this->errors[] = $status->value . ' ' . $text;
+        $this->errors[] = $status->value . ' ' . $text . '\n';
     }
 
     private function getChecks(): Collection|array
