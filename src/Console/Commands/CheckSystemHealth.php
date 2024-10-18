@@ -64,7 +64,7 @@ class CheckSystemHealth extends Command
     }
 
     private function mark($status, $text) {
-        $this->errors[] = $status->value . ' ' . $text . '\n';
+        $this->errors[] = $status->value . ' ' . $text;
     }
 
     private function getChecks(): Collection|array
@@ -76,13 +76,13 @@ class CheckSystemHealth extends Command
     {
         Mail::send([
 //            'html' => "Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME'),
-            'raw'  => implode("\n", $payload),
+            'raw'  => implode("\r\n", $payload),
         ],[], function (\Illuminate\Mail\Message $message) use ($name, $email) {
 
             $message
                 ->to($email)
 //                ->setBody(new TextPart("Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME')), 'text/html')
-                ->subject('System health error list of' . env('APP_NAME'))
+                ->subject('System health error list of ' . env('APP_NAME'))
 //                ->addPart(new TextPart("Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME')), 'text/plain')
 //            ->send()
             ;
