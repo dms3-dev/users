@@ -48,7 +48,8 @@ class CheckSystemHealth extends Command
                 ])) {
                 $this->changed = true;
             }
-            $this->mark($check->status, $check->health_check);
+
+            $this->mark($check->status,  (new ($check->health_check))->getName($check->status));
 
         });
 
@@ -62,8 +63,8 @@ class CheckSystemHealth extends Command
         return self::SUCCESS;
     }
 
-    private function mark($status, $class) {
-        $this->errors[] = $status->value . ' ' . $class;
+    private function mark($status, $text) {
+        $this->errors[] = $status->value . ' ' . $text;
     }
 
     private function getChecks(): Collection|array
