@@ -45,9 +45,12 @@ class NotesRelationManager extends RelationManager
                 Grid::make(4)->schema([
                     Forms\Components\Textarea::make('content')
                         ->required()
-                        ->rows(15)
+                        ->rows(16)
                         ->columnSpan(3),
                     Grid::make(1)->columnSpan(1)->schema([
+                        Forms\Components\Placeholder::make('created_at')
+                            ->visible(fn(?Note $record) => $record !== null)
+                            ->content(fn(?Note $record) => $record !== null ? $record->created_at->format(Date::userDateTimeFormat(false)) : ''),
                         Forms\Components\Select::make('type')
                             ->required()
                             ->options(NoteType::class)
