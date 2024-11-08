@@ -43,7 +43,7 @@ class ChangePassword extends Page implements HasForms
 
     public static function getNavigationLabel(): string
     {
-        return static::$navigationLabel ?? static::$title ?? __('mediamouse-users::pages/change-password.title');
+        return static::$navigationLabel ?? static::$title ?? __('mediamouse-users::pages/password.title');
     }
 
     public static function shouldRegisterNavigation(): bool
@@ -53,14 +53,14 @@ class ChangePassword extends Page implements HasForms
 
     public function getTitle(): string
     {
-        return static::$title ?? __('mediamouse-users::pages/change-password.title');
+        return static::$title ?? __('mediamouse-users::pages/password.title');
     }
 
     protected function getFormSchema(): array
     {
         return [
             Forms\Components\Grid::make(2)->schema([
-                Forms\Components\Fieldset::make(__('mediamouse-users::pages/change-password.password-settings'))
+                Forms\Components\Fieldset::make(__('mediamouse-users::pages/password.password-settings'))
                     ->columnSpan(1)
                     ->columns(1)
                     ->schema([
@@ -79,7 +79,7 @@ class ChangePassword extends Page implements HasForms
                                 },
                             ])
                             ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/change-password.current-password')),
+                            ->label(__('mediamouse-users::pages/password.current-password')),
                         TextInput::make('new_password')
                             ->password()
                             ->rules([
@@ -87,15 +87,15 @@ class ChangePassword extends Page implements HasForms
                             ])
                             ->required()
                             ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/change-password.new-password')),
+                            ->label(__('mediamouse-users::pages/password.new-password')),
                         TextInput::make('repeat_password')
                             ->password()
                             ->required()
                             ->rules([
-                                new ShouldEqual('new_password', __('mediamouse-users::pages/change-password.new-password'), $this),
+                                new ShouldEqual('new_password', __('mediamouse-users::pages/password.new-password'), $this),
                             ])
                             ->inlineLabel()
-                            ->label(__('mediamouse-users::pages/change-password.repeat-password')),
+                            ->label(__('mediamouse-users::pages/password.repeat-password')),
                     ]),
             ])
         ];
@@ -121,7 +121,7 @@ class ChangePassword extends Page implements HasForms
 
                 Notification::make()
                     ->success()
-                    ->title(__('mediamouse-users::pages/change-password.password-updated'))
+                    ->title(__('mediamouse-users::pages/password.password-updated'))
                     ->send();
 
                 response()->redirectTo(route(static::getUrl()));
@@ -133,7 +133,7 @@ class ChangePassword extends Page implements HasForms
     protected function getSaveFormAction(): Action
     {
         return Action::make('save')
-            ->label(__('mediamouse-users::pages/change-password.button'))
+            ->label(__('mediamouse-users::pages/password.button'))
             ->submit('submit')
             ->keyBindings(['mod+s']);
     }

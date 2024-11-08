@@ -53,7 +53,7 @@ class UserPlugin implements Plugin
         $panel->userMenuItems([
             'account' => MenuItem::make()->url(fn() => UserSettings::getUrl()),
             MenuItem::make()
-                ->label(__('mediamouse-users::pages/change-password.title'))
+                ->label(__('mediamouse-users::pages/password.title'))
                 ->url(fn() => ChangePassword::getUrl())
                 ->sort(1)
                 ->icon('heroicon-s-cog'),

@@ -3,7 +3,6 @@
 return [
     'title' => 'Systeem Instellingen',
     'menu-label' => 'Systeem Instellingen',
-    'title' => 'Systeem Instellingen',
     'date-settings' => 'Datum instellingen',
     'date-notation' => 'Datum notatie',
     'datetime-notation' => 'Datum/Tijd notatie',

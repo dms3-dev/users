@@ -129,7 +129,7 @@ class UserServiceProvider extends PackageServiceProvider
 //            Filament::registerUserMenuItems([
 //                'account' => UserMenuItem::make()->url(route('filament.pages.user-settings')),
 //                UserMenuItem::make()
-//                    ->label(__('mediamouse-users::pages/change-password.title'))
+//                    ->label(__('mediamouse-users::pages/password.title'))
 //                    ->url(route('filament.pages.change-password'))
 //                    ->sort(1)
 //                    ->icon('heroicon-s-cog'),
