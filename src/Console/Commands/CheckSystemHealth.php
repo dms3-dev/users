@@ -57,8 +57,6 @@ class CheckSystemHealth extends Command
         if($this->changed) {
             $this->sendErrorMail('Jeroen', 'jeroen@mediamouse.nl',  $this->errors);
             $this->sendErrorMail('Gijs', 'gijs@mediamouse.nl',  $this->errors);
-            $this->sendErrorMail('George', 'georgios@mediamouse.nl',  $this->errors);
-
         }
 
         return self::SUCCESS;
