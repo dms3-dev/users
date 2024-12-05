@@ -73,7 +73,7 @@ class CheckSystemHealth extends Command
 
     public function sendErrorMail(string $name, string $email, $payload)
     {
-        Mail::to($email)->send(new SimpleMail('System health error list of ' . env('APP_NAME'), $email));
+        Mail::to($email)->send(new SimpleMail('System health error list of ' . env('APP_NAME'), implode("\r\n", $payload)));
     }
 
 }
