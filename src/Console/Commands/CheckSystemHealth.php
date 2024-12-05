@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Mail;
+use Mediamouse\Mails\Mail\SimpleMail;
 use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Models\Policy;
 use Mediamouse\Users\Models\Group;
@@ -74,20 +75,7 @@ class CheckSystemHealth extends Command
 
     public function sendErrorMail(string $name, string $email, $payload)
     {
-        Mail::send([
-//            'html' => "Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME'),
-            'raw'  => implode("\r\n\r\n", $payload),
-        ],[], function (\Illuminate\Mail\Message $message) use ($name, $email) {
-
-            $message
-                ->to($email)
-//                ->setBody(new TextPart("Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME')), 'text/html')
-                ->subject('System health error list of ' . env('APP_NAME'))
-//                ->addPart(new TextPart("Hey {$name} " . ' There is an error with ' . $class_name . ' on ' . env('APP_NAME')), 'text/plain')
-//            ->send()
-            ;
-        });
-
+        Mail::to($email)->send(new SimpleMail('System health error list of ' . env('APP_NAME'), $email));
     }
 
 }
