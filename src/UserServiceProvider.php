@@ -37,6 +37,9 @@ use Mediamouse\Users\Settings\UserManagementSettings;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
 
 class UserServiceProvider extends PackageServiceProvider
 {
@@ -118,46 +121,17 @@ class UserServiceProvider extends PackageServiceProvider
         Livewire::component('enter-new-password', EnterNewPassword::class);
         Livewire::component('system-health-cards', SystemHealthCards::class);
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+            fn (): string => \view('mediamouse-users::system-health-badge'),
+        );
 
         Filament::serving(function (): void {
-
-
-            Filament::registerUserMenuItems([
-                // ...
-            ]);
-
-//            Filament::registerUserMenuItems([
-//                'account' => UserMenuItem::make()->url(route('filament.pages.user-settings')),
-//                UserMenuItem::make()
-//                    ->label(__('mediamouse-users::pages/password.title'))
-//                    ->url(route('filament.pages.change-password'))
-//                    ->sort(1)
-//                    ->icon('heroicon-s-cog'),
-//            ]);
 
             if (Filament::auth()->user() !== null) {
                 /** @var User $current_user */
                 $current_user = Filament::auth()->user();
                 App::setLocale($current_user->language_iso);
-
-                if ($current_user->role == UserRole::SA) {
-//                    Filament::registerUserMenuItems([
-//                        UserMenuItem::make()
-//                            ->label(__('mediamouse-users::pages/global-settings.menu-label'))
-//                            ->url(route('filament.pages.global-settings'))
-//                            ->sort(2)
-//                            ->icon('heroicon-s-cog'),
-//
-//                        UserMenuItem::make()
-//                            ->label(__('mediamouse-users::pages/system-health.menu-label'))
-//                            ->url(route('filament.pages.system-health'))
-//                            ->sort(2)
-//                            ->icon('heroicon-s-heart'),
-//
-//                    ]);
-                }
-
-
             }
 
             if (app()->isDownForMaintenance()) {
@@ -170,7 +144,6 @@ class UserServiceProvider extends PackageServiceProvider
             ]));
 
         });
-
 
         Event::listen(function (CommandFinished $event) {
             CreateViews::event($event);

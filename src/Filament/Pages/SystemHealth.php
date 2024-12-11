@@ -15,6 +15,7 @@ use Mediamouse\Users\Enums\SystemHealthStatus;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
+use Mediamouse\Users\Filament\Tables\Columns\DateTimeColumn;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\GlobalSettings as GlobalSettingsModel;
 use Filament\Forms\Components\TextInput;
@@ -92,16 +93,14 @@ class SystemHealth extends Page implements HasTable
                     if ($record->status == SystemHealthStatus::WARNING) return 'warning';
                     return 'success';
                 }),
-            TextColumn::make('checked_at')
-                ->sortable( ['id', 'checked_at'])
-                ->searchable()
-                ->toggleable()
-                ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),
-            TextColumn::make('valid_until')
-                ->sortable( ['id', 'valid_until'])
-                ->searchable()
-                ->toggleable()
-                ->formatStateUsing(fn($state)=>$state? Carbon::parse($state)->format(Date::userDateFormat()) : ''),
+            DateTimeColumn::make('checked_at')
+                        ->sortable( ['id', 'checked_at'])
+                        ->searchable()
+                        ->toggleable(),
+            DateTimeColumn::make('valid_until')
+                        ->sortable( ['id', 'checked_at'])
+                        ->searchable()
+                        ->toggleable(),
 
         ];
     }

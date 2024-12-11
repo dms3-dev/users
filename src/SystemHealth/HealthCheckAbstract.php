@@ -28,5 +28,19 @@ abstract class HealthCheckAbstract
     protected function init() : void {}
     public function getCards() : array { return []; }
 
+    public static function defaultPayload() { return null; }
+    public static function title(SystemHealth $health) { return 'Health Check'; }
+
+    public static function register(bool $check_exists = true) {
+        if(!$check_exists || !SystemHealth::query()->where('health_check', static::class)->exists()) {
+            $newSystem = new SystemHealth();
+            $newSystem->health_check = static::class;
+            $newSystem->payload = static::defaultPayload();
+            $newSystem->update_after = Carbon::now();
+
+            $newSystem->save();
+        }
+    }
+
 }
 

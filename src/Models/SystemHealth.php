@@ -101,15 +101,20 @@ class SystemHealth extends Model
         $nextStat->save();
     }
 
+    /**
+     * @param string $health_check
+     * @param mixed|null $payload
+     * @return void
+     *
+     * @deprecated 
+     */
     public static function addCheck(string $health_check, mixed $payload = null) {
         $newSystem = new SystemHealth();
         $newSystem->health_check = $health_check;
         $newSystem->payload = $payload;
         $newSystem->update_after = Carbon::now();
 
-
         $newSystem->save();
-
     }
 
 }
