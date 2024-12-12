@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Event;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\Facades\Blade;
+use Mediamouse\Users\Facade\SystemHealth as SystemHealthFacade;
 
 class UserServiceProvider extends PackageServiceProvider
 {
@@ -123,7 +124,7 @@ class UserServiceProvider extends PackageServiceProvider
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-            fn (): string => \view('mediamouse-users::system-health-badge'),
+            fn (): string => \view('mediamouse-users::system-health-badge', ['color' => SystemHealthFacade::healthColor()]),
         );
 
         Filament::serving(function (): void {
