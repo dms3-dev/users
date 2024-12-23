@@ -122,10 +122,10 @@ class UserServiceProvider extends PackageServiceProvider
         Livewire::component('enter-new-password', EnterNewPassword::class);
         Livewire::component('system-health-cards', SystemHealthCards::class);
 
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-            fn (): string => \view('mediamouse-users::system-health-badge', ['color' => SystemHealthFacade::healthColor()]),
-        );
+//        FilamentView::registerRenderHook(
+//            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+//            fn (): string => \view('mediamouse-users::system-health-badge', ['color' => SystemHealthFacade::healthColor()]),
+//        );
 
         Filament::serving(function (): void {
 
