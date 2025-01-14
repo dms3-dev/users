@@ -21,7 +21,6 @@ class CreateUserAction extends EditUserAction
             ->icon('heroicon-o-plus')
             ->form(self::form())
             ->action(function (array $data) {
-                dd($data);
                 $newUser = new User();
                 $newUser->username = $data['username'];
                 $newUser->name = $data['name'];
