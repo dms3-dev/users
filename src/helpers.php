@@ -9,3 +9,12 @@ if(!function_exists('hasPrivilege')) {
     }
 
 }
+
+if(!function_exists('userCan')) {
+    function userCan(mixed $policy, \Mediamouse\Laravel\Models\Model $record = null) {
+        /** @var \Mediamouse\Users\Models\User $user */
+        $user = \Filament\Facades\Filament::auth()->user();
+
+        return $user?->canDo($policy, $record) ?? false;
+    }
+}

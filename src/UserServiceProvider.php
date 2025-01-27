@@ -27,6 +27,7 @@ use Mediamouse\Users\Filament\Pages\SettingsSections\Sections;
 use Mediamouse\Users\Filament\Pages\SystemHealth;
 use Mediamouse\Users\Filament\Pages\Widgets\SystemHealthCards;
 use Mediamouse\Users\Filament\Resources\GroupResource;
+use Mediamouse\Users\Helper\UserCan;
 use Mediamouse\Users\Http\Livewire\Auth\Challenge;
 use Mediamouse\Users\Http\Livewire\Auth\EnterNewPassword;
 use Mediamouse\Users\Http\Livewire\Auth\ForgotPassword;
@@ -105,6 +106,10 @@ class UserServiceProvider extends PackageServiceProvider
     public function boot()
     {
         parent::boot();
+
+        $this->app->singleton(UserCan::class, function () {
+            return new UserCan();
+        });
 
         $kernel = app(\Illuminate\Contracts\Http\Kernel::class);
 
