@@ -218,8 +218,8 @@ class UserResource extends Resource
                     ),
                 Tables\Columns\TextColumn::make('lastLoginAttempt.created_at')
                     ->label((__('mediamouse-users::pages/user-resource.last_login_attempt')))
-                    ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s'))
-                    ->sortable( ['id', 'lastLoginAttempt.created_at']),
+//                    ->sortable( ['id', 'login_attempts.created_at'])
+                    ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s')),
             ])
             ->actions([
 //                Tables\Actions\Action::make('verify')
