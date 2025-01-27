@@ -28,7 +28,13 @@ class TasksOverview extends BaseWidget
             ->orderBy('milestone_at');
     }
 
-    protected int | string | array $columnSpan = 12;
+
+    protected int | string | array $columnSpan = [
+        'sm' => 1,
+        'md' => 12,
+        'lg' => 12,
+        'xl' => 12,
+    ];
 
 //    public function table(Table $table): Table
 //    {
