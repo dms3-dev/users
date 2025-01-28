@@ -246,7 +246,7 @@ class UserResource extends Resource
                     ))
                     ->visible(fn(User $record) =>
                                         $record->password === null)
-                    ->icon('heroicon-o-mail')
+                    ->icon('heroicon-o-envelope')
                     ->requiresConfirmation()
                     ->action(function (User $record) {
                         $record->sendWelcomeEmail();
