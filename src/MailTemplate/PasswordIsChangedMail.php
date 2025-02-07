@@ -9,6 +9,9 @@ class PasswordIsChangedMail extends MailTemplateAbstract {
     protected static string $key = 'UserPasswordReset';
     protected static string $name = 'Inform user about password reset';
 
+    protected static bool $bcc_active = false;
+    protected static bool $bcc_allowed = false;
+
     protected static function configure(MailTemplate $template): void
     {
         $template->addField('name', 'Full name', test: 'John Doe', tooltip: 'The Full name of the person trying to login');
