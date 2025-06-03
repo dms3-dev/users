@@ -14,11 +14,13 @@ class UserCan
         if($user->role === UserRole::SA) return true;
 
         foreach (self::$validators as $key => $validator) {
-            if($key === get_class($privilege)) {
+            if(
+                (is_object($privilege) && get_class($privilege) === $validator) ||
+                (is_string($privilege) && $key === $privilege)) {
                 return $validator->canDo($user, $privilege, $record);
             }
         }
-        
+
         return false;
     }
 

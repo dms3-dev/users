@@ -10,6 +10,9 @@ abstract class UserCanValidatorAbstract
     protected string $for;
 
     public function for() {
+        if(!isset($this->for)) {
+            return static::class;
+        }
         return $this->for;
     }
 

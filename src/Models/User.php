@@ -32,6 +32,7 @@ use Mediamouse\Users\MailTemplate\LoginChallengeMail;
 use Mediamouse\Users\MailTemplate\PasswordIsChangedMail;
 use Mediamouse\Users\MailTemplate\ResetPasswordLinkMail;
 use Mediamouse\Users\MailTemplate\WelcomeMail;
+use Mediamouse\Users\Policies\GroupPolicy;
 use Mediamouse\Users\Policies\PolicyAbstract;
 use Mediamouse\Users\Settings\UserManagementSettings;
 
@@ -300,8 +301,22 @@ class User extends Authenticatable implements FilamentUser
     {
         if($this->role === UserRole::SA) return true;
         $value = $privilege->value;
-        $policy = $this->privileges()->where('policy', $policy_class)->first();
-        if($policy === null && $this->groups()->count() > 0) {
+
+        $privileges = DB::table('group_has_policies')
+            ->select([
+                DB::raw('MAX(`view_any`) AS `view_any`'),
+                DB::raw('MAX(`view`) AS `view`'),
+                DB::raw('MAX(`create`) AS `create`'),
+                DB::raw('MAX(`update`) AS `update`'),
+                DB::raw('MAX(`delete`) AS `delete`'),
+                DB::raw('MAX(`restore`) AS `restore`'),
+                DB::raw('MAX(`force_delete`) AS `force_delete`'),
+                DB::raw('MAX(`reorder`) AS `reorder`'),
+            ])
+            ->where('policy', $policy_class)
+            ->whereIn('group_key', $this->groups()->pluck('key'))
+            ->first();
+        if($privileges === null && $this->groups()->count() > 0) {
             if(is_subclass_of($policy_class, PolicyAbstract::class)) {
                 try {
                     $newPolicy = new Policy();
@@ -316,7 +331,8 @@ class User extends Authenticatable implements FilamentUser
                 }
             }
         }
-        return $policy !== null && $policy?->$value;
+
+        return $privileges !== null && $privileges?->$value;
     }
 
     /**
