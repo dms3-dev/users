@@ -49,14 +49,13 @@ class UserPlugin implements Plugin
             TasksOverview::class,
         ]);
 
-
         $panel->userMenuItems([
             'account' => MenuItem::make()->url(fn() => UserSettings::getUrl()),
             MenuItem::make()
-                ->label(__('mediamouse-users::pages/password.title'))
                 ->url(fn() => ChangePassword::getUrl())
                 ->sort(1)
-                ->icon('heroicon-s-cog'),
+                ->icon('heroicon-s-cog')
+                ->label('Change Password'),
             MenuItem::make()
                 ->icon('heroicon-o-cog')
                 ->label('Global Settings')

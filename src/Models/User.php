@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Models;
 use Carbon\Carbon;
 use Dompdf\Exception;
 use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -387,6 +388,15 @@ class User extends Authenticatable implements FilamentUser
     public function validatePassword($password): bool
     {
         return Hash::check($password, $this->password);
+    }
+
+    public function passwordAlreadyUsed(string $value) : bool {
+        foreach(Password::query()->where('user_id', $this->id)->take(4)->pluck('password') as $password) {
+            if(Hash::check($value, $password)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function updatePassword(string $password): bool

@@ -149,10 +149,10 @@ class EnterNewPassword extends SimplePage implements HasForms
             TextInput::make('new-password')
                 ->label(__('mediamouse-users::login.fields.password.label'))
                 ->password()
-                ->minLength(8)
-                ->maxLength(20)
+                ->minLength(app(UserManagementSettings::class)->password_min_length)
+                ->maxLength(app(UserManagementSettings::class)->password_max_length)
                 ->rules([
-                    new \Mediamouse\Users\Validate\Password()
+                    new \Mediamouse\Users\Validate\Password($this->getPasswordReset()->user)
                 ])
                 ->required(),
             TextInput::make('repeat-password')
