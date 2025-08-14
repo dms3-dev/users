@@ -15,5 +15,11 @@ use Mediamouse\Laravel\Models\Model;
 
 class UserMemberOfGroup extends Model
 {
+
+    protected $fillable = [
+        'user_id',
+        'group_key',
+    ];
+
     protected $table = 'user_memberof_group';
 }

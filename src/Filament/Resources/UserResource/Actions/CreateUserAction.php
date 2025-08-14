@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Models\User;
 use Carbon\Carbon;
+use Mediamouse\Users\Models\UserMemberOfGroup;
 
 class CreateUserAction extends EditUserAction
 {
@@ -33,6 +34,14 @@ class CreateUserAction extends EditUserAction
 //                $newUser->email_verified_at = Carbon::now();
 
                 $newUser->save();
+
+
+                foreach ($data['groups'] as $group_key) {
+                    UserMemberOfGroup::create([
+                        'user_id' => $newUser->id,
+                        'group_key' => $group_key
+                    ]);
+                }
 
                 if(class_exists(Bugsnag::class) && env('APP_ENV') !== 'local') {
                     Bugsnag::notifyError( 'SystemHealthChecks','An new admin was created', function (\Bugsnag\Report $report) {
