@@ -37,7 +37,7 @@ class IpLocator
     }
 
     private static function ip() {
-        if(env('APP_ENV') == 'local') return '185.249.42.7';
+        if(config('app.env') == 'local') return '185.249.42.7';
 
         return request()->ip();
     }

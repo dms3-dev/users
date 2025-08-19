@@ -132,7 +132,7 @@ class Challenge extends SimplePage implements HasForms
         $this->message = 'A new challenge code has been sent to your email address';
 
         $this->form->fill([
-            'challenge' => env('APP_ENV') === 'local' ? session()->get('login.challenge') : ''
+            'challenge' => config('app.env') === 'local' ? session()->get('login.challenge') : ''
         ]);
 
     }
@@ -163,7 +163,7 @@ class Challenge extends SimplePage implements HasForms
         return [
             TextInput::make('challenge')
                 ->label('Challenge Code')
-                ->default(env('APP_ENV') === 'local' ? session()->get('login.challenge') : '')
+                ->default(config('app.env') === 'local' ? session()->get('login.challenge') : '')
                 ->required()
                 ->autocomplete(false),
         ];

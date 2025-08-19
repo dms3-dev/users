@@ -43,7 +43,7 @@ class CreateUserAction extends EditUserAction
                     ]);
                 }
 
-                if(class_exists(Bugsnag::class) && env('APP_ENV') !== 'local') {
+                if(class_exists(Bugsnag::class) && config('app.env') !== 'local') {
                     Bugsnag::notifyError( 'SystemHealthChecks','An new admin was created', function (\Bugsnag\Report $report) {
                         $report->setSeverity('info');
                     });
