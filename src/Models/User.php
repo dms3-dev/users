@@ -165,7 +165,7 @@ class User extends Authenticatable implements FilamentUser
 
         return route($route, ['token' => $token->token]);
 
-        return env('APP_URL', request()->schemeAndHttpHost()) . '/' . config('filament.path') . '/reset-password/' . $token->token;
+        return config('app.url', request()->schemeAndHttpHost()) . '/' . config('filament.path') . '/reset-password/' . $token->token;
     }
 
     public function mailableAddress(): Address

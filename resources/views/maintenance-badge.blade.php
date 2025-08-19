@@ -6,7 +6,7 @@
     Maintenance
 </div>
 
-<input id="urlWithSecret" type="text" value="{{ env('APP_URL') }}/{{ $secret }}" style="display: none;" />
+<input id="urlWithSecret" type="text" value="{{ config('app.url') }}/{{ $secret }}" style="display: none;" />
 
 <script>
 
