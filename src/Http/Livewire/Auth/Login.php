@@ -121,7 +121,7 @@ class Login extends SimplePage implements HasForms
      */
     private function validateUserLoginOrFail(User $user, string $password, LoginAttempt $attempt): true {
 
-        if(strlen($user->password ) == 40 && $user->password == sha1($password . env('LOGIN_PASSKEY'))) {
+        if(strlen($user->password ) == 40 && $user->password == sha1($password . config('mediamouse-users.login_passkey'))) {
             $user->password = Hash::make($password);
             $user->save();
         }
