@@ -46,7 +46,7 @@ class UserPlugin implements Plugin
         ]);
 
         $panel->widgets([
-            TasksOverview::class,
+//            TasksOverview::class,
         ]);
 
         $panel->userMenuItems([
