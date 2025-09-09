@@ -121,7 +121,7 @@ class Login extends SimplePage implements HasForms
      */
     private function validateUserLoginOrFail(User $user, string $password, LoginAttempt $attempt): true {
 
-        if(strlen($user->password ) == 40 && $user->password == sha1($password . env('LOGIN_PASSKEY'))) {
+        if(strlen($user->password ) == 40 && $user->password == sha1($password . config('mediamouse-users.login_passkey'))) {
             $user->password = Hash::make($password);
             $user->save();
         }
@@ -161,7 +161,7 @@ class Login extends SimplePage implements HasForms
      */
     private function loginRateLimit() {
         try {
-            $this->rateLimit(app(UserManagementSettings::class)->max_failed_login_attempts_per_ip, env('APP_ENV') == 'local' ? 10 : 1800);
+            $this->rateLimit(app(UserManagementSettings::class)->max_failed_login_attempts_per_ip, config('app.env') == 'local' ? 10 : 1800);
         } catch (TooManyRequestsException $exception) {
             throw ValidationException::withMessages([
                 'email' => 'Too many login attempts. Please try again later.',

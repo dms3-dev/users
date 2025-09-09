@@ -15,8 +15,8 @@ class ForceSchemeAndHost
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->getScheme() . '://' . $request->httpHost() !== env('APP_URL')) {
-            return redirect(env('APP_URL') . $request->getRequestUri());
+        if($request->getScheme() . '://' . $request->httpHost() !== config('app.url')) {
+            return redirect(config('app.url') . $request->getRequestUri());
         }
         return $next($request);
     }

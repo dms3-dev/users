@@ -23,11 +23,13 @@ class StoreFilamentSettings
 
         $response = $next($request);
 
-        if(Filament::auth()->user() !== null) {
-            $user = Filament::auth()->user();
-            $user->table_settings = session('tables');
-            $user->save();
-        }
+        try {
+            if (Filament::auth()->user() !== null) {
+                $user = Filament::auth()->user();
+                $user->table_settings = session('tables');
+                $user->save();
+            }
+        } catch (\Throwable $e) {}
 
         return $response;
     }

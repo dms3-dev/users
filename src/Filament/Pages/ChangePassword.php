@@ -83,7 +83,7 @@ class ChangePassword extends Page implements HasForms
                         TextInput::make('new_password')
                             ->password()
                             ->rules([
-                                new Password(),
+                                new Password(Filament::auth()->user()),
                             ])
                             ->required()
                             ->inlineLabel()
@@ -124,7 +124,7 @@ class ChangePassword extends Page implements HasForms
                     ->title(__('mediamouse-users::pages/password.password-updated'))
                     ->send();
 
-                response()->redirectTo(route(static::getUrl()));
+                response()->redirectTo(static::getUrl());
             }
         }
     }

@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Resources\UserResource\Actions;
 
 
+use Mediamouse\Users\Models\Group;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Filament\Pages\Actions\Action;
 use Filament\Facades\Filament;
@@ -76,10 +77,7 @@ class EditUserAction
                 ]),
                 Forms\Components\Grid::make(1)->columnSpan(1)->schema([
                     Forms\Components\Fieldset::make(__('mediamouse-users::model/user-model.groups'))->columns(1)->columnSpan(1)->schema([
-                        CheckboxList::make('groups')
-                            ->columns(2)
-                            ->relationship('groups', 'name')
-                            ->hiddenLabel(),
+                        self::checkBoxListGroups(),
                     ]),
                     Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.security'))->columns(1)->columnSpan(1)->schema([
                         Forms\Components\Grid::make(1)->columnSpan(1)->schema([
@@ -110,6 +108,20 @@ class EditUserAction
                 ]),
             ]),
         ];
+    }
+
+    private static function checkBoxListGroups() : CheckboxList {
+        $component = CheckboxList::make('groups')
+            ->columns(2)
+            ->options(Group::query()->pluck('name', 'key'))
+
+            ->hiddenLabel();
+
+        if(static::class === self::class) {
+            $component->relationship('groups', 'name');
+        }
+
+        return $component;
     }
 
 }

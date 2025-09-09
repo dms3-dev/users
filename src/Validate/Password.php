@@ -4,11 +4,19 @@ namespace Mediamouse\Users\Validate;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Mediamouse\Users\Models\User;
 use Mediamouse\Users\Settings\UserManagementSettings;
 use Mediamouse\Laravel\Support\Arr;
 
 class Password implements ValidationRule
 {
+    private User $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     public function validate(string $attribute, mixed $value, Closure $fail) : void {
         $settings = new UserManagementSettings();
         if(
@@ -31,6 +39,10 @@ class Password implements ValidationRule
                                                 __('mediamouse-users::pages/login.error-password-invalid-final-glue')
                                             )
                     ]));
+        }
+
+        if($this->user->passwordAlreadyUsed($value)) {
+            $fail(__('mediamouse-users::pages/password.password-used'));
         }
     }
 }
