@@ -10,9 +10,9 @@ use Mediamouse\Laravel\Support\Arr;
 
 class Password implements ValidationRule
 {
-    private User $user;
+    private ?User $user;
 
-    public function __construct(User $user)
+    public function __construct(User $user = null)
     {
         $this->user = $user;
     }
@@ -41,7 +41,7 @@ class Password implements ValidationRule
                     ]));
         }
 
-        if($this->user->passwordAlreadyUsed($value)) {
+        if($this->user && $this->user->passwordAlreadyUsed($value)) {
             $fail(__('mediamouse-users::pages/password.password-used'));
         }
     }
