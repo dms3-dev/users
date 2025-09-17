@@ -10,6 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
@@ -38,8 +39,8 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static \UnitEnum|string|null $navigationGroup = 'User Management';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 5;
 
     public static function getNavigationLabel(): string
@@ -47,10 +48,11 @@ class UserResource extends Resource
         return static::$navigationLabel ?? __('mediamouse-users::pages/user-resource.title');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+
+        return $schema
+            ->components([
 
                 Forms\Components\Grid::make(2)->schema([
                     Forms\Components\Grid::make(1)->columnSpan(1)->schema([

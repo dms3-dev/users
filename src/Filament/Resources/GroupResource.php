@@ -5,6 +5,7 @@ namespace Mediamouse\Users\Filament\Resources;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
@@ -20,8 +21,8 @@ class GroupResource extends Resource
 {
     protected static ?string $model = Group::class;
 
-    protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static \UnitEnum|string|null $navigationGroup = 'User Management';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 5;
 
 
@@ -30,11 +31,11 @@ class GroupResource extends Resource
         return static::$navigationLabel ?? __('mediamouse-users::pages/group-resource.title');
     }
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(Schema $schema): Schema
     {
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('key')
                     ->columns(1)
                     ->alphaNum()

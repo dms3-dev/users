@@ -28,10 +28,10 @@ class SystemHealth extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static ?string $navigationIcon = 'heroicon-s-heart';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-s-heart';
     protected static ?string $slug = 'system-health';
 
-    protected static string $view = 'mediamouse-users::system-health';
+    protected string $view = 'mediamouse-users::system-health';
 
     public static function shouldRegisterNavigation(): bool
     {

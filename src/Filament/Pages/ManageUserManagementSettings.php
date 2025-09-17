@@ -14,11 +14,11 @@ use Filament\Forms;
 
 class ManageUserManagementSettings extends SettingsPage
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-cog';
     protected static ?string $title = 'Settings';
     protected static ?string $slug = 'user-management-settings';
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static \UnitEnum|string|null $navigationGroup = 'User Management';
     protected static ?int $navigationSort = 6;
 
     public static function getNavigationLabel(): string

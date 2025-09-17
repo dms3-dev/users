@@ -26,10 +26,10 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
     use InteractsWithFormActions;
     use HasUnsavedDataChangesAlert;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'user-settings';
 
-    protected static string $view = 'filament-spatie-laravel-settings-plugin::pages.settings-page';
+    protected string $view = 'filament-spatie-laravel-settings-plugin::pages.settings-page';
 
     public array $data;
 

@@ -10,6 +10,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Model;
@@ -28,11 +29,12 @@ class UserMemberOfGroupRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Group';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+
+        return $schema
             ->columns(1)
-            ->schema([
+            ->components([
                 TextInput::make('name')
                     ->label((__('mediamouse-users::pages/group-resource.name')))
                     ->columnSpan(1),

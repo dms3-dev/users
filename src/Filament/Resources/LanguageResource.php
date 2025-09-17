@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Columns\CheckColumn;
@@ -19,8 +20,8 @@ class LanguageResource extends Resource
 {
     protected static ?string $model = Language::class;
 
-    protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-language';
+    protected static \UnitEnum|string|null $navigationGroup = 'User Management';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-language';
     protected static ?int $navigationSort = 5;
 
     /**
@@ -32,11 +33,11 @@ class LanguageResource extends Resource
         return static::$navigationLabel ?? __('mediamouse-users::pages/language-resource.title');
     }
 
-    public static function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public static function form(Schema $schema): Schema
     {
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('iso')
                     ->required()
                     ->unique(ignoreRecord: true)

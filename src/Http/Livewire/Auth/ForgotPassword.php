@@ -35,7 +35,7 @@ class ForgotPassword extends SimplePage implements HasForms
 
     private ?User $user = null;
 
-    protected static string $view = 'mediamouse-users::forgot-password';
+    protected string $view = 'mediamouse-users::forgot-password';
 
     public function mount(): void
     {

@@ -44,7 +44,7 @@ class Login extends SimplePage implements HasForms
 
     private ?User $user = null;
 
-    protected static string $view = 'mediamouse-users::login';
+    protected string $view = 'mediamouse-users::login';
 
     public function mount(): void
     {

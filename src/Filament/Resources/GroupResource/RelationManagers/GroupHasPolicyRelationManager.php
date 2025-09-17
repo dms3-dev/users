@@ -10,6 +10,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -35,11 +36,12 @@ class GroupHasPolicyRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Policy';
 
-    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+
+        return $schema
             ->columns(1)
-            ->schema([
+            ->components([
             ]);
     }
 

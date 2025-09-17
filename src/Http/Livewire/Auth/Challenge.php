@@ -36,7 +36,7 @@ class Challenge extends SimplePage implements HasForms
 
     public ?string $message = '';
 
-    protected static string $view = 'mediamouse-users::challenge';
+    protected string $view = 'mediamouse-users::challenge';
 
     /**
      * @throws ContainerExceptionInterface

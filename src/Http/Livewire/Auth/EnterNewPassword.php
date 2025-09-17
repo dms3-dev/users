@@ -42,7 +42,7 @@ class EnterNewPassword extends SimplePage implements HasForms
 
     private ?User $user = null;
 
-    protected static string $view = 'mediamouse-users::enter-new-password';
+    protected string $view = 'mediamouse-users::enter-new-password';
 
     public array $data = [];
 
