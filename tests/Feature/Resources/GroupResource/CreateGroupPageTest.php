@@ -2,7 +2,7 @@
 
 namespace Feature\Resources\GroupResource;
 
-use Filament\Forms\Components\Group;
+use Filament\Schemas\Components\Group;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mediamouse\Filament\Testing\Enums\ResourceType;
 use Mediamouse\Filament\Testing\Traits\FilamentForm;

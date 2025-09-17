@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Actions;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Filament\Tables\Actions\ViewAction;
 use Mediamouse\Users\Enums\PolicyPrivilege;
@@ -100,10 +101,10 @@ class GroupResource extends Resource
                     ->toggleable()
                     ->sortable( ['key', 'created_at']),
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make()->color('info')
                     ->visible(Filament::auth()->user()->hasPrivilege(GroupPolicy::class, PolicyPrivilege::VIEW)),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->visible(fn(Group $record) => $record->users_count === 0 ||
                         ($record->users_count === null && $record->users()->count() === 0 && Filament::auth()->user()->hasPrivilege(GroupPolicy::class, PolicyPrivilege::DELETE))
                 ),

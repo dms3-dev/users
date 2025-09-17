@@ -7,12 +7,16 @@ use Carbon\Carbon;
 use Closure;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\SimplePage;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\EmbeddedSchema;
+use Filament\Schemas\Schema;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
@@ -44,7 +48,10 @@ class EnterNewPassword extends SimplePage implements HasForms
 
     protected string $view = 'mediamouse-users::enter-new-password';
 
-    public array $data = [];
+    /**
+     * @var array<string, mixed> | null
+     */
+    public ?array $data = [];
 
     public function mount(): void
     {
@@ -68,7 +75,7 @@ class EnterNewPassword extends SimplePage implements HasForms
             $passReset->status !== PasswordResetStatus::CREATED ||
             ($passReset->user->password === null ?
                 $passReset->created_at < Carbon::now()->subDay() :
-                $passReset->created_at < Carbon::now()->subMinutes(30)
+                $passReset->created_at < Carbon::now()->subMinutes(300)
             )
             ) {
             session()->put('login.error', 'invalid-link');
@@ -154,26 +161,98 @@ class EnterNewPassword extends SimplePage implements HasForms
                 ->rules([
                     new \Mediamouse\Users\Validate\Password($this->getPasswordReset()->user)
                 ])
-                ->required(),
+                ->required()
+            ,
             TextInput::make('repeat-password')
                 ->label(__('mediamouse-users::pages/login.repeat-password'))
                 ->password()
                 ->minLength(app(UserManagementSettings::class)->password_min_length)
                 ->maxLength(app(UserManagementSettings::class)->password_max_length)
-                ->required(),
+                ->required()
+            ,
         ];
     }
 
-    protected function getForms(): array
-    {
-        return [
-            'form' => $this->makeForm()
-                ->schema($this->getFormSchema())
-                ->statePath('data'),
-        ];
-    }
+//    protected function getForms(): array
+//    {
+//        return [
+//            'form' => $this->makeForm()
+//                ->schema($this->getFormSchema())
+//                ->statePath('data'),
+//        ];
+//    }
 
     public function returnToLogin() {
         return app(LoginResponse::class);
+    }
+
+
+    public function defaultForm(Schema $schema): Schema
+    {
+        return $schema
+            ->disabled(! $this->canEdit())
+            ->inlineLabel($this->hasInlineLabels())
+            ->statePath('data');
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema->schema($this->getFormSchema())->statePath('data');
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentComponent(),
+            ]);
+    }
+
+    public function getFormContentComponent(): \Filament\Schemas\Components\Component
+    {
+        return \Filament\Schemas\Components\Form::make([EmbeddedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('submit')
+            ->footer([
+                $this->getFormActionsContentComponent(),
+            ]);
+    }
+
+    public function getFormActionsContentComponent(): \Filament\Schemas\Components\Component
+    {
+        return Actions::make($this->getFormActions())
+            ->alignment($this->getFormActionsAlignment())
+            ->fullWidth($this->hasFullWidthFormActions())
+            ->sticky($this->areFormActionsSticky());
+    }
+
+    public function getSubmitFormAction(): Action
+    {
+        return $this->getSaveFormAction();
+    }
+
+    protected function getSubmitFormLivewireMethodName(): string
+    {
+        return 'save';
+    }
+
+    public function hasFormWrapper(): bool
+    {
+        return true;
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
+    }
+
+    public function getRedirectUrl(): ?string
+    {
+        return null;
+    }
+
+    public function canEdit(): bool
+    {
+        return true;
     }
 }

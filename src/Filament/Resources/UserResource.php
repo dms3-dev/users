@@ -7,6 +7,8 @@ use Closure;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Schemas;
+use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -52,11 +54,11 @@ class UserResource extends Resource
     {
 
         return $schema
+            ->columns(1)
             ->components([
-
-                Forms\Components\Grid::make(2)->schema([
-                    Forms\Components\Grid::make(1)->columnSpan(1)->schema([
-                        Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.user_information'))->columns(1)->columnSpan(1)->schema([
+                Schemas\Components\Grid::make(2)->schema([
+                    Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
+                        Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.user_information'))->columns(1)->columnSpan(1)->schema([
                             TextInput::make('username')
                                 ->label((__('mediamouse-users::model/user-model.username')))
                                 ->required()
@@ -72,7 +74,7 @@ class UserResource extends Resource
                                 ->maxLength(255)
                                 ->unique(ignoreRecord: true),
                         ]),
-                        Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.about'))->columns(1)->columnSpan(1)->schema([
+                        Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.about'))->columns(1)->columnSpan(1)->schema([
                             Forms\Components\Select::make('language_iso')
                                 ->label((__('mediamouse-users::model/user-model.language')))
                                 ->required()
@@ -89,20 +91,20 @@ class UserResource extends Resource
                                 ->required(),
                         ]),
                     ]),
-                    Forms\Components\Grid::make(1)->columnSpan(1)->schema([
-                        Forms\Components\Fieldset::make(__('mediamouse-users::model/user-model.groups'))->columns(1)->columnSpan(1)->schema([
+                    Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
+                        Schemas\Components\Fieldset::make(__('mediamouse-users::model/user-model.groups'))->columns(1)->columnSpan(1)->schema([
                             Forms\Components\CheckboxList::make('groups')
                                 ->columns(2)
                                 ->relationship('groups', 'name')
                                 ->inlineLabel()
                                 ->disableLabel(),
                         ]),
-                        Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.security'))->columns(1)->columnSpan(1)->schema([
-                            Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+                        Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.security'))->columns(1)->columnSpan(1)->schema([
+                            Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
                                 Forms\Components\Select::make('two_factor')
                                     ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                                     ->enum(UserTwoFactor::class)
-                                    ->options(fn(\Filament\Forms\Get $get) => match ($get('role')) {
+                                    ->options(fn(\Filament\Schemas\Components\Utilities\Get $get) => match ($get('role')) {
                                         UserRole::ADMINISTRATOR->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_ADMINISTRATOR),
 
                                         UserRole::SA->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_SA),
@@ -164,7 +166,6 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-
                 Tables\Columns\TextColumn::make('username')
                     ->label((__('mediamouse-users::model/user-model.username')))
                     ->toggleable()
@@ -223,7 +224,7 @@ class UserResource extends Resource
 //                    ->sortable( ['id', 'login_attempts.created_at'])
                     ->formatStateUsing(fn(?Carbon $state) => $state?->format('j F Y H:i:s')),
             ])
-            ->actions([
+            ->recordActions([
 //                Tables\Actions\Action::make('verify')
 //                    ->label((__('mediamouse-users::pages/user-resource.verify')))
 //                    ->color('success')
@@ -240,7 +241,7 @@ class UserResource extends Resource
 //                            ->icon('heroicon-o-check')
 //                            ->send();
 //                    }),
-                Tables\Actions\Action::make('welcome-email')
+                Actions\Action::make('welcome-email')
                     ->label(fn(User $record) => (
                         $record->email_verified_at === null ?
                             __('mediamouse-users::pages/user-resource.send_welcome_email') :
@@ -261,7 +262,7 @@ class UserResource extends Resource
                     }),
                 ViewAction::make()->color('info')
                     ->visible(Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::VIEW)),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->visible(fn(User $record) => Filament::auth()->user()->hasPrivilege(UserPolicy::class, PolicyPrivilege::DELETE) && $record->id !== Filament::auth()->user()->id),
             ]);
     }

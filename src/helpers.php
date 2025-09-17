@@ -18,3 +18,5 @@ if(!function_exists('userCan')) {
         return $user?->canDo($policy, $record) ?? false;
     }
 }
+
+

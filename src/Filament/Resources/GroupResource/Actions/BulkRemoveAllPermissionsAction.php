@@ -6,7 +6,7 @@ use App\Filament\Resources\CountryResource;
 use App\Filament\Resources\CountryResource\Pages\ViewCountry;
 use App\Models\Country;
 use Exception;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Mediamouse\Filament\Forms\Components\TextInput;

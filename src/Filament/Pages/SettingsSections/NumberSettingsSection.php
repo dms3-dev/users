@@ -2,7 +2,7 @@
 
 namespace Mediamouse\Users\Filament\Pages\SettingsSections;
 
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Section;
 use Filament\Forms;
 use Mediamouse\Users\Settings\GlobalSettings;
 

@@ -2,7 +2,7 @@
 
 namespace Mediamouse\Users\Http\Responses\Auth\Login;
 
-use Filament\Http\Responses\Auth\Contracts\LoginResponse as Responsable;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse as Responsable;
 use Illuminate\Http\RedirectResponse;
 use Livewire\Features\SupportRedirects\Redirector;
 use Mediamouse\Users\Http\Livewire\Auth\Login;

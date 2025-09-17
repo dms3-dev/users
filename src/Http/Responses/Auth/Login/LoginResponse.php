@@ -3,7 +3,7 @@
 namespace Mediamouse\Users\Http\Responses\Auth\Login;
 
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse as Responsable;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse as Responsable;
 
 class LoginResponse implements Responsable
 {

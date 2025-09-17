@@ -8,6 +8,7 @@ use App\Models\Donor;
 use App\Models\Household;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
+use Filament\Actions;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -97,11 +98,11 @@ class TasksOverview extends BaseWidget
     protected function getTableActions(): array
     {
         return [
-            Tables\Actions\ViewAction::make()
+            Actions\ViewAction::make()
                 ->label(fn(Note $record) => 'View ' . $record->notable->labelText())
                 ->color(fn(Note $record) =>  $record->notable->labelColor())
                 ->url(fn(Note $record) =>  $record->notable->noteListLink()),
-            Tables\Actions\Action::make('resolve')
+            Actions\Action::make('resolve')
                 ->requiresConfirmation()
                 ->color('success')
                 ->icon('heroicon-s-check')

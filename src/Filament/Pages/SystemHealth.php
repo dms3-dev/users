@@ -21,6 +21,7 @@ use Mediamouse\Users\Settings\GlobalSettings as GlobalSettingsModel;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms;
+use Filament\Schemas;
 use Mediamouse\Users\Models\SystemHealth as SystemHealthModel;
 use Mediamouse\Users\Support\Date;
 
@@ -53,7 +54,7 @@ class SystemHealth extends Page implements HasTable
     {
 
         return [
-            Forms\Components\Grid::make(2)->schema([
+            Schemas\Components\Grid::make(2)->schema([
 
 
             ]),

@@ -5,7 +5,7 @@ namespace Mediamouse\Users\Filament\Resources\GroupResource\RelationManagers;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Exception;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;

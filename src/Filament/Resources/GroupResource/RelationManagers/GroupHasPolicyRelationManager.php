@@ -6,7 +6,7 @@ use Awcodes\TableRepeater\Components\TableRepeater;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\RelationManagers\RelationManager;

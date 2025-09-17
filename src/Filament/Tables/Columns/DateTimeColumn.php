@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class DateTimeColumn extends TextColumn
 {
 
-    public static function make(string $name): static
+    public static function make(?string $name = null): static
     {
         /** @var User $current_user */
         $current_user = Filament::auth()->user();

@@ -22,7 +22,7 @@ class ListGroups extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make()
+            \Filament\Actions\CreateAction::make()
                 ->visible(Filament::auth()->user()->hasPrivilege(GroupPolicy::class, PolicyPrivilege::CREATE))
                 ->color('success')
                 ->icon('heroicon-s-plus')

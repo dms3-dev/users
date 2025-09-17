@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Filament\Actions;
 use Filament\Tables;
 use Mediamouse\Users\Enums\NoteStatus;
 use Mediamouse\Users\Enums\NoteType;
@@ -22,7 +23,7 @@ use Mediamouse\Users\Filament\Tables\Columns\DateTimeColumn;
 use Mediamouse\Users\Models\Note;
 use Mediamouse\Users\Policies\NotePolicy;
 use Mediamouse\Users\Support\Date;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 
 class NotesRelationManager extends RelationManager
 {
@@ -41,7 +42,7 @@ class NotesRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         return $schema
-            ->columns(2)
+            ->columns(1)
             ->components([
                 Grid::make(4)->schema([
                     Forms\Components\Textarea::make('content')
@@ -60,19 +61,19 @@ class NotesRelationManager extends RelationManager
                         Forms\Components\DatePicker::make('milestone_at')
                             ->format(Date::userDateFormat())
                             ->reactive()
-                            ->visible(fn(Forms\Get $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
+                            ->visible(fn(\Filament\Schemas\Components\Utilities\Get $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
                             ->label('Due date')
                             ->closeOnDateSelection(),
                         Forms\Components\Select::make('status')
                             ->required()
                             ->options(NoteStatus::class)
                             ->reactive()
-                            ->visible(fn(Forms\Get $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
+                            ->visible(fn(\Filament\Schemas\Components\Utilities\Get $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
                             ->default(NoteStatus::OPEN),
                         Forms\Components\Select::make('assigned_to')
                             ->label('Assign task to')
                             ->reactive()
-                            ->visible(fn(Forms\Get $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
+                            ->visible(fn(\Filament\Schemas\Components\Utilities\Get $get) => $get('type') === NoteType::TASK->value || $get('type') === NoteType::TASK)
                             ->options(User::query()
                                 ->whereIn('role', [UserRole::ADMINISTRATOR, UserRole::SA])
                                 ->where('status', UserStatus::ACTIVE)
@@ -133,18 +134,18 @@ class NotesRelationManager extends RelationManager
                     ->options(NoteStatus::class)
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                Actions\CreateAction::make()
                     ->color('success')
                     ->icon('heroicon-s-plus')
                     ->visible(Filament::auth()->user()->hasPrivilege(NotePolicy::class, PolicyPrivilege::CREATE)),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                Actions\EditAction::make()
                     ->color('warning')
                     ->visible(Filament::auth()->user()->hasPrivilege(NotePolicy::class, PolicyPrivilege::UPDATE)),
-                Tables\Actions\DeleteAction::make()
+                Actions\DeleteAction::make()
                     ->visible(Filament::auth()->user()->hasPrivilege(NotePolicy::class, PolicyPrivilege::DELETE)),
-                Tables\Actions\Action::make('resolve')
+                Actions\Action::make('resolve')
                     ->label('Resolve')
                     ->icon('heroicon-o-check')
                     ->color('success')
@@ -162,8 +163,8 @@ class NotesRelationManager extends RelationManager
                         refreshPage();
                     })
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                Actions\DeleteBulkAction::make()
                     ->visible(Filament::auth()->user()->hasPrivilege(NotePolicy::class, PolicyPrivilege::DELETE)),
             ]);
     }

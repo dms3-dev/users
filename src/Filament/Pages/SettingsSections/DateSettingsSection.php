@@ -4,7 +4,7 @@ namespace Mediamouse\Users\Filament\Pages\SettingsSections;
 
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Components\Section;
+use Filament\Schemas\Components\Section;
 use Mediamouse\Users\Settings\GlobalSettings;
 
 class DateSettingsSection extends AbstractSettingsSection
