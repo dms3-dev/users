@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Pages;
 
 use Filament\Facades\Filament;
+use Filament\Schemas\Schema;
 use Mediamouse\Users\Enums\UserRole;
 use Mediamouse\Users\Enums\UserTwoFactor;
 use Mediamouse\Users\Models\User;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Pages\SettingsPage;
 use Filament\Forms;
+use Filament\Schemas;
 
 class ManageUserManagementSettings extends SettingsPage
 {
@@ -44,12 +46,16 @@ class ManageUserManagementSettings extends SettingsPage
         return Filament::auth()?->user()?->role === UserRole::SA;
     }
 
+    public function form(Schema $schema) : Schema {
+        return $schema->schema($this->getFormSchema());
+    }
+
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\Grid::make(2)->schema([
-                Forms\Components\Grid::make(1)->columnSpan(1)->schema([
-                    Forms\Components\Fieldset::make(__('mediamouse-users::pages/security-settings.security'))
+            Schemas\Components\Grid::make(2)->schema([
+                Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
+                    Schemas\Components\Fieldset::make(__('mediamouse-users::pages/security-settings.security'))
                         ->columns(1)->columnSpan(1)
 //                        ->label(__('mediamouse-users::pages/security_settings.security'))
                         ->schema([
@@ -65,7 +71,7 @@ class ManageUserManagementSettings extends SettingsPage
                             ->numeric()
                             ->required(),
                     ]),
-                    Forms\Components\Fieldset::make(__('mediamouse-users::pages/security-settings.two_factor_auth'))->columns(1)->columnSpan(1)->schema([
+                    Schemas\Components\Fieldset::make(__('mediamouse-users::pages/security-settings.two_factor_auth'))->columns(1)->columnSpan(1)->schema([
                         Forms\Components\CheckboxList::make('two_fa_MEMBER')
                             ->label(__('mediamouse-users::pages/security-settings.member'))
                             ->inlineLabel()
@@ -84,7 +90,7 @@ class ManageUserManagementSettings extends SettingsPage
                     ]),
                 ]),
 
-                Forms\Components\Fieldset::make(__('mediamouse-users::pages/security-settings.password_requirements'))->columns(8)->columnSpan(1)->schema([
+                Schemas\Components\Fieldset::make(__('mediamouse-users::pages/security-settings.password_requirements'))->columns(8)->columnSpan(1)->schema([
                     TextInput::make('reset_password_every_x_days_with_2fa')
                         ->label(__('mediamouse-users::pages/security-settings.reset_password_with_2fa'))
                         ->inlineLabel()

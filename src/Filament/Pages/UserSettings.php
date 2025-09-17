@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Filament\Pages;
 
 use Carbon\Carbon;
+use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -13,6 +14,12 @@ use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Filament\Forms;
+use Filament\Schemas;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\EmbeddedSchema;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Schema;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Models\Language;
 use Mediamouse\Users\Models\User;
@@ -22,16 +29,45 @@ use Mediamouse\Users\Models\User;
  */
 class UserSettings extends Page implements Forms\Contracts\HasForms
 {
-    use InteractsWithForms;
-    use InteractsWithFormActions;
+//    use InteractsWithForms;
+//    use InteractsWithFormActions;
     use HasUnsavedDataChangesAlert;
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-cog';
     protected static ?string $slug = 'user-settings';
 
-    protected string $view = 'filament-spatie-laravel-settings-plugin::pages.settings-page';
+    /**
+     * @var array<string, mixed> | null
+     */
+    public ?array $data = [];
 
-    public array $data;
+    public function mount(): void
+    {
+        $this->fillForm();
+    }
+
+    public function defaultForm(Schema $schema): Schema
+    {
+        return $schema
+            ->disabled(! $this->canEdit())
+            ->inlineLabel($this->hasInlineLabels())
+            ->statePath('data');
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema->schema($this->getFormSchema());
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getFormContentComponent(),
+            ]);
+    }
+
+
 
     public static function getNavigationLabel(): string
     {
@@ -48,13 +84,10 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
         return static::$title ?? __('mediamouse-users::pages/user-settings.title');
     }
 
-
-    public function mount(): void {
-        $this->fillForm();
-    }
-
     public function fillForm(): void
     {
+        $this->callHook('beforeFill');
+
         /** @var User $current_user */
         $current_user = auth()->user();
 
@@ -72,13 +105,16 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
             'csv_new_line' => $current_user->getUserSetting('mediamouse-users.csv_new_line'),
         ];
 
+
         $this->form->fill($data);
+
+        $this->callHook('afterFill');
     }
 
-    private function fieldsetLanguageSettings(): Forms\Components\Fieldset
+    private function fieldsetLanguageSettings(): Schemas\Components\Fieldset
     {
         return
-            Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.language-settings'))
+            Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.language-settings'))
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
@@ -89,10 +125,10 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                 ]);
     }
 
-    private function fieldsetDetailsSettings(): Forms\Components\Fieldset
+    private function fieldsetDetailsSettings(): Schemas\Components\Fieldset
     {
         return
-            Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.user-details'))
+            Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.user-details'))
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
@@ -105,10 +141,10 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                 ]);
     }
 
-    private function fieldsetNumberSettings(): Forms\Components\Fieldset
+    private function fieldsetNumberSettings(): Schemas\Components\Fieldset
     {
         return
-            Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.number-settings'))
+            Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.number-settings'))
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
@@ -126,10 +162,10 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                 ]);
     }
 
-    private function fieldsetCsvSettings(): Forms\Components\Fieldset
+    private function fieldsetCsvSettings(): Schemas\Components\Fieldset
     {
         return
-            Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.csv-settings'))
+            Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.csv-settings'))
                 ->columnSpan(1)
                 ->columns(1)
                 ->schema([
@@ -165,7 +201,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
                 ]);
     }
 
-    private function fieldsetDateSettings(): Forms\Components\Fieldset
+    private function fieldsetDateSettings(): Schemas\Components\Fieldset
     {
         $date = Carbon::create(2023, 8, 1, 4, 35, 59);
 
@@ -212,7 +248,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
         }
 
         return
-                Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.date-settings'))
+            Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-settings.date-settings'))
                     ->columnSpan(1)
                     ->columns(1)
                     ->schema([
@@ -237,13 +273,13 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\Grid::make(2)->schema([
-                Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+            Schemas\Components\Grid::make(2)->schema([
+                Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
                         $this->fieldsetDetailsSettings(),
                         $this->fieldsetLanguageSettings(),
                         $this->fieldsetNumberSettings(),
                     ]),
-                Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+                Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
                         $this->fieldsetDateSettings(),
                         $this->fieldsetCsvSettings(),
                     ]),
@@ -252,16 +288,16 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
     }
 
 
-    protected function getForms(): array
-    {
-        return [
-            'form' => $this->makeForm()
-                ->schema($this->getFormSchema())
-                ->statePath('data')
-                ->columns(2)
-                ->inlineLabel(config('filament.layout.forms.have_inline_labels')),
-        ];
-    }
+//    protected function getForms(): array
+//    {
+//        return [
+//            'form' => $this->form()
+//                ->schema($this->getFormSchema())
+//                ->statePath('data')
+//                ->columns(2)
+//                ->inlineLabel(config('filament.layout.forms.have_inline_labels')),
+//        ];
+//    }
 
     protected function getFormActions(): array
     {
@@ -273,6 +309,7 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
     public function save(): void
     {
         $data = $this->form->getState();
+
 
         /** @var User $current_user */
         $current_user = Filament::auth()->user();
@@ -311,5 +348,52 @@ class UserSettings extends Page implements Forms\Contracts\HasForms
             ->keyBindings(['mod+s']);
     }
 
+    public function getFormContentComponent(): Component
+    {
+        return \Filament\Schemas\Components\Form::make([EmbeddedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer([
+                $this->getFormActionsContentComponent(),
+            ]);
+    }
+
+    public function getFormActionsContentComponent(): Component
+    {
+        return Actions::make($this->getFormActions())
+            ->alignment($this->getFormActionsAlignment())
+            ->fullWidth($this->hasFullWidthFormActions())
+            ->sticky($this->areFormActionsSticky());
+    }
+
+    public function getSubmitFormAction(): Action
+    {
+        return $this->getSaveFormAction();
+    }
+
+    protected function getSubmitFormLivewireMethodName(): string
+    {
+        return 'save';
+    }
+
+    public function hasFormWrapper(): bool
+    {
+        return true;
+    }
+
+    protected function hasFullWidthFormActions(): bool
+    {
+        return false;
+    }
+
+    public function getRedirectUrl(): ?string
+    {
+        return null;
+    }
+
+    public function canEdit(): bool
+    {
+        return true;
+    }
 }
 

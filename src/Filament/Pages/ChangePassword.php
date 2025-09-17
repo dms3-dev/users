@@ -16,6 +16,7 @@ use Filament\Pages\Concerns\HasUnsavedDataChangesAlert;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\Page;
 use Filament\Forms;
+use Filament\Schemas;
 use Illuminate\Support\Facades\Auth;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Users\Models\Language;
@@ -59,7 +60,7 @@ class ChangePassword extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Forms\Components\Grid::make(2)->schema([
+            Schemas\Components\Grid::make(2)->schema([
                 Forms\Components\Fieldset::make(__('mediamouse-users::pages/password.password-settings'))
                     ->columnSpan(1)
                     ->columns(1)

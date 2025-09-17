@@ -3,14 +3,16 @@
 namespace Mediamouse\Users\Filament\Resources\UserResource\Actions;
 
 
+use Filament\Schemas\Components\Utilities\Get;
 use Mediamouse\Users\Models\Group;
 use Mediamouse\Users\Models\User;
 use Mediamouse\Filament\Pages\Actions\Action;
 use Filament\Facades\Filament;
+use Filament\Schemas;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\Select;
 use Mediamouse\Filament\Forms\Components\TextInput;
 use Mediamouse\Laravel\Support\Arr;
@@ -29,7 +31,7 @@ class EditUserAction
             ->icon('heroicon-o-pencil')
             ->color('primary')
             ->form(self::form())
-            ->mountUsing(fn(User $record, Forms\Form $form) => $form->fill($record->toArray()))
+            ->mountUsing(fn(User $record, \Filament\Schemas\Schema $schema) => $schema->fill($record->toArray()))
             ->action(function(User $record, array $data) {
                 $record->fill($data);
                 $record->save();
@@ -42,7 +44,7 @@ class EditUserAction
         return [
             Grid::make(2)->schema([
                 Grid::make(1)->columnSpan(1)->schema([
-                    Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.user_information'))->columns(1)->columnSpan(1)->schema([
+                    Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.user_information'))->columns(1)->columnSpan(1)->schema([
                         TextInput::make('username')
                             ->label((__('mediamouse-users::model/user-model.username')))
                             ->required()
@@ -75,16 +77,16 @@ class EditUserAction
                             ->required(),
                     ]),
                 ]),
-                Forms\Components\Grid::make(1)->columnSpan(1)->schema([
-                    Forms\Components\Fieldset::make(__('mediamouse-users::model/user-model.groups'))->columns(1)->columnSpan(1)->schema([
+                Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
+                    Schemas\Components\Fieldset::make(__('mediamouse-users::model/user-model.groups'))->columns(1)->columnSpan(1)->schema([
                         self::checkBoxListGroups(),
                     ]),
-                    Forms\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.security'))->columns(1)->columnSpan(1)->schema([
-                        Forms\Components\Grid::make(1)->columnSpan(1)->schema([
+                    Schemas\Components\Fieldset::make(__('mediamouse-users::pages/user-resource.security'))->columns(1)->columnSpan(1)->schema([
+                        Schemas\Components\Grid::make(1)->columnSpan(1)->schema([
                             Forms\Components\Select::make('two_factor')
                                 ->label((__('mediamouse-users::pages/user-resource.two_factor')))
                                 ->enum(UserTwoFactor::class)
-                                ->options(fn(\Filament\Forms\Get $get) => match ($get('role')) {
+                                ->options(fn(Get $get) => match ($get('role')) {
                                     UserRole::ADMINISTRATOR->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_ADMINISTRATOR),
 
                                     UserRole::SA->value => Arr::setKeysEqualToValues(app(UserManagementSettings::class)->two_fa_SA),

@@ -22,7 +22,7 @@ use Mediamouse\Users\Filament\Tables\Columns\DateTimeColumn;
 use Mediamouse\Users\Models\Note;
 use Mediamouse\Users\Policies\NotePolicy;
 use Mediamouse\Users\Support\Date;
-use Filament\Forms\Components\Grid;
+use Filament\Schemas\Components\Grid;
 
 class NotesRelationManager extends RelationManager
 {
