@@ -10,6 +10,7 @@ use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Mediamouse\Users\Enums\NoteStatus;
@@ -37,11 +38,11 @@ class NotesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Note';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->columns(2)
-            ->schema([
+            ->components([
                 Grid::make(4)->schema([
                     Forms\Components\Textarea::make('content')
                         ->required()

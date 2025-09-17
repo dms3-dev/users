@@ -4,6 +4,7 @@ namespace Mediamouse\Users\Filament\RelationManagers;
 
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Mediamouse\Users\Support\Date;
@@ -14,10 +15,10 @@ class ChangeLogRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'description';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Forms\Components\TextInput::make('Log')
                     ->required()
                     ->maxLength(255),
