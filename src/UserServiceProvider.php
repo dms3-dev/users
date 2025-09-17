@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Mediamouse\Users\Console\Commands\CheckSystemHealth;
+use Mediamouse\Users\Console\Commands\UpdateIp6Database;
 use Mediamouse\Users\Console\Commands\UpdateIpDatabase;
 use Mediamouse\Users\Console\Commands\UpdatePolicies;
 use Mediamouse\Users\Database\CreateViews;
@@ -71,7 +72,8 @@ class UserServiceProvider extends PackageServiceProvider
             ->hasCommands([
                     UpdatePolicies::class,
                     CheckSystemHealth::class,
-                    UpdateIpDatabase::class
+                    UpdateIpDatabase::class,
+                    UpdateIp6Database::class,
                 ])
             ->hasTranslations()
             ->hasMigrations([
@@ -99,6 +101,7 @@ class UserServiceProvider extends PackageServiceProvider
                 'create_change_log_table',
                 'error_codes_settings',
                 'create_ip_locator_table',
+                'create_ip6_locator_table',
                 'add_settings_to_user_table',
             ]);
     }
