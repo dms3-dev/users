@@ -3,6 +3,7 @@
 namespace Mediamouse\Users\Http\Livewire\Auth;
 
 use App\Models\User;
+use Carbon\Carbon;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Facades\Filament;
@@ -133,8 +134,22 @@ class Login extends SimplePage implements HasForms
             throw ValidationException::withMessages([
                 'email' => __('mediamouse-users::login.messages.failed'),
             ]);
-
         }
+
+        if($user->loginAttempts
+                    ->where('created_at', '>', Carbon::now()->subMinutes(30))
+                    ->where('status', LoginAttemptStatus::FAILED)
+                    ->count() >= app(UserManagementSettings::class)->max_login_attempts
+                ) {
+
+            $attempt->status = LoginAttemptStatus::FAILED;
+            $attempt->save();
+
+            throw ValidationException::withMessages([
+                'email' => 'Too many login attempts. Please try again later...',
+            ]);
+        }
+
         if(!Filament::auth()->validate([
             'email' => $user->email,
             'password' => $password,
