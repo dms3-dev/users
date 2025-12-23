@@ -11,7 +11,7 @@ use Mediamouse\Users\Support\Date;
 class DateColumn extends TextColumn
 {
 
-    public static function make(string $name): static
+    public static function make(?string $name = null): static
     {
         return parent::make($name)
             ->dateTime(Date::userDateFormat());
