@@ -317,7 +317,8 @@ class User extends Authenticatable implements FilamentUser
             ->where('policy', $policy_class)
             ->whereIn('group_key', $this->groups()->pluck('key'))
             ->first();
-        if($privileges === null && $this->groups()->count() > 0) {
+        
+        if($privileges->view_any === null && $this->groups()->count() > 0) {
             if(is_subclass_of($policy_class, PolicyAbstract::class)) {
                 try {
                     $newPolicy = new Policy();
