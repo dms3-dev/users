@@ -89,7 +89,13 @@ class LoggableField
         $shouldReplace = [];
         foreach($this->fields as $field) {
             if(isset($data[$field])) {
-                $shouldReplace[':' . $field] = $data[$field];
+                if(is_enum($data[$field])) {
+                    $shouldReplace[':' . $field] = $data[$field]->value;
+                }
+                else {
+                    $shouldReplace[':' . $field] = $data[$field];
+                }
+
             }
             else {
                 $shouldReplace[':' . $field] = '';
